@@ -124,7 +124,7 @@ func Model(data *types.GenerateType) (map[string]string, error) {
 	resp := make(map[string]string)
 
 	if data.Model {
-		modelStr, err := model.PackageModel()
+		modelStr, err := model.PackageModel(data)
 		if err != nil {
 			return nil, errors.New("生成model的失败:" + err.Error())
 		}
