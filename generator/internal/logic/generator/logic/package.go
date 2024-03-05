@@ -17,7 +17,7 @@ func PackageLogic(data *types.GenerateType) (string, error) {
 	loginStr += "use support\\exception\\RespBusinessException;\n" +
 		"\n"
 
-	loginStr += data.ClassText + "模块逻辑层"
+	loginStr += "### " + data.ClassText + "模块逻辑层"
 
 	return loginStr, nil
 }

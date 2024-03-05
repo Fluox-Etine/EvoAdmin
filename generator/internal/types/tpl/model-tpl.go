@@ -6,6 +6,8 @@ declare (strict_types=1);
 {{.Package}}
 class {{.ClassTitle}} extends Base
 {
+	
+	{{.SoftDeletes}}
     /**
      * The table associated with the model.
      *

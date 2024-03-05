@@ -19,7 +19,7 @@ func PackageController(data *types.GenerateType) (string, error) {
 		"use support\\Request;\n" +
 		"use support\\Response;\n" +
 		"\n"
-	controllerStr += data.ClassText + "模块控制器层"
+	controllerStr += "### " + data.ClassText + "模块控制器层"
 
 	return controllerStr, nil
 }

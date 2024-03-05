@@ -11,12 +11,14 @@ type GenerateType struct {
 	Model      bool `json:"model"`
 	Logic      bool `json:"logic"`
 	// 基础配置信息
-	ClassName  string `json:"class_name"`  // 类名、文件名，格式采用蛇形命名
-	ClassText  string `json:"class_text"`  // 类中文注释名称
-	TableName  string `json:"table_name"`  // 表名
-	PrimaryKey string `json:"primary_key"` // 主键
-	Multiapp   string `json:"multiapp"`    // 应用模式
+	ClassName string `json:"class_name"` // 类名、文件名，格式采用蛇形命名
+	ClassText string `json:"class_text"` // 类中文注释名称
+	Multiapp  string `json:"multiapp"`   // 应用模式
 	// 程序附带配置信息
 	PathPrefix string `json:"path_prefix"` // 路径前缀
 	ClassTitle string `json:"class_title"` // 处理类名称（大写）
+	// 数据库部分信息
+	TableName     string `json:"table_name"`      // 表名
+	PrimaryKey    string `json:"primary_key"`     // 主键
+	IsSoftDeletes bool   `json:"is_soft_deletes"` // 是否软删除
 }

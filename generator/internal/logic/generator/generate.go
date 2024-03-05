@@ -7,7 +7,10 @@ import (
 	"generator/internal/logic/generator/logic"
 	"generator/internal/logic/generator/model"
 	"generator/internal/types"
+	"generator/internal/types/tpl"
+	"os"
 	"strings"
+	"text/template"
 )
 
 func GenerateLogic(data *types.GenerateType) error {
@@ -25,19 +28,19 @@ func GenerateLogic(data *types.GenerateType) error {
 		data.PathPrefix = strings.ToLower(classNameArray[0])
 	}
 
-	controllerStr, err := Controller(data)
+	controllerStr, err := generateController(data)
 	if err != nil {
 		return err
 	}
 	fmt.Println("控制器的字符串", controllerStr)
 
-	logicStr, err := Logic(data)
+	logicStr, err := generateLogic(data)
 	if err != nil {
 		return err
 	}
 	fmt.Println("逻辑层", logicStr)
 
-	modelStr, err := Model(data)
+	modelStr, err := generateModel(data)
 	if err != nil {
 		return err
 	}
@@ -46,7 +49,8 @@ func GenerateLogic(data *types.GenerateType) error {
 
 }
 
-func Controller(data *types.GenerateType) (map[string]string, error) {
+// 生成控制器
+func generateController(data *types.GenerateType) (map[string]string, error) {
 	resp := make(map[string]string)
 
 	if data.Controller {
@@ -79,11 +83,42 @@ func Controller(data *types.GenerateType) (map[string]string, error) {
 			return nil, errors.New("生成控制器的update方法失败:" + err.Error())
 		}
 		resp["update"] = updateStr
+
+		// 开始合成生成页面
+		templateField := tpl.TemplateController{
+			Package:      resp["package"],
+			ClassTitle:   data.ClassTitle,
+			ListMethod:   resp["list"],
+			CreateMethod: resp["create"],
+			UpdateMethod: resp["update"],
+			DetailMethod: "",
+		}
+
+		templateFile, err := template.New("controller_template").Parse(tpl.CONTROLLER)
+		if err != nil {
+			return nil, errors.New("生成控制器的模板失败:" + err.Error())
+		}
+
+		// 开始输出文件
+		fileName := data.ClassTitle + "Controller.php"
+		file, err := os.Create(fileName)
+		if err != nil {
+			panic(err)
+		}
+		defer file.Close()
+		err = templateFile.Execute(file, templateField)
+		if err != nil {
+			return nil, errors.New("生成控制器的文件失败:" + err.Error())
+		}
+		// 关闭文件
+		file.Close()
 	}
+
 	return resp, nil
 }
 
-func Logic(data *types.GenerateType) (map[string]string, error) {
+// 生成逻辑层
+func generateLogic(data *types.GenerateType) (map[string]string, error) {
 	resp := make(map[string]string)
 
 	if data.Logic {
@@ -116,11 +151,42 @@ func Logic(data *types.GenerateType) (map[string]string, error) {
 			return nil, errors.New("生成逻辑的delete方法失败:" + err.Error())
 		}
 		resp["delete"] = deleteStr
+
+		// 开始合成生成页面
+		templateField := tpl.TemplateLogic{
+			Package:      resp["package"],
+			ClassTitle:   data.ClassTitle,
+			ListMethod:   resp["list"],
+			CreateMethod: resp["create"],
+			UpdateMethod: resp["update"],
+			DetailMethod: "",
+		}
+
+		templateFile, err := template.New("logic_template").Parse(tpl.CONTROLLER)
+		if err != nil {
+			return nil, errors.New("生成逻辑层的模板失败:" + err.Error())
+		}
+
+		// 开始输出文件
+		fileName := data.ClassTitle + "Logic.php"
+		file, err := os.Create(fileName)
+		if err != nil {
+			panic(err)
+		}
+		defer file.Close()
+		err = templateFile.Execute(file, templateField)
+		if err != nil {
+			return nil, errors.New("生成逻辑层的文件失败:" + err.Error())
+		}
+		// 关闭文件
+		file.Close()
 	}
+
 	return resp, nil
 }
 
-func Model(data *types.GenerateType) (map[string]string, error) {
+// 生成模型层
+func generateModel(data *types.GenerateType) (map[string]string, error) {
 	resp := make(map[string]string)
 
 	if data.Model {

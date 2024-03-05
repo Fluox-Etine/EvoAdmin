@@ -15,7 +15,7 @@ func UpdateController(data *types.GenerateType) (string, error) {
 			"     */\n"+
 			"    public function update(Request $request): Response\n"+
 			"    {\n"+
-			"        if ((new %s())->update($request->post())) {\n"+
+			"        if (new %s())->update($request->post())) {\n"+
 			"            return renderSuccess('更新成功');\n"+
 			"        }\n"+
 			"        return renderError('更新失败');\n "+

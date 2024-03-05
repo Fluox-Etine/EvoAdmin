@@ -13,12 +13,12 @@ func UpdateLogic(data *types.GenerateType) (string, error) {
 			"     * @return bool\n"+
 			"     * @throws RespBusinessException\n"+
 			"     */\n"+
-			"    public function create(array $params): bool\n"+
+			"    public function update(array $params): bool\n"+
 			"    {\n"+
 			"        try {\n"+
 			"            // TODO 处理数据\n"+
 			"            $data = $params;\n"+
-			"            $where = [%s::primaryKey => $parmas['%s']\n"+
+			"            $where = [%s::primaryKey => $params['%s']\n"+
 			"            return (new %s())->update($data,$where) != false;\n"+
 			"        } catch (\\Exception $e) {\n"+
 			"            throw new RespBusinessException($e->getMessage());\n"+
