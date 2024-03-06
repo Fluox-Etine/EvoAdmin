@@ -3,14 +3,17 @@ package main
 import (
 	"fmt"
 	"generator/core"
+	"generator/core/config"
+	"generator/global"
 )
 
 func main() {
-	conf, err := core.ViperReadConf()
+	conf, err := config.ViperReadConf()
 	if err != nil {
 		panic(err)
 	}
 
+	global.Conf = conf
 	// 配置加载成功
 	fmt.Println("conf:", conf)
 

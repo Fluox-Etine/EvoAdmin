@@ -2,6 +2,7 @@ package core
 
 import (
 	"fmt"
+	"generator/core/config"
 	"generator/route"
 	"github.com/gin-gonic/gin"
 	"os"
@@ -9,7 +10,7 @@ import (
 	"syscall"
 )
 
-func NewHttp(conf *HTTP) {
+func NewHttp(conf *config.Http) {
 	// 创建gin实例
 	r := gin.Default()
 

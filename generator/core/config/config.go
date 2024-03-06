@@ -1,4 +1,4 @@
-package core
+package config
 
 import (
 	"github.com/spf13/viper"
@@ -6,13 +6,19 @@ import (
 
 // Model 系统配置模型
 type Model struct {
-	Http HTTP `json:"http"`
+	Http      Http      `json:"http"`
+	Generator Generator `json:"generator"`
 }
 
-// HTTP 系统配置
-type HTTP struct {
+// Http 系统配置
+type Http struct {
 	Port string `json:"port"` // 端口 8089  别问为什么是8089字符串 另外一边不想处理
 	Mode string `json:"mode"` // 模式 运行模式 debug｜release
+}
+
+// Generator 生成器配置
+type Generator struct {
+	PathOutput string `json:"path_output"`
 }
 
 // ViperReadConf 读取配置文件

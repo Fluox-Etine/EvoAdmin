@@ -3,14 +3,17 @@ package generator
 import (
 	"errors"
 	"fmt"
+	"generator/global"
 	"generator/internal/logic/generator/controller"
 	"generator/internal/logic/generator/logic"
 	"generator/internal/logic/generator/model"
 	"generator/internal/types"
 	"generator/internal/types/tpl"
 	"os"
+	"path/filepath"
 	"strings"
 	"text/template"
+	"time"
 )
 
 func GenerateLogic(data *types.GenerateType) error {
@@ -27,7 +30,11 @@ func GenerateLogic(data *types.GenerateType) error {
 		// 处理路径前缀只是取第一个
 		data.PathPrefix = strings.ToLower(classNameArray[0])
 	}
-
+	// 获取当前日期，并格式化为 YYYYMMDD
+	date := time.Now().Format("20060102")
+	// 获取当前时间戳（纳秒级）
+	timestamp := time.Now().UnixNano()
+	data.PathOutput = fmt.Sprintf("%s/%s/%d", global.Conf.Generator.PathOutput, date, timestamp)
 	controllerStr, err := generateController(data)
 	if err != nil {
 		return err
@@ -107,7 +114,20 @@ func generateController(data *types.GenerateType) (map[string]string, error) {
 		}
 
 		// 开始输出文件
-		fileName := data.ClassTitle + "Controller.php"
+		path := filepath.Join(data.PathOutput, "app", data.Multiapp, "controller")
+		if data.PathPrefix != "" {
+			path = filepath.Join(data.PathOutput, "app", data.Multiapp, "controller", data.PathPrefix)
+		}
+		// 判断这个目录是否存在
+		if _, err := os.Stat(path); os.IsNotExist(err) {
+			// 如果不存在就创建
+			err := os.MkdirAll(path, os.ModePerm)
+			if err != nil {
+				return nil, errors.New("生成控制器的文件夹失败:" + err.Error())
+			}
+		}
+		fileName := filepath.Join(path, data.ClassTitle+"Controller.php")
+
 		file, err := os.Create(fileName)
 		if err != nil {
 			panic(err)
@@ -182,7 +202,20 @@ func generateLogic(data *types.GenerateType) (map[string]string, error) {
 		}
 
 		// 开始输出文件
-		fileName := data.ClassTitle + "Logic.php"
+		path := filepath.Join(data.PathOutput, "app", data.Multiapp, "logic")
+		if data.PathPrefix != "" {
+			path = filepath.Join(data.PathOutput, "app", data.Multiapp, "logic", data.PathPrefix)
+		}
+		// 判断这个目录是否存在
+		if _, err := os.Stat(path); os.IsNotExist(err) {
+			// 如果不存在就创建
+			err := os.MkdirAll(path, os.ModePerm)
+			if err != nil {
+				return nil, errors.New("生成逻辑层的文件夹失败:" + err.Error())
+			}
+		}
+		fileName := filepath.Join(path, data.ClassTitle+"Logic.php")
+
 		file, err := os.Create(fileName)
 		if err != nil {
 			panic(err)
@@ -229,8 +262,18 @@ func generateModel(data *types.GenerateType) (map[string]string, error) {
 			return nil, errors.New("生成逻辑层的模板失败:" + err.Error())
 		}
 
-		// 开始输出文件
-		fileName := data.ClassTitle + "Model.php"
+		path := filepath.Join(data.PathOutput, "common", "model")
+		// 判断这个目录是否存在
+		if _, err := os.Stat(path); os.IsNotExist(err) {
+			// 如果不存在就创建
+			err := os.MkdirAll(path, os.ModePerm)
+			if err != nil {
+				return nil, errors.New("生成逻辑层的文件夹失败:" + err.Error())
+			}
+		}
+
+		fileName := filepath.Join(path, data.ClassTitle+"Model.php")
+
 		file, err := os.Create(fileName)
 		if err != nil {
 			panic(err)

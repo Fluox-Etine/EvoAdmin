@@ -1,3 +1,7 @@
 http:
   port: 8091
   mode: debug
+
+
+generator:
+  pathOutput: ./runtime/generate  # 相对路径 ./runtime/generate   #绝对路径 /Users/xxx/xxx/runtime/generate

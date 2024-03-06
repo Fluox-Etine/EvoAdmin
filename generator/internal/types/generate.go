@@ -15,8 +15,9 @@ type GenerateType struct {
 	ClassText string `json:"class_text"` // 类中文注释名称
 	Multiapp  string `json:"multiapp"`   // 应用模式
 	// 程序附带配置信息
-	PathPrefix string `json:"path_prefix"` // 路径前缀
-	ClassTitle string `json:"class_title"` // 处理类名称（大写）
+	PathPrefix string `json:"path_prefix,omitempty"` // 路径前缀
+	ClassTitle string `json:"class_title,omitempty"` // 处理类名称（大写）
+	PathOutput string `json:"path_output,omitempty"` // 生成文件夹路径
 	// 数据库部分信息
 	TableName     string `json:"table_name"`      // 表名
 	PrimaryKey    string `json:"primary_key"`     // 主键
