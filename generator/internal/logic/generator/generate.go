@@ -209,6 +209,39 @@ func generateModel(data *types.GenerateType) (map[string]string, error) {
 			return nil, errors.New("生成model的失败:" + err.Error())
 		}
 		resp["package"] = modelStr
+
+		// 开始合成生成页面
+		templateField := tpl.TemplateModel{
+			Package:     resp["package"],
+			ClassTitle:  data.ClassTitle,
+			SoftDeletes: "",
+			TableName:   data.TableName,
+			PrimaryKey:  data.PrimaryKey,
+		}
+
+		// 判断是否有软删除
+		if data.IsSoftDeletes {
+			templateField.SoftDeletes = "\n" +
+				"	use SoftDeletes;\n"
+		}
+		templateFile, err := template.New("logic_template").Parse(tpl.MODEL)
+		if err != nil {
+			return nil, errors.New("生成逻辑层的模板失败:" + err.Error())
+		}
+
+		// 开始输出文件
+		fileName := data.ClassTitle + "Model.php"
+		file, err := os.Create(fileName)
+		if err != nil {
+			panic(err)
+		}
+		defer file.Close()
+		err = templateFile.Execute(file, templateField)
+		if err != nil {
+			return nil, errors.New("生成逻辑层的文件失败:" + err.Error())
+		}
+		// 关闭文件
+		file.Close()
 	}
 	return resp, nil
 }

@@ -4,9 +4,8 @@ var MODEL = `
 <?php
 declare (strict_types=1);
 {{.Package}}
-class {{.ClassTitle}} extends Base
+class {{.ClassTitle}} extends Model
 {
-	
 	{{.SoftDeletes}}
     /**
      * The table associated with the model.
@@ -23,3 +22,11 @@ class {{.ClassTitle}} extends Base
     protected $primaryKey = '{{.PrimaryKey}}';
 }
 `
+
+type TemplateModel struct {
+	Package     string
+	ClassTitle  string
+	SoftDeletes string
+	TableName   string
+	PrimaryKey  string
+}
