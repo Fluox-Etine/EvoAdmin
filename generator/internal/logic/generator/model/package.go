@@ -11,7 +11,8 @@ func PackageModel(data *types.GenerateType) (string, error) {
 	if data.IsSoftDeletes {
 		modelStr += "use Illuminate\\Database\\Eloquent\\SoftDeletes;\n"
 	}
-	modelStr += "### " + data.ClassText + "模块模型层"
+	modelStr += "\n" +
+		"### " + data.ClassText + "模块模型层"
 
 	return modelStr, nil
 }
