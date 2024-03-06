@@ -5,16 +5,16 @@ import (
 	"generator/internal/types"
 )
 
-func DeleteLogic(data *types.GenerateType) (string, error) {
+func DetailLogic(data *types.GenerateType) (string, error) {
 	str := fmt.Sprintf(
 		"    /**\n"+
-			"     * 删除操作\n"+
+			"     * 详情操作\n"+
 			"     * @param array $params\n"+
 			"     * @return mixed\n"+
 			"     */\n"+
 			"    public function getDetail(array $params): mixed\n"+
 			"    {\n"+
-			"        return %s::where([%s::primaryKey => $params['id']])->delete();\n"+
+			"        return %s::where([%s::primaryKey => $params['id']])->first();\n"+
 			"    }",
 		data.ClassTitle+"Model",
 		data.ClassTitle+"Model",

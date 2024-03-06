@@ -16,6 +16,8 @@ class {{.ClassTitle}}
 
 {{.DetailMethod}}
 
+{{.DeleteMethod}}
+
 }
 `
 
@@ -26,4 +28,5 @@ type TemplateLogic struct {
 	DetailMethod string
 	Package      string
 	ClassTitle   string
+	DeleteMethod string
 }

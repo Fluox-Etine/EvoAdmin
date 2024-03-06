@@ -15,6 +15,9 @@ class {{.ClassTitle}}
 {{.UpdateMethod}}
 
 {{.DetailMethod}}
+
+{{.DeleteMethod}}
+
 }
 `
 
@@ -26,4 +29,5 @@ type TemplateController struct {
 	CreateMethod string
 	UpdateMethod string
 	DetailMethod string
+	DeleteMethod string
 }

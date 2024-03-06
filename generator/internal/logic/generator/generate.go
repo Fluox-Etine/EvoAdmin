@@ -84,6 +84,12 @@ func generateController(data *types.GenerateType) (map[string]string, error) {
 		}
 		resp["update"] = updateStr
 
+		detailStr, err := controller.DetailController(data)
+		if err != nil {
+			return nil, errors.New("生成控制器的detail方法失败:" + err.Error())
+		}
+		resp["detail"] = detailStr
+
 		// 开始合成生成页面
 		templateField := tpl.TemplateController{
 			Package:      resp["package"],
@@ -91,7 +97,8 @@ func generateController(data *types.GenerateType) (map[string]string, error) {
 			ListMethod:   resp["list"],
 			CreateMethod: resp["create"],
 			UpdateMethod: resp["update"],
-			DetailMethod: "",
+			DetailMethod: resp["detail"],
+			DeleteMethod: resp["delete"],
 		}
 
 		templateFile, err := template.New("controller_template").Parse(tpl.CONTROLLER)
@@ -152,6 +159,12 @@ func generateLogic(data *types.GenerateType) (map[string]string, error) {
 		}
 		resp["delete"] = deleteStr
 
+		detailStr, err := logic.DetailLogic(data)
+		if err != nil {
+			return nil, errors.New("生成逻辑的detail方法失败:" + err.Error())
+		}
+		resp["detail"] = detailStr
+
 		// 开始合成生成页面
 		templateField := tpl.TemplateLogic{
 			Package:      resp["package"],
@@ -159,7 +172,8 @@ func generateLogic(data *types.GenerateType) (map[string]string, error) {
 			ListMethod:   resp["list"],
 			CreateMethod: resp["create"],
 			UpdateMethod: resp["update"],
-			DetailMethod: "",
+			DetailMethod: resp["detail"],
+			DeleteMethod: resp["delete"],
 		}
 
 		templateFile, err := template.New("logic_template").Parse(tpl.CONTROLLER)
