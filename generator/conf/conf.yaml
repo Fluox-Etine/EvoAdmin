@@ -4,4 +4,4 @@ http:
 
 
 generator:
-  pathOutput: ./runtime/generate  # 相对路径 ./runtime/generate   #绝对路径 /Users/xxx/xxx/runtime/generate
+  pathOutput: /Users/imac/Desktop/my-project/dev/gitee/webman-antdv-admin/webman  # 相对路径 ./runtime/generate   #绝对路径 /Users/xxx/xxx/runtime/generate

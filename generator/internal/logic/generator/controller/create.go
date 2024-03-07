@@ -15,7 +15,7 @@ func CreateController(data *types.GenerateType) (string, error) {
 			"     */\n"+
 			"    public function create(Request $request): Response\n"+
 			"    {\n"+
-			"        if (new %s())->create($request->post())) {\n"+
+			"        if ((new %s())->create($request->post())) {\n"+
 			"            return renderSuccess('添加成功');\n"+
 			"        }\n"+
 			"        return renderError('添加失败');\n "+

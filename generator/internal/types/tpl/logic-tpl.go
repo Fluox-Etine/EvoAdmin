@@ -1,8 +1,6 @@
 package tpl
 
-var LOGIC = `
-<?php
-declare (strict_types=1);
+var LOGIC = `<?php
 
 {{.Package}}
 class {{.ClassTitle}}

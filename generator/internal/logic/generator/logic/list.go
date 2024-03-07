@@ -23,10 +23,9 @@ func ListLogic(data *types.GenerateType) (string, error) {
 			"    /**\n"+
 			"     * 列表操作\n"+
 			"     * @param array $params\n"+
-			"     * @return Paginator\n"+
-			"     * @throws DbException\n"+
+			"     * @return LengthAwarePaginator\n"+
 			"     */\n"+
-			"    public function list(array $params): Paginator\n"+
+			"    public function list(array $params): LengthAwarePaginator\n"+
 			"    {\n"+
 			"        $where = $this->setSearch($params);\n"+
 			"        return (new %s())->where($where)->paginate($params['limit']);\n"+

@@ -100,7 +100,7 @@ func generateController(data *types.GenerateType) (map[string]string, error) {
 		// 开始合成生成页面
 		templateField := tpl.TemplateController{
 			Package:      resp["package"],
-			ClassTitle:   data.ClassTitle,
+			ClassTitle:   data.ClassTitle + "Controller",
 			ListMethod:   resp["list"],
 			CreateMethod: resp["create"],
 			UpdateMethod: resp["update"],
@@ -188,7 +188,7 @@ func generateLogic(data *types.GenerateType) (map[string]string, error) {
 		// 开始合成生成页面
 		templateField := tpl.TemplateLogic{
 			Package:      resp["package"],
-			ClassTitle:   data.ClassTitle,
+			ClassTitle:   data.ClassTitle + "Logic",
 			ListMethod:   resp["list"],
 			CreateMethod: resp["create"],
 			UpdateMethod: resp["update"],
@@ -246,7 +246,7 @@ func generateModel(data *types.GenerateType) (map[string]string, error) {
 		// 开始合成生成页面
 		templateField := tpl.TemplateModel{
 			Package:     resp["package"],
-			ClassTitle:  data.ClassTitle,
+			ClassTitle:  data.ClassTitle + "Model",
 			SoftDeletes: "",
 			TableName:   data.TableName,
 			PrimaryKey:  data.PrimaryKey,
@@ -262,7 +262,11 @@ func generateModel(data *types.GenerateType) (map[string]string, error) {
 			return nil, errors.New("生成逻辑层的模板失败:" + err.Error())
 		}
 
-		path := filepath.Join(data.PathOutput, "common", "model")
+		//path := filepath.Join(data.PathOutput, "common", "model")
+		path := filepath.Join(data.PathOutput, "app", "common", "model")
+		if data.PathPrefix != "" {
+			path = filepath.Join(data.PathOutput, "app", "common", "model", data.PathPrefix)
+		}
 		// 判断这个目录是否存在
 		if _, err := os.Stat(path); os.IsNotExist(err) {
 			// 如果不存在就创建

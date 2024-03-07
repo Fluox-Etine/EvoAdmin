@@ -15,11 +15,9 @@ func DetailController(data *types.GenerateType) (string, error) {
 			"     */\n"+
 			"    public function detail(Request $request): Response\n"+
 			"    {\n"+
-			"        if (new %s())->detail($request->get())) {\n"+
-			"            return renderSuccess(compact('detail'));\n"+
-			"        }\n"+
-			"        return renderError('获取失败');\n "+
-			"   }",
+			"        $detail = (new %s())->detail($request->get());\n"+
+			"        return renderSuccess(compact('detail'));\n"+
+			"    }",
 		data.ClassTitle+"Logic",
 	)
 	return str, nil

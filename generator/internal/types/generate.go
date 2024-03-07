@@ -6,6 +6,7 @@ type GenerateType struct {
 	UpdateAction bool `json:"update_action"` // 是否创建更新方法
 	DeleteAction bool `json:"delete_action"` // 是否创建删除方法
 	ListAction   bool `json:"list_action"`   // 是否创建列表方法
+	DetailAction bool `json:"detail_action"` // 是否创建详情方法
 	// 控制器 逻辑层 模型层
 	Controller bool `json:"controller"`
 	Model      bool `json:"model"`

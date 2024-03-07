@@ -18,15 +18,15 @@ func UpdateLogic(data *types.GenerateType) (string, error) {
 			"        try {\n"+
 			"            // TODO 处理数据\n"+
 			"            $data = $params;\n"+
-			"            $where = [%s::primaryKey => $params['%s']\n"+
+			"            $where = [%s::PrimaryKey => $params['%s']]\n"+
 			"            return (new %s())->update($data,$where) != false;\n"+
 			"        } catch (\\Exception $e) {\n"+
 			"            throw new RespBusinessException($e->getMessage());\n"+
 			"        }\n"+
 			"    }",
 		data.ClassTitle+"Model",
-		data.ClassTitle+"Model",
 		data.PrimaryKey,
+		data.ClassTitle+"Model",
 	)
 
 	return str, nil

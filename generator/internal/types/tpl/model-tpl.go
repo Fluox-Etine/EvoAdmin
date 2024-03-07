@@ -1,13 +1,14 @@
 package tpl
 
-var MODEL = `
-<?php
-declare (strict_types=1);
+var MODEL = `<?php
 
 {{.Package}}
 class {{.ClassTitle}} extends Model
 {
 	{{.SoftDeletes}}
+
+	const PrimaryKey = '{{.PrimaryKey}}';
+
     /**
      * The table associated with the model.
      *

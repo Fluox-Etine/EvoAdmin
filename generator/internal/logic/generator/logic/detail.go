@@ -12,9 +12,9 @@ func DetailLogic(data *types.GenerateType) (string, error) {
 			"     * @param array $params\n"+
 			"     * @return mixed\n"+
 			"     */\n"+
-			"    public function getDetail(array $params): mixed\n"+
+			"    public function detail(array $params): mixed\n"+
 			"    {\n"+
-			"        return %s::where([%s::primaryKey => $params['id']])->first();\n"+
+			"        return %s::where([%s::PrimaryKey => $params['id']])->first();\n"+
 			"    }",
 		data.ClassTitle+"Model",
 		data.ClassTitle+"Model",

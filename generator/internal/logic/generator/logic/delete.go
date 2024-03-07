@@ -10,11 +10,11 @@ func DeleteLogic(data *types.GenerateType) (string, error) {
 		"    /**\n"+
 			"     * 删除操作\n"+
 			"     * @param array $params\n"+
-			"     * @return mixed\n"+
+			"     * @return bool\n"+
 			"     */\n"+
-			"    public function getDetail(array $params): mixed\n"+
+			"    public function setDelete(array $params): bool\n"+
 			"    {\n"+
-			"        return %s::where([%s::primaryKey => $params['id']])->delete();\n"+
+			"        return %s::where([%s::PrimaryKey => $params['id']])->delete() != false;\n"+
 			"    }",
 		data.ClassTitle+"Model",
 		data.ClassTitle+"Model",
