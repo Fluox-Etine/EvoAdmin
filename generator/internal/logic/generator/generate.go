@@ -35,6 +35,8 @@ func GenerateLogic(data *types.GenerateType) error {
 	// 获取当前时间戳（纳秒级）
 	timestamp := time.Now().UnixNano()
 	data.PathOutput = fmt.Sprintf("%s/%s/%d", global.Conf.Generator.PathOutput, date, timestamp)
+
+	// TODO 生成有问题
 	controllerStr, err := generateController(data)
 	if err != nil {
 		return err
