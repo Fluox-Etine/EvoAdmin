@@ -9,10 +9,15 @@ func PackageController(data *types.GenerateType) (string, error) {
 	var controllerStr string
 	if data.PathPrefix == "" {
 		controllerStr = "namespace app\\" + data.Multiapp + "\\controller;\n"
-		controllerStr += "use app\\" + data.Multiapp + "\\logic\\" + data.ClassTitle + "Logic;\n"
+
+		if data.CreateAction || data.ListAction || data.DetailAction || data.UpdateAction || data.DeleteAction {
+			controllerStr += "use app\\" + data.Multiapp + "\\logic\\" + data.ClassTitle + "Logic;\n"
+		}
 	} else {
 		controllerStr = "namespace app\\" + data.Multiapp + "\\controller\\" + data.PathPrefix + ";\n"
-		controllerStr += "use app\\" + data.Multiapp + "\\logic\\" + data.PathPrefix + "\\" + data.ClassTitle + "Logic;\n"
+		if data.CreateAction || data.ListAction || data.DetailAction || data.UpdateAction || data.DeleteAction {
+			controllerStr += "use app\\" + data.Multiapp + "\\logic\\" + data.PathPrefix + "\\" + data.ClassTitle + "Logic;\n"
+		}
 	}
 
 	controllerStr += "use support\\exception\\RespBusinessException;\n" +

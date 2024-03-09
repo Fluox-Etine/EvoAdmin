@@ -69,35 +69,45 @@ func generateController(data *types.GenerateType) (map[string]string, error) {
 		}
 		resp["package"] = packageStr
 
-		createStr, err := controller.CreateController(data)
-		if err != nil {
-			return nil, errors.New("生成控制器的create方法失败:" + err.Error())
+		if data.CreateAction {
+			createStr, err := controller.CreateController(data)
+			if err != nil {
+				return nil, errors.New("生成控制器的create方法失败:" + err.Error())
+			}
+			resp["create"] = createStr
 		}
-		resp["create"] = createStr
 
-		listStr, err := controller.ListController(data)
-		if err != nil {
-			return nil, errors.New("生成控制器的list方法失败:" + err.Error())
+		if data.ListAction {
+			listStr, err := controller.ListController(data)
+			if err != nil {
+				return nil, errors.New("生成控制器的list方法失败:" + err.Error())
+			}
+			resp["list"] = listStr
 		}
-		resp["list"] = listStr
 
-		deleteStr, err := controller.DeleteController(data)
-		if err != nil {
-			return nil, errors.New("生成控制器的delete方法失败:" + err.Error())
+		if data.DeleteAction {
+			deleteStr, err := controller.DeleteController(data)
+			if err != nil {
+				return nil, errors.New("生成控制器的delete方法失败:" + err.Error())
+			}
+			resp["delete"] = deleteStr
 		}
-		resp["delete"] = deleteStr
 
-		updateStr, err := controller.UpdateController(data)
-		if err != nil {
-			return nil, errors.New("生成控制器的update方法失败:" + err.Error())
+		if data.UpdateAction {
+			updateStr, err := controller.UpdateController(data)
+			if err != nil {
+				return nil, errors.New("生成控制器的update方法失败:" + err.Error())
+			}
+			resp["update"] = updateStr
 		}
-		resp["update"] = updateStr
 
-		detailStr, err := controller.DetailController(data)
-		if err != nil {
-			return nil, errors.New("生成控制器的detail方法失败:" + err.Error())
+		if data.DetailAction {
+			detailStr, err := controller.DetailController(data)
+			if err != nil {
+				return nil, errors.New("生成控制器的detail方法失败:" + err.Error())
+			}
+			resp["detail"] = detailStr
 		}
-		resp["detail"] = detailStr
 
 		// 开始合成生成页面
 		templateField := tpl.TemplateController{
@@ -157,35 +167,45 @@ func generateLogic(data *types.GenerateType) (map[string]string, error) {
 		}
 		resp["package"] = packageStr
 
-		createStr, err := logic.CreateLogic(data)
-		if err != nil {
-			return nil, errors.New("生成逻辑的create方法失败:" + err.Error())
+		if data.CreateAction {
+			createStr, err := logic.CreateLogic(data)
+			if err != nil {
+				return nil, errors.New("生成逻辑的create方法失败:" + err.Error())
+			}
+			resp["create"] = createStr
 		}
-		resp["create"] = createStr
 
-		listStr, err := logic.ListLogic(data)
-		if err != nil {
-			return nil, errors.New("生成逻辑的list方法失败:" + err.Error())
+		if data.ListAction {
+			listStr, err := logic.ListLogic(data)
+			if err != nil {
+				return nil, errors.New("生成逻辑的list方法失败:" + err.Error())
+			}
+			resp["list"] = listStr
 		}
-		resp["list"] = listStr
 
-		updateStr, err := logic.UpdateLogic(data)
-		if err != nil {
-			return nil, errors.New("生成逻辑的update方法失败:" + err.Error())
+		if data.UpdateAction {
+			updateStr, err := logic.UpdateLogic(data)
+			if err != nil {
+				return nil, errors.New("生成逻辑的update方法失败:" + err.Error())
+			}
+			resp["update"] = updateStr
 		}
-		resp["update"] = updateStr
 
-		deleteStr, err := logic.DeleteLogic(data)
-		if err != nil {
-			return nil, errors.New("生成逻辑的delete方法失败:" + err.Error())
+		if data.DeleteAction {
+			deleteStr, err := logic.DeleteLogic(data)
+			if err != nil {
+				return nil, errors.New("生成逻辑的delete方法失败:" + err.Error())
+			}
+			resp["delete"] = deleteStr
 		}
-		resp["delete"] = deleteStr
 
-		detailStr, err := logic.DetailLogic(data)
-		if err != nil {
-			return nil, errors.New("生成逻辑的detail方法失败:" + err.Error())
+		if data.DetailAction {
+			detailStr, err := logic.DetailLogic(data)
+			if err != nil {
+				return nil, errors.New("生成逻辑的detail方法失败:" + err.Error())
+			}
+			resp["detail"] = detailStr
 		}
-		resp["detail"] = detailStr
 
 		// 开始合成生成页面
 		templateField := tpl.TemplateLogic{
