@@ -10,7 +10,6 @@ class FooController
     {
         return response('hello index');
     }
-
     public function hello(Request $request)
     {
         throw new  RespBusinessException("系统错误",558);
