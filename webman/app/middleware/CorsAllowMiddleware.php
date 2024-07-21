@@ -20,8 +20,6 @@ class CorsAllowMiddleware implements MiddlewareInterface
             'Access-Control-Allow-Methods' => $request->header('access-control-request-method', '*'),
             'Access-Control-Allow-Headers' => $request->header('access-control-request-headers', '*'),
         ]);
-
-
         $response->header('Server','nginx');
         return $response;
     }
