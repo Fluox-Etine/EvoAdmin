@@ -25,9 +25,13 @@
   },
   "require": {
     "php": ">=8.1",
+    "ext-mbstring": "*",
+    "ext-pdo": "*",
     "workerman/webman-framework": "^1.5.0",
     "monolog/monolog": "^2.0",
-    "ext-mbstring": "*"
+    "illuminate/database": "^10.48",
+    "illuminate/redis": "^10.48",
+    "illuminate/events": "^10.48"
   },
   "suggest": {
     "ext-event": "For better performance. "
