@@ -1,7 +1,7 @@
 <?php
 declare (strict_types=1);
 
-namespace app\{MODULE_NAME}\controller{PACKAGE_NAME};
+namespace app\http\{MODULE_NAME}\controller{PACKAGE_NAME};
 
 use support\Request;
 use support\Response;
