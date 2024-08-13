@@ -1,7 +1,7 @@
 <?php
 declare (strict_types=1);
 
-namespace app\http\{MODULE_NAME}\controller{PACKAGE_NAME};
+{{NAMESPACE}
 
 use support\Request;
 use support\Response;
@@ -10,7 +10,7 @@ use support\Response;
 /**
  * {CLASS_COMMENT}
  * Class {UPPER_CAMEL_NAME}Controller
- * @package app\{MODULE_NAME}\controller{PACKAGE_NAME}
+ * @package app\http\{MODULE_NAME}\controller{PACKAGE_NAME}
  */
 class {UPPER_CAMEL_NAME}Controller
 {

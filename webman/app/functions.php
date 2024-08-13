@@ -225,7 +225,6 @@ function bcsub_tools($leftOperand, $rightOperand, int $scale = 2): string
 }
 
 
-
 /**
  * 下划线转驼峰
  * @param string $camelize_words
@@ -292,4 +291,14 @@ function str_substr($str, int $length = 30): bool|string
         $str = mb_substr($str, 0, $length);
     }
     return $str;
+}
+
+/**
+ * 文件夹不存在则创建
+ * @param string $path
+ * @return void
+ */
+function check_dir(string $path): void
+{
+    !is_dir($path) && mkdir($path, 0755, true);
 }

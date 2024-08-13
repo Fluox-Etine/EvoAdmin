@@ -16,6 +16,21 @@ class GenerateService
             $tableName = self::getNoPrefixTableName($params['table_name']);
             // 包名
             $upperCameName = self::underscoreToCamelCase($tableName);
+            // 时间
+            $date = date('Y/m/d H:i');
+            // 类注释
+            $classComment = $params['class_comment'];
+            // 包名
+            $packageName = self::getPackageNameContent($classDir);
+
+            $tmpController = ControllerService::handleController([
+                'moduleName' => $moduleName,
+                'classDir' => $classDir,
+                'tableName' => $tableName,
+                'upperCameName' => $upperCameName,
+                'classComment' => $classComment,
+                'packageName' => $packageName,
+            ]);
         } catch (\Throwable $e) {
             var_dump('GenerateService===getMessage' . $e->getMessage());
             var_dump('GenerateService===getFile' . $e->getFile());
@@ -62,7 +77,59 @@ class GenerateService
         if ($firstCharacterUpper) {
             $result[0] = strtoupper($result[0]);
         }
-
         return $result;
+    }
+
+
+    /**
+     * 获取包名
+     * @param string $classDir
+     * @return string
+     */
+    private static function getPackageNameContent(string $classDir): string
+    {
+        return !empty($classDir) ? '\\' . $classDir : '';
+    }
+
+
+    /**
+     * 获取模板路径
+     * @param string $templateName
+     * @return string
+     */
+    public static function getTemplatePath(string $templateName): string
+    {
+        return config('env.generate.template_dir') . $templateName . '.stub';
+    }
+
+
+    /**
+     * 获取命名空间内容
+     * @param string $moduleName // 模块名
+     * @param string $classDir // 类目录
+     * @param string $component
+     * @return string
+     */
+    public static function getNameSpaceContent(string $moduleName, string $classDir, string $component): string
+    {
+        $lowerComponent = strtolower($component);
+        if (empty($classDir)) {
+            return "namespace app\\http\\$moduleName\\$lowerComponent;";
+        }
+        $ucfComponent = ucfirst($component);
+        return "namespace app\\http\\$moduleName\\{$lowerComponent}\\" . $classDir . $ucfComponent . ";";
+    }
+
+
+    /**
+     * 替换文件数据
+     * @param array $needReplace
+     * @param array $waitReplace
+     * @param string $template
+     * @return array|false|string|string[]
+     */
+    public static function replaceFileData(array $needReplace, array $waitReplace, string $template): array|bool|string
+    {
+        return str_replace($needReplace, $waitReplace, file_get_contents($template));
     }
 }

@@ -1,7 +1,7 @@
 <?php
 declare (strict_types=1);
 
-namespace app\http\{MODULE_NAME}\logic{PACKAGE_NAME};
+{{NAMESPACE}
 
 {USE}
 

@@ -5,19 +5,33 @@ namespace app\http\generate\service;
 class ControllerService
 {
 
-
-    /**
-     * 获取命名空间内容
-     * @param string $moduleName // 模块名
-     * @param string $classDir // 类目录
-     * @return string
-     */
-    private static function getNameSpaceContent(string $moduleName, string $classDir): string
+    public static function handleController(array $params)
     {
-        if (empty($classDir)) {
-            return "namespace app\\http\\$moduleName\\controller;";
-        }
-        return "namespace app\\http\\$moduleName\\controller\\" . $classDir . "Controller;";
+        // 需要替换的变量
+        $needReplace = [
+            '{NAMESPACE}',
+            '{USE}',
+            '{CLASS_COMMENT}',
+            '{UPPER_CAMEL_NAME}',
+            '{MODULE_NAME}',
+            '{PACKAGE_NAME}',
+        ];
+
+        // 等待替换的内容
+        $waitReplace = [
+            GenerateService::getNameSpaceContent($params['moduleName'], $params['classDir'], 'controller'),
+            self::getUseContent($params['moduleName'], $params['classDir'], $params['upperCameName']),
+            $params['classComment'],
+            $params['upperCameName'],
+            $params['moduleName'],
+            $params['packageName'],
+        ];
+
+        $templatePath = GenerateService::getTemplatePath('php/controller');
+
+        // 替换内容
+        $content = GenerateService::replaceFileData($needReplace, $waitReplace, $templatePath);
+        return true;
     }
 
 
