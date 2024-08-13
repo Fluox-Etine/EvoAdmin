@@ -58,6 +58,7 @@ class LogicService
      * @param string $notes
      * @param string $date
      * @param string $upperCameName
+     * @param string $pk
      * @return string
      */
     private static function handleFunctions(array $method, string $notes, string $date, string $upperCameName, string $pk): string
@@ -78,19 +79,86 @@ class LogicService
         return $content;
     }
 
-    private static function handleLists(string $notes, string $date, string $upperCameName): string
+    private static function handleLists(string $notes, string $date, string $upperCameName, array $queryColumn): string
     {
-
+        // 需要替换的变量
+        $needReplace = [
+            '{NOTES}',
+            '{DATE}',
+            '{UPPER_CAMEL_NAME}',
+            'QUERY_CONDITION'
+        ];
+        $queryCondition = self::getFormatQueryContent($queryColumn);
+        // 等待替换的内容
+        $waitReplace = [
+            $notes,
+            $date,
+            $upperCameName,
+            $queryCondition
+        ];
+        $templatePath = GenerateService::getTemplatePath('php/logic/listsLogic');
+        return GenerateService::replaceFileData($needReplace, $waitReplace, $templatePath);
     }
 
-    private static function handleCreate(string $notes, string $date, string $upperCameName): string
+    /**
+     * 处理创建方法
+     * @param string $notes
+     * @param string $date
+     * @param string $upperCameName
+     * @param array $createColumn
+     * @return string
+     */
+    private static function handleCreate(string $notes, string $date, string $upperCameName, array $createColumn): string
     {
-
+        // 需要替换的变量
+        $needReplace = [
+            '{NOTES}',
+            '{DATE}',
+            '{UPPER_CAMEL_NAME}',
+            'CREATE_DATA'
+        ];
+        $updateData = self::getFormatDataContent($createColumn, 'create');
+        // 等待替换的内容
+        $waitReplace = [
+            $notes,
+            $date,
+            $upperCameName,
+            $updateData
+        ];
+        $templatePath = GenerateService::getTemplatePath('php/logic/createLogic');
+        return GenerateService::replaceFileData($needReplace, $waitReplace, $templatePath);
     }
 
-    private static function handleUpdate(string $notes, string $date, string $upperCameName): string
+    /**
+     * 处理更新方法
+     * @param string $notes
+     * @param string $date
+     * @param string $upperCameName
+     * @param string $pk
+     * @param array $updateColumn
+     * @return string
+     */
+    private static function handleUpdate(string $notes, string $date, string $upperCameName, string $pk, array $updateColumn): string
     {
-
+        // 需要替换的变量
+        $needReplace = [
+            '{NOTES}',
+            '{DATE}',
+            '{UPPER_CAMEL_NAME}',
+            '{PK}',
+            'UPDATE_DATA'
+        ];
+        $createData = self::getFormatDataContent($updateColumn);
+        // 等待替换的内容
+        $waitReplace = [
+            $notes,
+            $date,
+            $upperCameName,
+            $pk,
+            $createData
+        ];
+        $templatePath = GenerateService::getTemplatePath('php/logic/updateLogic');
+        return GenerateService::replaceFileData($needReplace, $waitReplace, $templatePath);
     }
 
 
@@ -118,7 +186,7 @@ class LogicService
             $upperCameName,
             $pk
         ];
-        $templatePath = GenerateService::getTemplatePath('php/controller/deleteLogic');
+        $templatePath = GenerateService::getTemplatePath('php/logic/deleteLogic');
         return GenerateService::replaceFileData($needReplace, $waitReplace, $templatePath);
     }
 
@@ -150,7 +218,72 @@ class LogicService
             $pk,
             $fields
         ];
-        $templatePath = GenerateService::getTemplatePath('php/controller/detailLogic');
+        $templatePath = GenerateService::getTemplatePath('php/logic/detailLogic');
         return GenerateService::replaceFileData($needReplace, $waitReplace, $templatePath);
+    }
+
+
+    /**
+     *
+     * @param array $tableColumn
+     * @param string $flag
+     * @return string
+     */
+    private static function getFormatDataContent(array $tableColumn, string $flag = ''): string
+    {
+        if (empty($tableColumn)) {
+            return '';
+        }
+        $content = '';
+        foreach ($tableColumn as $column) {
+            $content .= self::formatColumn($column);
+        }
+        if (empty($content)) {
+            return $content;
+        }
+        if ($flag == 'create') {
+            $content .= "'created_at' => " . time() . ',' . PHP_EOL;
+        }
+        $content .= "'updated_at' => " . time();
+        $content = substr($content, 0, -2);
+        return GenerateService::setBlankSpace($content, "                ");
+    }
+
+    /**
+     * 格式化字段
+     * @param array $column
+     * @return string
+     */
+    private static function formatColumn(array $column): string
+    {
+        if ($column['column_type'] == 'int' && $column['view_type'] == 'datetime') {
+            // 物理类型为int，显示类型选择日期的情况
+            $content = "'" . $column['column_name'] . "' => " . 'strtotime($params[' . "'" . $column['column_name'] . "'" . ']),' . PHP_EOL;
+        } else {
+            $content = "'" . $column['column_name'] . "' => " . '$params[' . "'" . $column['column_name'] . "'" . '],' . PHP_EOL;
+        }
+        return $content;
+    }
+
+
+    /**
+     * 获取查询条件
+     * @param array $tableColumn
+     * @return string
+     */
+    private static function getFormatQueryContent(array $tableColumn): string
+    {
+        if (empty($tableColumn)) {
+            return '';
+        }
+        $content = '';
+        foreach ($tableColumn as $column) {
+            $content .= $content = "'" . $column['column_name'] . "' => " . null . ',' . PHP_EOL;
+        }
+        if (empty($content)) {
+            return $content;
+        }
+        $content = substr($content, 0, -2);
+        return GenerateService::setBlankSpace($content, "                ");
     }
 }

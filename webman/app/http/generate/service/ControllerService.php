@@ -215,4 +215,5 @@ class ControllerService
         $templatePath = GenerateService::getTemplatePath('php/controller/detailController');
         return GenerateService::replaceFileData($needReplace, $waitReplace, $templatePath);
     }
+
 }

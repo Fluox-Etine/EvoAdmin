@@ -145,4 +145,20 @@ class GenerateService
 
         return str_replace($needReplace, $waitReplace, file_get_contents($template));
     }
+
+
+    /**
+     * 设置空额占位符
+     * @param $content
+     * @param $blankpace
+     * @return string
+     */
+    public static  function setBlankSpace($content, $blankpace): string
+    {
+        $content = explode(PHP_EOL, $content);
+        foreach ($content as $line => $text) {
+            $content[$line] = $blankpace . $text;
+        }
+        return (implode(PHP_EOL, $content));
+    }
 }
