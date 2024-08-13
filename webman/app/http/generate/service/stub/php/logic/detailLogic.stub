@@ -1,0 +1,19 @@
+
+    /**
+     * {NOTES}详情
+     * @param array $params
+     * @return array
+     * @date {DATE}
+     */
+    public static function handleDelete(array $params): array
+    {
+        try {
+            $detail = {UPPER_CAMEL_NAME}Model::query()->where('{PK}', $params['{PK}'])->select({FIELDS})->first();
+            if(is_null($detail)){
+                // TODO 抛出异常（直接返回，不经过异常）
+            }
+            return $detail->toArray();
+        } catch (\Exception $e) {
+            return false;
+        }
+    }

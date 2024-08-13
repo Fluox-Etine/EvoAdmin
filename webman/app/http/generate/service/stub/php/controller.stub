@@ -1,7 +1,7 @@
 <?php
 declare (strict_types=1);
 
-{{NAMESPACE}
+{NAMESPACE}
 
 use support\Request;
 use support\Response;
@@ -15,5 +15,5 @@ use support\Response;
 class {UPPER_CAMEL_NAME}Controller
 {
 
-
+    {FUNCTIONS}
 }

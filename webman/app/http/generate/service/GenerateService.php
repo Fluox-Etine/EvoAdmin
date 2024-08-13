@@ -22,6 +22,14 @@ class GenerateService
             $classComment = $params['class_comment'];
             // 包名
             $packageName = self::getPackageNameContent($classDir);
+            // curd 方法
+            $methods = [
+                'lists' => $params['lists'],
+                'create' => $params['create'],
+                'update' => $params['update'],
+                'delete' => $params['delete'],
+                'detail' => $params['detail']
+            ];
 
             $tmpController = ControllerService::handleController([
                 'moduleName' => $moduleName,
@@ -30,11 +38,15 @@ class GenerateService
                 'upperCameName' => $upperCameName,
                 'classComment' => $classComment,
                 'packageName' => $packageName,
+                'methods' => $methods,
+                'date' => $date
             ]);
+
+            // $tmpLogic =
         } catch (\Throwable $e) {
-            var_dump('GenerateService===getMessage' . $e->getMessage());
-            var_dump('GenerateService===getFile' . $e->getFile());
-            var_dump('GenerateService===getLine' . $e->getLine());
+            var_dump('GenerateService===getMessage===' . $e->getMessage());
+            var_dump('GenerateService===getFile===' . $e->getFile());
+            var_dump('GenerateService===getLine===' . $e->getLine());
             return renderError($e->getMessage());
         }
     }
@@ -126,10 +138,11 @@ class GenerateService
      * @param array $needReplace
      * @param array $waitReplace
      * @param string $template
-     * @return array|false|string|string[]
+     * @return string
      */
-    public static function replaceFileData(array $needReplace, array $waitReplace, string $template): array|bool|string
+    public static function replaceFileData(array $needReplace, array $waitReplace, string $template): string
     {
+
         return str_replace($needReplace, $waitReplace, file_get_contents($template));
     }
 }
