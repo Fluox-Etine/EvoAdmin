@@ -4,7 +4,7 @@ namespace app\middleware;
 
 use app\common\enum\RedisKeyEnum;
 use support\Context;
-use support\Redis;
+use support\Log;
 use Webman\Http\Request;
 use Webman\Http\Response;
 use Webman\MiddlewareInterface;
@@ -24,20 +24,20 @@ class LogMiddleware implements MiddlewareInterface
     public function process(Request $request, callable $handler): Response
     {
         $start = microtime(true);
-        $traceid = guid_v4();
+        $traceId = guid_v4();
         $data = [
             'ip' => $this->getIp($request),
             'uri' => $request->uri(),
             'method' => $request->method(),
-            'traceid' => $traceid,
+            'traceId' => $traceId,
             'refer' => $request->header('referer'),
             'user_agent' => $request->header('user-agent'),
             'query' => $request->all(),
             'created_at' => date('Y-m-d H:i:s'),
         ];
 
-        //记录全局traceid 后期做异常追踪有用
-        Context::set('traceid', $data['traceid']);
+        //记录全局traced 后期做异常追踪有用
+        Context::set('traceId', $data['traceId']);
 
         $response = $handler($request);
         $err = $response->exception();
@@ -51,7 +51,8 @@ class LogMiddleware implements MiddlewareInterface
         $exec_time = round(($end - $start) * 1000, 2);
         $data['exec_time'] = $exec_time;
         // 投递到异步日志队列
-        Redis::send(RedisKeyEnum::REDIS_QUEUE_LOG_MIDDLEWARE, $data);
+        Log::info(RedisKeyEnum::REDIS_QUEUE_LOG_MIDDLEWARE, $data);
+        // Redis::send(RedisKeyEnum::REDIS_QUEUE_LOG_MIDDLEWARE, $data);
         return $response;
     }
 

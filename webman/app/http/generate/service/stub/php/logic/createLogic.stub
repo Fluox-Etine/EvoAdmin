@@ -1,0 +1,17 @@
+
+    /**
+     * 添加{NOTES}
+     * @param array $params
+     * @return bool
+     * @date {DATE}
+     */
+    public static function handleDelete(array $params): bool
+    {
+        try {
+            return {UPPER_CAMEL_NAME}Model::create([
+{CREATE_DATA}
+            ]) != false;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }

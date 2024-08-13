@@ -182,7 +182,7 @@ function array_column2_Key($source, $index): array
  * @param int $scale
  * @return string|null
  */
-function bcdiv($leftOperand, $rightOperand, int $scale = 2): ?string
+function bcdiv_tools($leftOperand, $rightOperand, int $scale = 2): ?string
 {
     return \bcdiv($leftOperand, $rightOperand, $scale);
 }
@@ -194,7 +194,7 @@ function bcdiv($leftOperand, $rightOperand, int $scale = 2): ?string
  * @param int $scale
  * @return string
  */
-function bcmul($leftOperand, $rightOperand, int $scale = 2): string
+function bcmul_tools($leftOperand, $rightOperand, int $scale = 2): string
 {
     return \bcmul($leftOperand, $rightOperand, $scale);
 }
@@ -206,7 +206,7 @@ function bcmul($leftOperand, $rightOperand, int $scale = 2): string
  * @param int $scale
  * @return string
  */
-function bcadd($leftOperand, $rightOperand, int $scale = 2): string
+function bcadd_tools($leftOperand, $rightOperand, int $scale = 2): string
 {
     return \bcadd($leftOperand, $rightOperand, $scale);
 }
@@ -219,7 +219,7 @@ function bcadd($leftOperand, $rightOperand, int $scale = 2): string
  * @param int $scale
  * @return string
  */
-function bcsub($leftOperand, $rightOperand, int $scale = 2): string
+function bcsub_tools($leftOperand, $rightOperand, int $scale = 2): string
 {
     return \bcsub($leftOperand, $rightOperand, $scale);
 }

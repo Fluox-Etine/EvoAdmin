@@ -1,0 +1,22 @@
+
+    /**
+     * 获取{NOTES}列表
+     * @param array $params
+     * @return array
+     * @date {DATE}
+     */
+    public static function handleLists(array $params): array
+    {
+        try {
+            $filter = [];
+            $params = setQueryDefaultValue($param, [
+{QUERY_CONDITION}
+            ]);
+
+            {{QUERY_DATA}}
+            $list = {UPPER_CAMEL_NAME}Model::query()->where($filter)->orderBy({ORDER_BY_DATA})->{METHOD_LIST};
+            return formattedPaginate($list);
+        } catch (\Exception $e) {
+            return [];
+        }
+    }

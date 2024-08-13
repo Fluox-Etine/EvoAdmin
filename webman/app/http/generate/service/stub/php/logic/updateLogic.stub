@@ -1,0 +1,17 @@
+
+    /**
+     * 添加{NOTES}
+     * @param array $params
+     * @return bool
+     * @date {DATE}
+     */
+    public static function handleUpdate(array $params): bool
+    {
+        try {
+            return {UPPER_CAMEL_NAME}Model::query()->where('{PK}', $params['{PK}'])->update([
+{UPDATE_DATA}
+            ]) != false;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
