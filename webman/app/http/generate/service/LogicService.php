@@ -79,6 +79,14 @@ class LogicService
         return $content;
     }
 
+    /**
+     * 处理列表方法
+     * @param string $notes
+     * @param string $date
+     * @param string $upperCameName
+     * @param array $queryColumn
+     * @return string
+     */
     private static function handleLists(string $notes, string $date, string $upperCameName, array $queryColumn): string
     {
         // 需要替换的变量
