@@ -1,0 +1,19 @@
+<?php
+declare (strict_types=1);
+
+namespace app\{MODULE_NAME}\controller{PACKAGE_NAME};
+
+use support\Request;
+use support\Response;
+{USE}
+
+/**
+ * {CLASS_COMMENT}
+ * Class {UPPER_CAMEL_NAME}Controller
+ * @package app\{MODULE_NAME}\controller{PACKAGE_NAME}
+ */
+class {UPPER_CAMEL_NAME}Controller
+{
+
+
+}

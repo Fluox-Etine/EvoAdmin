@@ -1,0 +1,13 @@
+
+    /**
+     * 编辑{NOTES}
+     * @param Request $request
+     * @return Response
+     * @date {DATE}
+     */
+    public function update(Request $request): Response
+    {
+        $params = $request->post();
+        $result = {UPPER_CAMEL_NAME}Logic::handleUpdate($params);
+        $result ? return renderSuccess('修改成功') : return renderError('修改失败');
+    }

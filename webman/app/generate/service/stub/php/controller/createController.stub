@@ -1,0 +1,13 @@
+
+    /**
+     * 添加{NOTES}
+     * @param Request $request
+     * @return Response
+     * @date {DATE}
+     */
+    public function create(Request $request): Response
+    {
+        $params = $request->post();
+        $result = {UPPER_CAMEL_NAME}Logic::handleCreate($params);
+        $result ? return renderSuccess('添加成功') : return renderError('添加失败');
+    }

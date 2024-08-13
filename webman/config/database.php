@@ -1,10 +1,6 @@
 <?php
-
 return [
-    // 默认数据库
     'default' => 'mysql',
-
-    // 各种数据库配置
     'connections' => [
         'mysql' => [
             'driver'      => 'mysql',
@@ -14,8 +10,8 @@ return [
             'username'    => 'root',
             'password'    => '',
             'unix_socket' => '',
-            'charset'     => 'utf8',
-            'collation'   => 'utf8_unicode_ci',
+            'charset' => 'utf8mb4',
+            'collation' => 'utf8mb4_0900_ai_ci',
             'prefix'      => '',
             'strict'      => true,
             'engine'      => null,

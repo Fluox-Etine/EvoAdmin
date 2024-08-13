@@ -1,0 +1,23 @@
+<?php
+declare (strict_types=1);
+
+namespace app\common\model\{MODULE_NAME}\{PACKAGE_NAME};
+
+use app\common\model\BaseModel;
+{USE}
+
+/**
+ * {CLASS_COMMENT}
+ * Class {UPPER_CAMEL_NAME}
+ * @package app\common\model{PACKAGE_NAME}
+ */
+class {UPPER_CAMEL_NAME} extends BaseModel
+{
+    {DELETE_USE}
+
+    /** 与模型关联的表名 * @var string */
+    protected $table = '{TABLE_NAME}';
+
+    /** 重定义主键，默认是id @var string */
+    protected $primaryKey = '{PRIMARY_KEY}';
+}
