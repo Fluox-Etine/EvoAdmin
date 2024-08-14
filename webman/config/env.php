@@ -6,4 +6,9 @@ return [
         'template_dir' => base_path() . '/app/http/generate/service/stub/', // 模板路径
         'generator_dir' => run_path() . '/generate/', // 生成路径
     ],
+
+    'show_sql' => [
+        'enable' => true,  // 是否开启
+        'limit' => 10,    // sql执行时间大于多少秒进行拦截（单位毫秒 默认1000）
+    ]
 ];
