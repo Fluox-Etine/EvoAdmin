@@ -258,3 +258,20 @@ function arrayColumn2Key($source, $index): array
     }
     return $data;
 }
+
+
+/**
+ * 格式化分页数据
+ * @param $paginate
+ * @return array
+ */
+function formattedPaginate($paginate): array
+{
+    return [
+        'total' => $paginate->total(), // 获取总记录数
+        'current_page' => $paginate->currentPage(), // 获取当前页码
+        'per_page' => $paginate->perPage(), // 获取每页记录数
+        'last_page' => $paginate->lastPage(), // 获取最后一页的页码
+        'data' => $paginate->items(), // 获取当前页的数据
+    ];
+}

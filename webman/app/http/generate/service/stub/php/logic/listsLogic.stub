@@ -9,7 +9,7 @@
     {
         try {
             $filter = [];
-            $params = setQueryDefaultValue($param, [
+            $param = setQueryDefaultValue($param, [
 {QUERY_CONDITION}
             ]);
 
