@@ -5,6 +5,11 @@ namespace app\http\generate\service;
 class LogicService
 {
 
+    /**
+     * 生成逻辑层
+     * @param array $params
+     * @return string
+     */
     public static function handleLogic(array $params): string
     {
         // 需要替换的变量
@@ -26,7 +31,7 @@ class LogicService
             $params['upperCameName'],
             $params['moduleName'],
             $params['packageName'],
-            self::handleFunctions($params['methods'], $params['classComment'], $params['date'], $params['upperCameName'])
+            self::handleFunctions($params['methods'], $params['classComment'], $params['date'], $params['upperCameName'], $params['pk'], $params['queryColumn'], $params['createColumn'], $params['updateColumn'], $params['fields'])
         ];
 
         $templatePath = GenerateService::getTemplatePath('php/logic');
@@ -59,22 +64,29 @@ class LogicService
      * @param string $date
      * @param string $upperCameName
      * @param string $pk
+     * @param array $queryColumn
+     * @param array $createColumn
+     * @param array $updateColumn
+     * @param array $fields
      * @return string
      */
-    private static function handleFunctions(array $method, string $notes, string $date, string $upperCameName, string $pk): string
+    private static function handleFunctions(array $method, string $notes, string $date, string $upperCameName, string $pk, array $queryColumn, array $createColumn, array $updateColumn, array $fields): string
     {
         $content = '';
-        $methods = [
-            'lists' => 'handleLists',
-            'create' => 'handleCreate',
-            'update' => 'handleUpdate',
-            'delete' => 'handleDelete',
-            'detail' => 'handleDetail', // 假设存在 handleDetail 方法
-        ];
-        foreach ($methods as $action => $methodName) {
-            if (isset($method[$action]) && $method[$action]) {
-                $content .= self::$methodName($notes, $date, $upperCameName, $pk) . PHP_EOL;
-            }
+        if ($method['lists']) {
+            $content .= self::handleLists($notes, $date, $upperCameName, $queryColumn);
+        }
+        if ($method['create']) {
+            $content .= self::handleCreate($notes, $date, $upperCameName, $createColumn);
+        }
+        if ($method['update']) {
+            $content .= self::handleUpdate($notes, $date, $upperCameName, $pk, $updateColumn);
+        }
+        if ($method['detail']) {
+            $content .= self::handleDetail($notes, $date, $upperCameName, $pk, $fields);
+        }
+        if ($method['delete']) {
+            $content .= self::handleDelete($notes, $date, $upperCameName, $pk);
         }
         return $content;
     }
@@ -204,11 +216,11 @@ class LogicService
      * @param string $notes
      * @param string $date
      * @param string $upperCameName
-     * @param $pk
+     * @param string $pk
      * @param array $fields
      * @return string
      */
-    private static function handleDetail(string $notes, string $date, string $upperCameName, $pk, array $fields): string
+    private static function handleDetail(string $notes, string $date, string $upperCameName, string $pk, array $fields): string
     {
         // 需要替换的变量
         $needReplace = [

@@ -5,7 +5,13 @@ namespace app\http\generate\service;
 class GenerateService
 {
 
-    public static function generate(array $params)
+
+    /**
+     * 生成代码
+     * @param array $params
+     * @return bool
+     */
+    public static function generate(array $params): bool
     {
         try {
             // 模块名
@@ -30,7 +36,10 @@ class GenerateService
                 'delete' => $params['delete'],
                 'detail' => $params['detail']
             ];
+            // 删除方式
+            $deleteType = $params['delete_type'];
 
+            // 生成控制器
             $tmpController = ControllerService::handleController([
                 'moduleName' => $moduleName,
                 'classDir' => $classDir,
@@ -42,12 +51,18 @@ class GenerateService
                 'date' => $date
             ]);
 
-            // $tmpLogic =
+            // 生成逻辑层
+            $tmpLogic = LogicService::handleLogic([]);
+
+            // 生成模型
+            $tmpModel = ModelService::handleModel([]);
+
+            return true;
         } catch (\Throwable $e) {
             var_dump('GenerateService===getMessage===' . $e->getMessage());
             var_dump('GenerateService===getFile===' . $e->getFile());
             var_dump('GenerateService===getLine===' . $e->getLine());
-            return renderError($e->getMessage());
+            return false;
         }
     }
 
@@ -153,7 +168,7 @@ class GenerateService
      * @param $blankpace
      * @return string
      */
-    public static  function setBlankSpace($content, $blankpace): string
+    public static function setBlankSpace($content, $blankpace): string
     {
         $content = explode(PHP_EOL, $content);
         foreach ($content as $line => $text) {

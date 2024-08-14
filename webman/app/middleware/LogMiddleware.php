@@ -24,7 +24,7 @@ class LogMiddleware implements MiddlewareInterface
     public function process(Request $request, callable $handler): Response
     {
         $start = microtime(true);
-        $traceId = guid_v4();
+        $traceId = guidV4();
         $data = [
             'ip' => $this->getIp($request),
             'uri' => $request->uri(),
