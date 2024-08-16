@@ -9,5 +9,5 @@
     {
         $params = $request->post();
         $result = {UPPER_CAMEL_NAME}Logic::handleDelete($params);
-        $result ? return renderSuccess('删除成功') : return renderError('删除失败');
+        return $result ? renderSuccess('删除成功') : renderError('删除失败');
     }
