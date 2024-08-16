@@ -1,5 +1,6 @@
 <?php
 
 return [
-     support\bootstrap\LaravelDb::class,
+    support\bootstrap\LaravelDb::class,
+    bootstrap\SlowSQL::class
 ];
