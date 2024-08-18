@@ -2,6 +2,11 @@
 
 namespace app\http\generate\service;
 
+/**
+ * 生成代码服务
+ * @package app\http\generate\service
+ * Class GenerateService
+ */
 class GenerateService
 {
 

@@ -37,7 +37,7 @@ class TableService
                 ];
             }
 
-            $offset = max(0, ((int)$params['page'] - 1) * 15);
+            $offset = max(0, ((int)$params['page'] ?? 0 - 1) * 15);
             $count = count($data);
             $data = array_slice($data, $offset, 15, true);
 
@@ -49,6 +49,25 @@ class TableService
                 'data' => $data,
             ];
         } catch (\Throwable $e) {
+            exceptionLog($e);
+            return [];
+        }
+    }
+
+
+    /**
+     * 获取表详情
+     * @param string $tableName
+     * @return array
+     */
+    public static function tableSheetDetail(string $tableName): array
+    {
+        try {
+            $database = config('database.connections.mysql.database');
+            $sql = "SELECT COLUMN_NAME,COLUMN_DEFAULT,IS_NULLABLE,DATA_TYPE,CHARACTER_MAXIMUM_LENGTH,NUMERIC_PRECISION,NUMERIC_SCALE,DATA_TYPE AS COLUMN_TYPE,COLUMN_KEY,EXTRA,COLUMN_COMMENT FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = '{$database}' AND TABLE_NAME = '{$tableName}'";
+            return Db::select($sql);
+        } catch (\Exception $e) {
+            exceptionLog($e);
             return [];
         }
     }

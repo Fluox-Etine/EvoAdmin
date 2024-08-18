@@ -275,3 +275,32 @@ function formattedPaginate($paginate): array
         'data' => $paginate->items(), // 获取当前页的数据
     ];
 }
+
+
+/**
+ * 异常打印在控制台
+ * @param object $e
+ * @param bool $isTrace
+ * @return void
+ */
+function exceptionLog(object $e, bool $isTrace = false): void
+{
+    $now = date('Y-m-d H:i:s');
+    echo "================================== 打印异常 {$now} ====================================", PHP_EOL;
+    echo '错误信息：';
+    echo $e->getMessage(), PHP_EOL;
+    echo '错误文件：';
+    echo $e->getFile(), PHP_EOL;
+    echo '错误行号：';
+    echo $e->getLine(), PHP_EOL;
+    echo '错误代码：';
+    echo $e->getCode(), PHP_EOL;
+    if ($isTrace) {
+        echo '错误堆栈：';
+        echo $e->getTraceAsString(), PHP_EOL;
+    }
+    echo "=========================================== 打印异常结束 ============================================", PHP_EOL;
+    echo '', PHP_EOL;
+    echo PHP_EOL;
+    echo PHP_EOL;
+}

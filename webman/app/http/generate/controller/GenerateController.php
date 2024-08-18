@@ -40,4 +40,16 @@ class GenerateController
         $list = TableService::tableSheet($request->all());
         return renderSuccess(compact('list'));
     }
+
+    /**
+     * 获取表详情l
+     * @param Request $request
+     * @return Response
+     */
+    public function dataSheetDetail(Request $request): Response
+    {
+        $tableName = $request->get('tableName');
+        $list = TableService::tableSheetDetail($tableName);
+        return renderSuccess(compact('list'));
+    }
 }
