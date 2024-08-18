@@ -36,11 +36,9 @@ class TableService
                     'update_time' => $value->Update_time,
                 ];
             }
-
-            $offset = max(0, ((int)$params['page'] ?? 0 - 1) * 15);
+            $offset = max(0, ((int)$params['page'] - 1) * 15);
             $count = count($data);
             $data = array_slice($data, $offset, 15, true);
-
             return [
                 'total' => $count,
                 'current_page' => (int)$params['page'],

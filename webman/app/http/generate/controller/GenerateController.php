@@ -37,7 +37,7 @@ class GenerateController
      */
     public function dataSheet(Request $request): Response
     {
-        $list = TableService::tableSheet($request->all());
+        $list = TableService::tableSheet($request->get());
         return renderSuccess(compact('list'));
     }
 

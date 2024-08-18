@@ -2,6 +2,7 @@
 
 use Webman\Route;
 
+Route::get('/test',[app\http\generate\controller\TestController::class, 'test']);
 // 代码生成器
 Route::group('/gen', function () {
     Route::get('/test', [app\http\generate\controller\GenerateController::class, 'test']);
