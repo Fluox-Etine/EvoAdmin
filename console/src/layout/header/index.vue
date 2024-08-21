@@ -18,20 +18,18 @@
     </div>
     <div class="header-right">
       <Space :size="20">
-        <Search />
         <FullScreen />
-        <LocalePicker />
         <Dropdown placement="bottomRight">
           <Avatar :src="userInfo.avatar" :alt="userInfo.username">{{ userInfo.username }}</Avatar>
           <template #overlay>
             <Menu>
               <Menu.Item @click="$router.push({ name: 'account-settings' })">
-                {{ $t('routes.account.settings') }}
+                个人设置
               </Menu.Item>
               <Menu.Divider />
               <Menu.Item>
                 <div @click.prevent="doLogout">
-                  <poweroff-outlined /> {{ $t('layout.header.dropdownItemLoginOut') }}
+                  <poweroff-outlined /> 退出系统
                 </div>
               </Menu.Item>
             </Menu>
@@ -44,14 +42,13 @@
 </template>
 
 <script lang="tsx" setup>
-  import { computed, type CSSProperties } from 'vue';
-  import { useRouter, useRoute } from 'vue-router';
+import {computed, type CSSProperties, PropType} from 'vue';
+import {useRouter, useRoute, createRouter as $router} from 'vue-router';
   import {
     QuestionCircleOutlined,
     MenuFoldOutlined,
     MenuUnfoldOutlined,
     PoweroffOutlined,
-    LockOutlined,
   } from '@ant-design/icons-vue';
   import {
     Layout,
@@ -61,14 +58,11 @@
     Menu,
     Space,
     Avatar,
-    Tooltip,
     type MenuTheme,
   } from 'ant-design-vue';
-  import { Search, FullScreen, ProjectSetting, LayoutBreadcrumb } from './components/';
-  import { LocalePicker } from '@/components/basic/locale-picker';
+  import { FullScreen, ProjectSetting, LayoutBreadcrumb } from './components/';
   import { useUserStore } from '@/store/modules/user';
   import { useKeepAliveStore } from '@/store/modules/keepAlive';
-  import { useLockscreenStore } from '@/store/modules/lockscreen';
   import { LOGIN_NAME } from '@/router/constant';
   import { useLayoutSettingStore } from '@/store/modules/layoutSetting';
 
@@ -83,7 +77,6 @@
   const emit = defineEmits(['update:collapsed']);
   const userStore = useUserStore();
   const layoutSettingStore = useLayoutSettingStore();
-  const lockscreenStore = useLockscreenStore();
   const keepAliveStore = useKeepAliveStore();
 
   const router = useRouter();

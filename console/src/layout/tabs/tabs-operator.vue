@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { computed, unref } from 'vue';
+import {computed, PropType, unref} from 'vue';
   import {
     DownOutlined,
     ReloadOutlined,
@@ -13,8 +13,6 @@
   import { isFunction } from 'lodash-es';
   import { message } from 'ant-design-vue';
   import { REDIRECT_NAME } from '@/router/constant';
-  import { TitleI18n } from '@/components/basic/title-i18n';
-  import { isDevMode } from '@/constants/env';
   import { useTabsViewStore } from '@/store/modules/tabsView';
 
   defineOptions({
@@ -91,10 +89,6 @@
 
   /** 打开页面所在的文件(仅在开发环境有效) */
   const openPageFile = async () => {
-    if (!isDevMode) {
-      console.warn('仅在开发环境有效');
-      return;
-    }
 
     const routes = router.getRoutes();
     const target = routes.find((n) => n.name === props.tabItem.name);
@@ -128,44 +122,34 @@
     <a v-if="isExtra" class="ant-dropdown-link" @click.prevent>
       <down-outlined :style="{ fontSize: '20px' }" />
     </a>
-    <div v-else style="display: inline-block">
-      <TitleI18n :title="tabItem.meta?.title" />
-    </div>
     <template #overlay>
       <a-menu style="user-select: none">
         <a-menu-item key="1" :disabled="activeKey !== tabItem.fullPath" @click="reloadPage">
           <reload-outlined />
-          {{ $t('layout.multipleTab.reload') }}
+          重新加载
         </a-menu-item>
         <a-menu-item key="2" @click="removeTab">
           <close-outlined />
-          {{ $t('layout.multipleTab.close') }}
+          关闭标签页
         </a-menu-item>
         <a-menu-divider />
         <a-menu-item key="3" @click="closeLeft">
           <vertical-right-outlined />
-          {{ $t('layout.multipleTab.closeLeft') }}
+          关闭左侧标签页
         </a-menu-item>
         <a-menu-item key="4" @click="closeRight">
           <vertical-left-outlined />
-          {{ $t('layout.multipleTab.closeRight') }}
+          关闭右侧标签页
         </a-menu-item>
         <a-menu-divider />
         <a-menu-item key="5" @click="closeOther">
           <column-width-outlined />
-          {{ $t('layout.multipleTab.closeOther') }}
+          关闭其它标签页
         </a-menu-item>
         <a-menu-item key="6" @click="closeAll">
           <minus-outlined />
-          {{ $t('layout.multipleTab.closeAll') }}
+          关闭全部标签页
         </a-menu-item>
-        <template v-if="isDevMode">
-          <a-menu-divider />
-          <a-menu-item key="7" @click="openPageFile">
-            <column-width-outlined />
-            打开页面文件
-          </a-menu-item>
-        </template>
       </a-menu>
     </template>
   </a-dropdown>
