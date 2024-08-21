@@ -1,18 +1,19 @@
 import {ref} from 'vue';
 import {defineStore} from 'pinia';
 import type {RouteRecordRaw} from 'vue-router';
-import {store} from '@/store';
-import Api from '@/api/';
+import * as Api from '@/api/backend/auth';
 import {resetRouter} from '@/router';
 import {generateDynamicRoutes} from '@/router/helper/routeHelper';
 
+// @ts-ignore
+// @ts-ignore
 export const useUserStore = defineStore(
     'user',
     () => {
         const token = ref<string>();
         const perms = ref<string[]>([]);
         const menus = ref<RouteRecordRaw[]>([]);
-        const userInfo = ref<Partial<API.UserEntity>>({});
+        const userInfo = ref<Partial<any>>({});
 
         const sortMenus = (menus: RouteRecordRaw[] = []) => {
             return menus
@@ -42,11 +43,14 @@ export const useUserStore = defineStore(
             token.value = _token;
         };
         /** 登录 */
-        const login = async (params: API.LoginDto) => {
+        const login = async (params: any) => {
             try {
-                const data = await Api.auth.authLogin(params);
-                setToken(data.token);
-                await afterLogin();
+                // const data = await Api.authLogin(params);
+                // setToken(data.token);
+                // await afterLogin();
+
+                // TODO 模拟成功
+                setToken('asdasdas')
             } catch (error) {
                 return Promise.reject(error);
             }
@@ -96,8 +100,3 @@ export const useUserStore = defineStore(
         },
     },
 );
-
-// 在组件setup函数外使用
-export function useUserStoreWithOut() {
-    return useUserStore(store);
-}

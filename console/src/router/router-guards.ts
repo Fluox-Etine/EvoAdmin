@@ -7,7 +7,6 @@ import type { Router, RouteLocationNormalized } from 'vue-router';
 import { useUserStore } from '@/store/modules/user';
 import { useKeepAliveStore } from '@/store/modules/keepAlive';
 import { to as _to } from '@/utils/awaitTo';
-import { transformI18n } from '@/hooks/useI18n';
 
 NProgress.configure({ showSpinner: false }); // NProgress Configuration
 
@@ -79,7 +78,8 @@ export function createRouterGuards(router: Router, whiteNameList: WhiteNameList)
 
     if (to.meta?.title) {
       // 设置网页标题
-      document.title = transformI18n(to.meta.title);
+      // @ts-ignore
+      document.title = to.meta.title;
     }
 
     const keepAliveStore = useKeepAliveStore();

@@ -19,7 +19,7 @@ const theme = computed(() => {
 </script>
 
 <template>
-  <ConfigProvider v-bind="$props" :locale="getAntdLocale" :theme="theme">
+  <ConfigProvider v-bind="$props"  :theme="theme">
     <slot/>
   </ConfigProvider>
 </template>

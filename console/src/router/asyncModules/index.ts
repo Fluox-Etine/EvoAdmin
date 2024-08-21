@@ -1,3 +1,4 @@
+// @ts-ignore
 type ImportVueFileType = typeof import('*.vue');
 type ImportVueFileFnType = () => Promise<ImportVueFileType>;
 

@@ -75,7 +75,7 @@ export const generateDynamicRoutes = (menus: RouteRecordRaw[]) => {
 /**
  * 主要方便于设置 a-menu 的 open-keys，即控制左侧菜单应当展开哪些菜单
  * @param {RouteRecordRaw[]} routes 需要添加 namePath 的路由
- * @param {string[]} namePath
+ * @param parentNamePath
  */
 export const genNamePathForRoutes = (routes: RouteRecordRaw[], parentNamePath: string[] = []) => {
   routes.forEach((item) => {
@@ -87,6 +87,7 @@ export const genNamePathForRoutes = (routes: RouteRecordRaw[], parentNamePath: s
       }
 
       if (item.children?.length) {
+        // @ts-ignore
         genNamePathForRoutes(item.children, item.meta.namePath);
       }
     }
