@@ -10,7 +10,6 @@ import {computed, PropType, unref} from 'vue';
     MinusOutlined,
   } from '@ant-design/icons-vue';
   import { useRoute, useRouter, type RouteLocationNormalizedLoaded } from 'vue-router';
-  import { isFunction } from 'lodash-es';
   import { message } from 'ant-design-vue';
   import { REDIRECT_NAME } from '@/router/constant';
   import { useTabsViewStore } from '@/store/modules/tabsView';
@@ -87,31 +86,6 @@ import {computed, PropType, unref} from 'vue';
     router.replace('/');
   };
 
-  /** 打开页面所在的文件(仅在开发环境有效) */
-  const openPageFile = async () => {
-
-    const routes = router.getRoutes();
-    const target = routes.find((n) => n.name === props.tabItem.name);
-    if (target) {
-      const comp = target.components?.default;
-      // @ts-ignore
-      let __file = comp?.__file as string;
-      if (isFunction(comp)) {
-        try {
-          // @ts-ignore
-          const res = await comp();
-          __file = res?.default?.__file;
-        } catch (error) {
-          console.log(error);
-        }
-      }
-      if (__file) {
-        const filePath = `/__open-in-editor?file=${__file}`;
-        fetch(filePath);
-      }
-    }
-  };
-
   defineExpose({
     removeTab,
   });
@@ -122,6 +96,9 @@ import {computed, PropType, unref} from 'vue';
     <a v-if="isExtra" class="ant-dropdown-link" @click.prevent>
       <down-outlined :style="{ fontSize: '20px' }" />
     </a>
+    <div v-else style="display: inline-block">
+     {{ tabItem.meta?.title }}
+    </div>
     <template #overlay>
       <a-menu style="user-select: none">
         <a-menu-item key="1" :disabled="activeKey !== tabItem.fullPath" @click="reloadPage">

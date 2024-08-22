@@ -77,8 +77,6 @@ export function createRouterGuards(router: Router, whiteNameList: WhiteNameList)
     }
 
     if (to.meta?.title) {
-      // 设置网页标题
-      // @ts-ignore
       document.title = to.meta.title;
     }
 

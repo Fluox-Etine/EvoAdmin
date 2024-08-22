@@ -1,13 +1,13 @@
 <template>
   <template v-if="item?.meta?.icon">
-<!--    <Icon :icon="item.meta.icon" />-->
+    <Icon :icon="item.meta.icon"/>
   </template>
   {{ item?.meta?.title}}
 </template>
 
 <script lang="ts" setup>
   import type { RouteRecordRaw } from 'vue-router';
-  // import { Icon } from '@/components/basic/icon';
+  import { Icon } from '@/components/core/icon';
 
   defineOptions({
     name: 'MenuItemContent',

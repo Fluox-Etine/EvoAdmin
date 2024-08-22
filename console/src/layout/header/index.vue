@@ -126,7 +126,7 @@ import {useRouter, useRoute, createRouter as $router} from 'vue-router';
     padding: 0 20px;
 
     .header-right {
-      min-width: 180px;
+      min-width: 105px;
       cursor: pointer;
     }
 
