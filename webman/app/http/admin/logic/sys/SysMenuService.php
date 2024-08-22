@@ -4,6 +4,7 @@ namespace app\http\admin\logic\sys;
 
 use app\common\model\sys\SysAdminRoleModel;
 use app\common\model\sys\SysMenuModel;
+use app\common\model\sys\SysRoleMenuModel;
 use app\http\admin\service\system\SysAdminService;
 use support\exception\RespBusinessException;
 
@@ -23,11 +24,11 @@ class SysMenuService
             if (empty($roleIds)) {
                 throw new RespBusinessException('用户未分配角色');
             }
-            $menuIds = SysAdminRoleModel::query()->whereIn('role_id', $roleIds->toArray())->pluck('menu_id');
+            $menuIds = SysRoleMenuModel::query()->whereIn('role_id', $roleIds)->pluck('menu_id');
             if (empty($menuIds)) {
                 throw new RespBusinessException('用户角色未分配菜单');
             }
-            $menus = SysMenuModel::query()->whereIn('id', $menuIds->toArray())
+            $menus = SysMenuModel::query()->whereIn('id', $menuIds)
                 ->orderBy('order_no', 'ASC')
                 ->select(['parent_id', 'type', 'id', 'active_menu', 'ext_open_mode', 'icon', 'is_ext', 'keep_alive', 'order_no', 'show', 'status', 'type', 'component', 'name', 'path'])
                 ->get()
@@ -37,7 +38,6 @@ class SysMenuService
             throw new RespBusinessException($e->getMessage());
         }
     }
-
 
 
     /**
@@ -90,7 +90,6 @@ class SysMenuService
 
         return $res;
     }
-
 
 
     /**

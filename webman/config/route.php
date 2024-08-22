@@ -18,11 +18,11 @@ Route::group('/v1', function () {
                 // 个人信息
                 Route::get('/profile', [app\http\admin\controller\AccountController::class, 'profile']);
                 // 退出登录
-                Route::get('/logout', [app\http\admin\controller\AccountController::class, 'logout']);
+                Route::post('/logout', [app\http\admin\controller\AccountController::class, 'logout']);
                 // 菜单
-                Route::get('/menus', [app\http\admin\controller\AccountController::class, 'menus']);
+                Route::post('/menus', [app\http\admin\controller\AccountController::class, 'menus']);
                 // 权限
-                Route::get('/permissions', [app\http\admin\controller\AccountController::class, 'permissions']);
+                Route::post('/permissions', [app\http\admin\controller\AccountController::class, 'permissions']);
             });
         });
     });

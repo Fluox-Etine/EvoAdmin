@@ -5,7 +5,7 @@ return [
     'transport' => 'tcp',
     'context' => [],
     'name' => 'Evo-PHP-Admin',
-    'count' => cpu_count() * 4,
+    'count' => cpu_count(),
     'user' => '',
     'group' => '',
     'reusePort' => false,
