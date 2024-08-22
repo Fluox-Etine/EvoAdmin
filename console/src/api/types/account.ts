@@ -33,7 +33,6 @@ declare namespace API {
 
     type MenuMeta = {
         title: string;
-        permission?: string;
         type?: number;
         icon?: string;
         orderNo?: number;
