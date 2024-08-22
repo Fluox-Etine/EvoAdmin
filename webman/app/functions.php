@@ -149,3 +149,12 @@ function check_dir(string $path): void
 {
     !is_dir($path) && mkdir($path, 0755, true);
 }
+
+/**
+ * 获取token
+ * @return string
+ */
+function get_token(): string
+{
+    return request()->header('Authorization') ?? '';
+}

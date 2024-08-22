@@ -46,4 +46,23 @@ class SysAdminService
         Redis::setEx(RedisKeyEnum::ADMIN_TOKEN->value . $token, 3600, $id);
         return $token;
     }
+
+
+    /**
+     * 获取当前登录用户id
+     * @return int
+     * @throws RespBusinessException
+     */
+    public static function getCurrentLoginId(): int
+    {
+        $token = get_token();
+        if (empty($token)) {
+            throw new RespBusinessException('非法登录');
+        }
+        $id = Redis::get(RedisKeyEnum::ADMIN_TOKEN->value . $token);
+        if (empty($id)) {
+            throw new RespBusinessException('身份验证信息已过期');
+        }
+        return $id;
+    }
 }

@@ -2,14 +2,38 @@
 
 use Webman\Route;
 
-Route::get('/test',[app\http\generate\controller\TestController::class, 'test']);
-// 代码生成器
-Route::group('/gen', function () {
-    Route::get('/test', [app\http\generate\controller\GenerateController::class, 'test']);
+Route::group('/v1', function () {
 
-    // 所有数据表
-    Route::get('/table/sheet', [app\http\generate\controller\GenerateController::class, 'dataSheet']);
-    // 数据表详情
-    Route::get('/table/sheet/detail', [app\http\generate\controller\GenerateController::class, 'dataSheetDetail']);
+    /** 后台管理 */
+    Route::group('/console', function () {
+        /** 不需要授权 */
+        Route::group('/auth', function () {
+            // 登录
+            Route::post('/login', [app\http\admin\controller\AccountController::class, 'login']);
+        });
+        /** 需要授权 */
+        Route::group('', function () {
+            // 个人相关
+            Route::group('/account', function () {
+                // 个人信息
+                Route::get('/profile', [app\http\admin\controller\AccountController::class, 'profile']);
+                // 退出登录
+                Route::get('/logout', [app\http\admin\controller\AccountController::class, 'logout']);
+                // 菜单
+                Route::get('/menus', [app\http\admin\controller\AccountController::class, 'menus']);
+                // 权限
+                Route::get('/permissions', [app\http\admin\controller\AccountController::class, 'permissions']);
+            });
+        });
+    });
+    /** 代码生成器 **/
+    Route::group('/gen', function () {
+        Route::get('/test', [app\http\generate\controller\GenerateController::class, 'test']);
+
+        // 所有数据表
+        Route::get('/table/sheet', [app\http\generate\controller\GenerateController::class, 'dataSheet']);
+        // 数据表详情
+        Route::get('/table/sheet/detail', [app\http\generate\controller\GenerateController::class, 'dataSheetDetail']);
+    });
 });
 Route::disableDefaultRoute();
