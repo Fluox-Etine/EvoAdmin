@@ -55,7 +55,7 @@ function renderSuccess(array|string $data = [], string $message = 'success'): Re
         $message = $data;
         $data = [];
     }
-    return renderJson($data, 200, $message);
+    return renderJson($data, config('env.http.success_code'), $message);
 }
 
 /**
@@ -71,7 +71,7 @@ function renderError(array|string $message = 'error', array $data = []): Respons
     } else {
         $error = $message;
     }
-    return renderJson($data, 500, $error);
+    return renderJson($data, config('env.http.error_code'), $error);
 }
 
 /**
