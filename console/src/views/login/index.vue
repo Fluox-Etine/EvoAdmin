@@ -20,7 +20,9 @@
             placeholder="a123456"
             autocomplete="new-password"
         >
-          <template #prefix> <Icon icon="ant-design:lock-outlined" /></template>
+          <template #prefix>
+            <Icon icon="ant-design:lock-outlined"/>
+          </template>
         </a-input>
       </a-form-item>
       <a-form-item>
@@ -33,12 +35,11 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import {ref} from 'vue';
 import {useRoute, useRouter} from 'vue-router';
 import {message, Modal} from 'ant-design-vue';
 import {useUserStore} from '@/store/modules/user';
 import {to} from '@/utils/awaitTo';
-import { LockOutlined } from '@ant-design/icons-vue';
 import {Icon} from "@/components/core/icon";
 
 const route = useRoute();
@@ -48,7 +49,7 @@ const userStore = useUserStore();
 const loading = ref(false);
 const loginFormModel = ref({
   username: 'admin',
-  password: 'a123456'
+  password: '123456'
 });
 
 
@@ -59,9 +60,6 @@ const handleSubmit = async () => {
   }
   message.loading('登录中...', 0);
   loading.value = true;
-  console.log(loginFormModel.value);
-  // params.password = md5(password)
-
   const [err] = await to(userStore.login(loginFormModel.value));
   if (err) {
     Modal.error({

@@ -5,15 +5,13 @@ import * as Api from '@/api/backend/auth';
 import {resetRouter} from '@/router';
 import {generateDynamicRoutes} from '@/router/helper/routeHelper';
 
-// @ts-ignore
-// @ts-ignore
 export const useUserStore = defineStore(
     'user',
     () => {
         const token = ref<string>();
         const perms = ref<string[]>([]);
         const menus = ref<RouteRecordRaw[]>([]);
-        const userInfo = ref<Partial<any>>({});
+        const userInfo = ref<Partial<API.UserEntity>>({});
 
         const sortMenus = (menus: RouteRecordRaw[] = []) => {
             return menus
@@ -43,14 +41,11 @@ export const useUserStore = defineStore(
             token.value = _token;
         };
         /** 登录 */
-        const login = async (params: any) => {
+        const login = async (params: API.LoginDto) => {
             try {
-                // const data = await Api.authLogin(params);
-                // setToken(data.token);
-                // await afterLogin();
-
-                // TODO 模拟成功
-                setToken('asdasdas')
+                const data = await Api.authLogin(params);
+                setToken(data.token);
+                await afterLogin();
             } catch (error) {
                 return Promise.reject(error);
             }
@@ -58,9 +53,7 @@ export const useUserStore = defineStore(
         /** 登录成功之后, 获取用户信息以及生成权限路由 */
         const afterLogin = async () => {
             try {
-                const {accountProfile} = Api.account;
-                // const wsStore = useWsStore();
-                userInfo.value = await accountProfile();
+                userInfo.value = await Api.accountProfile();
                 await fetchPermsAndMenus();
             } catch (error) {
                 return Promise.reject(error);
@@ -69,9 +62,7 @@ export const useUserStore = defineStore(
         };
         /** 获取权限及菜单 */
         const fetchPermsAndMenus = async () => {
-            const {accountPermissions, accountMenu} = Api.account;
-            // const wsStore = useWsStore();
-            const [menusData, permsData] = await Promise.all([accountMenu(), accountPermissions()]);
+            const [menusData, permsData] = await Promise.all([Api.accountMenu(), Api.accountPermissions()]);
             perms.value = permsData;
             const result = generateDynamicRoutes(menusData as unknown as RouteRecordRaw[]);
             menus.value = sortMenus(result);
