@@ -1,13 +1,15 @@
 <template>
   <div class="login-box">
     <div class="login-logo">
-      <img src="~@/assets/images/logo.png" width="45"/>
-      <h1 class="mb-0 ml-2 text-3xl font-bold">Antdv Admin</h1>
+      <img src="~@/assets/images/logo.png" width="45" alt="logo"/>
+      <h1 class="mb-0 ml-2 text-3xl font-bold">Evo PHP Admin</h1>
     </div>
     <a-form layout="horizontal" :model="loginFormModel" @submit.prevent="handleSubmit">
       <a-form-item>
         <a-input v-model:value="loginFormModel.username" size="large" placeholder="admin">
-          <!--          <template #prefix> <Icon icon="ant-design:user-outlined" /> </template>-->
+          <template #prefix>
+            <Icon icon="ant-design:user-outlined"/>
+          </template>
         </a-input>
       </a-form-item>
       <a-form-item>
@@ -18,7 +20,7 @@
             placeholder="a123456"
             autocomplete="new-password"
         >
-          <!--          <template #prefix> <Icon icon="ant-design:lock-outlined" /></template>-->
+          <template #prefix> <Icon icon="ant-design:lock-outlined" /></template>
         </a-input>
       </a-form-item>
       <a-form-item>
@@ -36,6 +38,8 @@ import {useRoute, useRouter} from 'vue-router';
 import {message, Modal} from 'ant-design-vue';
 import {useUserStore} from '@/store/modules/user';
 import {to} from '@/utils/awaitTo';
+import { LockOutlined } from '@ant-design/icons-vue';
+import {Icon} from "@/components/core/icon";
 
 const route = useRoute();
 const router = useRouter();
