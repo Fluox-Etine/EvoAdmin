@@ -1,16 +1,21 @@
 import {createApp} from 'vue'
-import Antd from 'ant-design-vue';
 import App from './App.vue'
 import {setupRouter} from './router';
 import {setupStore} from '@/store';
-import 'ant-design-vue/dist/reset.css';
-import {setupAssets} from '@/plugins';
+import {setupAntd, setupAssets, setupGlobalMethods} from '@/plugins';
+import {setupIcons} from "@/components/core/icon";
 
 const app = createApp(App)
 
 function setupPlugins() {
+    // 安装图标
+    setupIcons();
+    // 注册全局常用的ant-design-vue组件
+    setupAntd(app);
     // 引入静态资源
-    setupAssets(app);
+    setupAssets();
+    // 注册全局方法，如：app.config.globalProperties.$message = message
+    setupGlobalMethods(app);
 }
 
 // 挂载vuex状态管理
@@ -18,4 +23,5 @@ setupStore(app);
 // 挂载路由
 await setupRouter(app);
 setupPlugins();
-app.use(Antd).mount('#app')
+
+app.mount('#app');

@@ -6,6 +6,8 @@ import vueJsx from '@vitejs/plugin-vue-jsx'
 import unocss from 'unocss/vite';
 import {createSvgIconsPlugin} from 'vite-plugin-svg-icons';
 import {resolve} from "node:path";
+import {AntDesignVueResolver} from "unplugin-vue-components/resolvers";
+import Components from 'unplugin-vue-components/vite';
 
 
 const CWD = process.cwd();
@@ -26,6 +28,25 @@ export default defineConfig({
             iconDirs: [resolve(CWD, 'src/assets/icons')],
             // Specify symbolId format
             symbolId: 'svg-icon-[dir]-[name]',
+        }),
+        Components({
+            dts: 'types/components.d.ts',
+            types: [
+                {
+                    from: './src/components/basic/button/',
+                    names: ['AButton'],
+                },
+                {
+                    from: 'vue-router',
+                    names: ['RouterLink', 'RouterView'],
+                },
+            ],
+            resolvers: [
+                AntDesignVueResolver({
+                    importStyle: false, // css in js
+                    exclude: ['Button'],
+                }),
+            ],
         }),
     ],
 
