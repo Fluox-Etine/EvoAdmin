@@ -1,6 +1,6 @@
 <?php
 
-namespace app\http\admin\logic\sys;
+namespace app\http\admin\logic\system;
 
 use app\common\model\sys\SysAdminModel;
 use app\http\admin\service\system\SysAdminService;

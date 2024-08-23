@@ -1,11 +1,10 @@
 <?php
 
-namespace app\http\admin\logic\sys;
+namespace app\http\admin\service\system;
 
 use app\common\model\sys\SysAdminRoleModel;
 use app\common\model\sys\SysMenuModel;
 use app\common\model\sys\SysRoleMenuModel;
-use app\http\admin\service\system\SysAdminService;
 use support\exception\RespBusinessException;
 
 class SysPermissionsService

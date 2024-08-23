@@ -3,10 +3,10 @@
 namespace app\http\admin\controller;
 
 use app\common\enum\RedisKeyEnum;
-use app\http\admin\logic\sys\SysAdminLogic;
-use app\http\admin\logic\sys\SysMenuService;
-use app\http\admin\logic\sys\SysPermissionsService;
+use app\http\admin\logic\system\SysAdminLogic;
 use app\http\admin\service\system\SysAdminService;
+use app\http\admin\service\system\SysMenuService;
+use app\http\admin\service\system\SysPermissionsService;
 use support\exception\RespBusinessException;
 use support\Redis;
 use support\Response;

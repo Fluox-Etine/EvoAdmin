@@ -304,3 +304,19 @@ function exceptionLog(object $e, bool $isTrace = false): void
     echo PHP_EOL;
     echo PHP_EOL;
 }
+
+/**
+ * 处理request的参数设置默认值问题
+ * @param array $fields
+ * @return array
+ */
+function formattedRequest(array $fields): array
+{
+    $requestData = [];
+
+    foreach ($fields as $field) {
+        $requestData[$field] = request()->input($field, null);
+    }
+
+    return $requestData;
+}

@@ -25,6 +25,37 @@ Route::group('/v1', function () {
                 Route::post('/permissions', [app\http\admin\controller\AccountController::class, 'permissions']);
             });
         });
+
+        /** 系统设置 */
+        Route::group('/system', function () {
+            // 菜单部分
+            Route::group('/menu', function () {
+                // 获取菜单列表
+                Route::GET('/list', ['app\http\admin\controller\system\MenuController', 'list']);
+                // 新增菜单或权限
+                Route::POST('/create', ['app\http\admin\controller\system\MenuController', 'create']);
+                // 修改菜单或权限
+                Route::POST('/update', ['app\http\admin\controller\system\MenuController', 'update']);
+                // 删除菜单或权限
+                Route::POST('/delete', ['app\http\admin\controller\system\MenuController', 'delete']);
+                //获取后端定义的所有权限集
+                Route::GET('/permissions', ['app\http\admin\controller\system\MenuController', 'permissions']);
+            });
+            // 角色部分
+            Route::group('/role', function () {
+                // 获取角色列表
+                Route::GET('/list', ['app\http\admin\controller\system\RoleController', 'list']);
+                // 新增角色
+                Route::POST('/create', ['app\http\admin\controller\system\RoleController', 'create']);
+                // 修改角色
+                Route::POST('/update', ['app\http\admin\controller\system\RoleController', 'update']);
+                // 删除角色
+                Route::GET('/delete', ['app\http\admin\controller\system\RoleController', 'delete']);
+                // 角色详情
+                Route::GET('/detail', ['app\http\admin\controller\system\RoleController', 'detail']);
+            });
+        });
+
     });
     /** 代码生成器 **/
     Route::group('/gen', function () {
