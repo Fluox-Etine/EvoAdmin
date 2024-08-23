@@ -69,7 +69,7 @@ export const useUserStore = defineStore(
         };
         /** 登出 */
         const logout = async () => {
-            await Api.account.accountLogout();
+            await Api.accountLogout();
             clearLoginStatus();
         };
 

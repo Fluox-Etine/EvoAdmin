@@ -76,6 +76,7 @@
   import type { ThemeColor } from './constant';
   import type { LayoutSetting } from '@/store/modules/layoutSetting';
   import { useLayoutSettingStore } from '@/store/modules/layoutSetting';
+  import SvgIcon from "@/components/core/icon/src/SvgIcon.vue";
 
   defineOptions({
     name: 'ProjectSetting',
