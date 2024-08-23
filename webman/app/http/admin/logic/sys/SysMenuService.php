@@ -57,6 +57,9 @@ class SysMenuService
             // 根级别菜单渲染
             $realRoute = null;
 
+            $genFullPath = function (string $path, string $parentPath) {
+                return self::uniqueSlash(str_starts_with($path, '/') ? $path : "/$parentPath/$path");
+            };
             if (!$parentRoute && !$menu['parent_id'] && $menu['type'] == 1) {
                 // 根菜单
                 $realRoute = self::createRoute($menu);
@@ -64,6 +67,7 @@ class SysMenuService
                 $childRoutes = self::filterAsyncRoutes($menus, $menu);
                 $realRoute = self::createRoute($menu);
                 if ($childRoutes && count($childRoutes) > 0) {
+                    $realRoute['redirect'] = $genFullPath($childRoutes[0]['path'], $realRoute['path']);
                     $realRoute['children'] = $childRoutes;
                 }
             } elseif ($parentRoute && $parentRoute['id'] == $menu['parent_id'] && $menu['type'] === 1) {
@@ -74,6 +78,7 @@ class SysMenuService
                 $childRoutes = self::filterAsyncRoutes($menus, $menu);
                 $realRoute = self::createRoute($menu);
                 if ($childRoutes && count($childRoutes) > 0) {
+                    $realRoute['redirect'] = $genFullPath($childRoutes[0]['path'], $realRoute['path']);
                     $realRoute['children'] = $childRoutes;
                 }
             }

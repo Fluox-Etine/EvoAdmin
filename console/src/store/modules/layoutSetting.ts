@@ -31,7 +31,6 @@ export type LayoutSetting = {
   iconfontUrl: string;
   /** 是否缓存标签页 */
   cacheTabs: boolean;
-  // production: process.env.NODE_ENV === 'production' && process.env.VUE_APP_PREVIEW !== 'true'
 };
 
 export const defaultSetting: LayoutSetting = {

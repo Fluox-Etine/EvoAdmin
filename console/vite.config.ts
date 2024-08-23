@@ -4,19 +4,31 @@ import {defineConfig} from 'vite'
 import vue from '@vitejs/plugin-vue'
 import vueJsx from '@vitejs/plugin-vue-jsx'
 import unocss from 'unocss/vite';
+import {createSvgIconsPlugin} from 'vite-plugin-svg-icons';
+import {resolve} from "node:path";
+
+
+const CWD = process.cwd();
 
 // https://vitejs.dev/config/
 export default defineConfig({
-    plugins: [
-        vue(),
-        vueJsx(),
-        unocss()
-    ],
     resolve: {
         alias: {
             '@': fileURLToPath(new URL('./src', import.meta.url))
         }
     },
+    plugins: [
+        vue(),
+        vueJsx(),
+        unocss(),
+        createSvgIconsPlugin({
+            // Specify the icon folder to be cached
+            iconDirs: [resolve(CWD, 'src/assets/icons')],
+            // Specify symbolId format
+            symbolId: 'svg-icon-[dir]-[name]',
+        }),
+    ],
+
     server: {
         host: '0.0.0.0',
         port: 8088,
@@ -28,8 +40,7 @@ export default defineConfig({
                 rewrite: (path) => path.replace(/^\/api/, ''),
             },
             '^/upload': {
-                target: 'https://nest-api.buqiyuan.site/upload',
-                // target: 'http://127.0.0.1:7001/upload',
+                target: 'http://127.0.0.1:19878/v1/upload',
                 changeOrigin: true,
                 rewrite: (path) => path.replace(new RegExp(`^/upload`), ''),
             },
