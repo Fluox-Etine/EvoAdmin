@@ -15,7 +15,10 @@ class MenuController
      */
     public function list(): Response
     {
-        $list = SysMenuLogic::list();
+        $fields = ['name', 'path', 'component'];
+        $params = formattedRequest($fields);
+        $list = SysMenuLogic::list($params);
+        var_dump($list);
         return renderSuccess($list);
     }
 
@@ -90,7 +93,6 @@ class MenuController
         $component = $request->post('component', null);
         $keep_alive = $request->post('keep_alive', 1);
         $show = $request->post('show', 1);
-
         // 将参数合并到一个新数组中
         return array_merge($request->post(), [
             'parent_id' => $parent_id,

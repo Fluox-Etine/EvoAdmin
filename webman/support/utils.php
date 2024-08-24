@@ -39,6 +39,8 @@ function renderJson(array $data, int $code = null, string $message = ''): Respon
     ];
     if (!empty($data)) {
         $response['data'] = $data;
+    } else {
+        $response['data'] = [];
     }
     return new Response(200, ['Content-Type' => 'application/json'], json_encode($response, JSON_UNESCAPED_UNICODE));
 }

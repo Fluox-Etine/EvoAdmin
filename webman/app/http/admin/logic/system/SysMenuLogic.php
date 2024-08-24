@@ -10,12 +10,22 @@ class SysMenuLogic
 {
     /**
      * 菜单列表
+     * @param array $params
      * @return array
      */
-    public static function list(): array
+    public static function list(array $params): array
     {
-        // 后期处理搜索功能问题
-        $list = SysMenuModel::orderBy('order_no')->get();
+        $param = setQueryDefaultValue($params, [
+            'name' => null,
+            'path' => null,
+            'component' => null
+        ]);
+        $filter = [];
+        !is_null($param['name']) && $filter[] = ['name', 'like', '%' . $param['name'] . '%'];
+        !is_null($param['path']) && $filter[] = ['path', 'like', '%' . $param['path'] . '%'];
+        !is_null($param['component']) && $filter[] = ['component', 'like', '%' . $param['component'] . '%'];
+
+        $list = SysMenuModel::query()->where($filter)->orderBy('order_no')->get();
         if (empty($list)) {
             return [];
         }
