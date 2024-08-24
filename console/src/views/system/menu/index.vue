@@ -84,7 +84,7 @@ const openMenuModal = async (record: Partial<TableListItem>) => {
   console.log('record', record);
 };
 const delRowConfirm = async (record: TableListItem) => {
-  await Api.systemMenu.menuDelete({id: record.id});
+  await Api.menuDelete({id: record.id});
   dynamicTableInstance.reload();
 };
 

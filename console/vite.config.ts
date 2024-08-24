@@ -72,5 +72,8 @@ export default defineConfig({
             // 可以通过运行 npx vite --debug transform 并检查日志来找到频繁使用的文件
             clientFiles: ['./index.html', './src/{components,api}/*'],
         },
+        optimizeDeps: {
+            include: ['lodash-es', 'ant-design-vue/es/locale/zh_CN'],
+        },
     },
 })

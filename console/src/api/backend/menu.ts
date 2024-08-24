@@ -17,7 +17,7 @@ export async function menuList(
 
 /** 新增菜单或权限 POST /system/menu */
 export async function menuCreate(body: API.MenuDto, options?: RequestOptions) {
-    return request<any>('/system/menu', {
+    return request<any>('/system/menu/create', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -27,20 +27,7 @@ export async function menuCreate(body: API.MenuDto, options?: RequestOptions) {
     });
 }
 
-/** 获取菜单或权限信息 GET /system/menu/detail */
-export async function menuInfo(
-    // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-    params: API.queryId,
-    options?: RequestOptions,
-) {
-    return request<any>(`/system/menu/detail`, {
-        method: 'GET',
-        params: {...params},
-        ...(options || {}),
-    });
-}
-
-/** 更新菜单或权限 PUT /system/menu/update */
+/** 更新菜单或权限 POST /system/menu/update */
 export async function menuUpdate(
     // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
     body: API.MenuUpdateDto,
@@ -56,10 +43,10 @@ export async function menuUpdate(
     });
 }
 
-/** 删除菜单或权限 DELETE /system/menu/delete */
+/** 删除菜单或权限 GET /system/menu/delete */
 export async function menuDelete(
     // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-    params: API.queryId,
+    params: API.QueryId,
     options?: RequestOptions,
 ) {
     return request<any>(`/system/menu/delete`, {

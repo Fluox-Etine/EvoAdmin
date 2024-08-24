@@ -63,7 +63,7 @@ export const useTableState = ({props, slots}: UseTableStateParams) => {
             pageSizeOptions: [...tableConfig.pageSizeOptions],
             showQuickJumper: true,
             showSizeChanger: true, // 显示可改变每页数量
-            showTotal: (total) => `共` + {total}`条数据`, // 显示总数
+            showTotal: (total) => `共 ${total} 条数据`,
             // onChange: (current, pageSize) => pageOption?.pageChange?.(current, pageSize),
             // onShowSizeChange: (current, pageSize) => pageOption?.pageChange?.(current, pageSize),
             ...props.pagination,

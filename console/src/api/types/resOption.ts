@@ -8,7 +8,16 @@ declare namespace API {
     };
 
     /** 全局 id 条件 */
-    type queryId = {
+    type QueryId = {
         id: number;
+    }
+
+    /** 全局分页参数信息 */
+    type Meta = {
+        itemCount?: number;
+        totalItems?: number;
+        itemsPerPage?: number;
+        totalPages?: number;
+        currentPage?: number;
     }
 }
