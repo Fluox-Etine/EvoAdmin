@@ -7,4 +7,4 @@ import * as Api from '@/api/backend/menu';
 const permissions = Api.menuGetPermissions()
 export type PermissionType = (typeof permissions)[number];
 
-// console.log('permissions', permissions);
+console.log('permissionsCode', permissions);

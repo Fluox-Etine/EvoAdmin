@@ -51,7 +51,7 @@ const openMenuModal = async (record: Partial<TableListItem>) => {
       title: `${record.id ? '编辑' : '新增'}菜单`,
       width: 700,
       onFinish: async (values) => {
-        record.id && (values.menuId = record.id);
+        record.id && (values.id = record.id);
         if (Array.isArray(values.component)) {
           values.component = values.component.join('/');
         }
@@ -62,9 +62,9 @@ const openMenuModal = async (record: Partial<TableListItem>) => {
           Reflect.deleteProperty(values, 'parentId');
         }
         if (record.id) {
-          await Api.systemMenu.menuUpdate({id: record.id}, values);
+          await Api.menuUpdate(values);
         } else {
-          await Api.systemMenu.menuCreate(values);
+          await Api.menuCreate(values);
         }
         dynamicTableInstance.reload();
       },
