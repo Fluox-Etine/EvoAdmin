@@ -68,6 +68,62 @@
                    :scroll="{ x: 1024 }"
                    :pagination="false"
           >
+            <template #headerCell="{ column }">
+              <template v-if="column.dataIndex === 'IS_NULLABLE'">
+                {{ column.title }}
+                <a-tooltip placement="bottom">
+                  <template #title>
+                    <span>全选 / 全不选</span>
+                  </template>
+                  <a-checkbox/>
+                </a-tooltip>
+              </template>
+              <template v-else-if="column.dataIndex === 'LIST'">
+                {{ column.title }}
+                <a-tooltip placement="bottom">
+                  <template #title>
+                    <span>全选 / 全不选</span>
+                  </template>
+                  <a-checkbox/>
+                </a-tooltip>
+              </template>
+              <template v-else-if="column.dataIndex === 'CREATE'">
+                {{ column.title }}
+                <a-tooltip placement="bottom">
+                  <template #title>
+                    <span>全选 / 全不选</span>
+                  </template>
+                  <a-checkbox/>
+                </a-tooltip>
+              </template>
+              <template v-else-if="column.dataIndex === 'UPDATE'">
+                {{ column.title }}
+                <a-tooltip placement="bottom">
+                  <template #title>
+                    <span>全选 / 全不选</span>
+                  </template>
+                  <a-checkbox/>
+                </a-tooltip>
+              </template>
+              <template v-else-if="column.dataIndex === 'DETAIL'">
+                {{ column.title }}
+                <a-tooltip placement="bottom">
+                  <template #title>
+                    <span>全选 / 全不选</span>
+                  </template>
+                  <a-checkbox/>
+                </a-tooltip>
+              </template>
+              <template v-else-if="column.dataIndex === 'FILTER'">
+                {{ column.title }}
+                <a-tooltip placement="bottom">
+                  <template #title>
+                    <span>全选 / 全不选</span>
+                  </template>
+                  <a-checkbox/>
+                </a-tooltip>
+              </template>
+            </template>
             <template v-slot:bodyCell="{ column, record,index}">
               <!--              序列-->
               <template v-if="column.dataIndex === 'dataIndex'">
