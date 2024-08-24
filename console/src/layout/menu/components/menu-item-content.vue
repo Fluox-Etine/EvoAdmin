@@ -2,21 +2,21 @@
   <template v-if="item?.meta?.icon">
     <Icon :icon="item.meta.icon"/>
   </template>
-  {{ item?.meta?.title}}
+  <span>{{ item?.meta?.title }}</span>
 </template>
 
 <script lang="ts" setup>
-  import type { RouteRecordRaw } from 'vue-router';
-  import { Icon } from '@/components/core/icon';
+import type {RouteRecordRaw} from 'vue-router';
+import {Icon} from '@/components/core/icon';
 
-  defineOptions({
-    name: 'MenuItemContent',
-  });
+defineOptions({
+  name: 'MenuItemContent',
+});
 
-  defineProps({
-    item: {
-      type: Object as PropType<RouteRecordRaw>,
-      default: () => ({}),
-    },
-  });
+defineProps({
+  item: {
+    type: Object as PropType<RouteRecordRaw>,
+    default: () => ({}),
+  },
+});
 </script>
