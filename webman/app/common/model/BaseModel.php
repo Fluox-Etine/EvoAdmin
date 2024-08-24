@@ -12,10 +12,15 @@ class BaseModel extends Model
     // 隐藏字段
     protected $hidden = ['deleted_at'];
 
-    public function serializeDate(DateTimeInterface $date): string
-    {
-        return $date->format('Y-m-d H:i:s');
-    }
+    /**
+     * 时间戳格式化
+     */
+//    public function serializeDate(DateTimeInterface $date): string
+//    {
+//        return $date->format('Y-m-d H:i:s');
+//    }
+
+    public $timestamps = FALSE;
 
 
     /**

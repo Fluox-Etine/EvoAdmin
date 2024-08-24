@@ -158,3 +158,18 @@ function get_token(): string
 {
     return request()->header('Authorization') ?? '';
 }
+
+/**
+ * TODO 为了适配以前之前埋的坑，暂时不处理（只是影响系统设置菜单接口）
+ * 把数组key的小驼峰转化为下划线
+ * @param $array
+ * @return array
+ */
+function array_key_to_underline($array): array
+{
+    $newArray = [];
+    foreach ($array as $key => $value) {
+        $newArray[uncamelize($key)] = $value;
+    }
+    return $newArray;
+}

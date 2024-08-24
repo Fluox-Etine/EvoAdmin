@@ -105,10 +105,10 @@ class SysMenuLogic
      * @return bool
      * @throws RespBusinessException
      */
-    public function create(array $params): bool
+    public static function create(array $params): bool
     {
         try {
-            $this->checkMenuParams($params);
+            self::checkMenuParams($params);
 
             SysMenuModel::insert(
                 [
@@ -141,10 +141,12 @@ class SysMenuLogic
      * @return bool
      * @throws RespBusinessException
      */
-    public function update(array $params): bool
+    public static function update(array $params): bool
     {
         try {
-            $this->checkMenuParams($params);
+            self::checkMenuParams($params);
+            $params = array_key_to_underline($params);
+            $params['updated_at'] = time();
             return SysMenuModel::query()->where('id', $params['id'])->update($params) != false;
         } catch (\Exception $e) {
             throw new RespBusinessException($e->getMessage());
@@ -157,7 +159,7 @@ class SysMenuLogic
      * @return void
      * @throws \Exception
      */
-    protected function checkMenuParams(array $params): void
+    protected static function checkMenuParams(array $params): void
     {
         // 无法直接创建权限，必须有parent
         if ($params['type'] == 2 && !$params['parent_id']) {

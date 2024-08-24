@@ -18,7 +18,6 @@ class MenuController
         $fields = ['name', 'path', 'component'];
         $params = formattedRequest($fields);
         $list = SysMenuLogic::list($params);
-        var_dump($list);
         return renderSuccess($list);
     }
 
@@ -32,7 +31,7 @@ class MenuController
     {
         // TODO 后期增加数据校验功能
         $data = $this->processRequestData($request);
-        if ((new SysMenuLogic())->create($data)) {
+        if (SysMenuLogic::create($data)) {
             return renderSuccess("创建菜单成功");
         }
         return renderError("创建菜单失败");
@@ -47,7 +46,7 @@ class MenuController
      */
     public function update(Request $request): Response
     {
-        if ((new SysMenuLogic())->update($request->post())) {
+        if (SysMenuLogic::update($request->post())) {
             return renderSuccess("更新菜单成功");
         }
         return renderError("更新菜单失败");
