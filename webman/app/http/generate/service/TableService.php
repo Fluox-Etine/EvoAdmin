@@ -62,8 +62,33 @@ class TableService
     {
         try {
             $database = config('database.connections.mysql.database');
-            $sql = "SELECT COLUMN_NAME,COLUMN_DEFAULT,IS_NULLABLE,DATA_TYPE,CHARACTER_MAXIMUM_LENGTH,NUMERIC_PRECISION,NUMERIC_SCALE,DATA_TYPE AS COLUMN_TYPE,COLUMN_KEY,EXTRA,COLUMN_COMMENT FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = '{$database}' AND TABLE_NAME = '{$tableName}'";
-            return Db::select($sql);
+            $sqlFields = "SELECT COLUMN_NAME,COLUMN_DEFAULT,IS_NULLABLE,DATA_TYPE,CHARACTER_MAXIMUM_LENGTH,NUMERIC_PRECISION,NUMERIC_SCALE,DATA_TYPE AS COLUMN_TYPE,COLUMN_KEY,EXTRA,COLUMN_COMMENT FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = '{$database}' AND TABLE_NAME = '{$tableName}'";
+            $fields = Db::select($sqlFields);
+            if (!empty($fields)) {
+                foreach ($fields as &$field) {
+                    if ($field->IS_NULLABLE === 'YES') {
+                        $field->IS_NULLABLE = 1;
+                        $field->LIST = 1;
+                        $field->CREATE = 1;
+                        $field->UPDATE = 1;
+                        $field->DETAIL = 1;
+                        $field->FILTER = 1;
+                    } else {
+                        $field->IS_NULLABLE = 0;
+                        $field->LIST = 0;
+                        $field->CREATE = 0;
+                        $field->UPDATE = 0;
+                        $field->DETAIL = 0;
+                        $field->FILTER = 0;
+                    }
+                }
+            }
+            $sqlTable = "SHOW TABLE STATUS WHERE  Name = " . "'{$tableName}'";
+            $table = Db::select($sqlTable);
+            return [
+                'fields' => $fields,
+                'table' => $table[0] ?? []
+            ];
         } catch (\Exception $e) {
             exceptionLog($e);
             return [];
