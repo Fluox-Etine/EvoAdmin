@@ -3,8 +3,6 @@ declare (strict_types=1);
 
 namespace app\common\model;
 
-use app\common\model\sys\SysRoleModel;
-use DateTimeInterface;
 use support\Model;
 
 class BaseModel extends Model
@@ -25,12 +23,13 @@ class BaseModel extends Model
 
     /**
      * 检查条件是否存在
+     * @param BaseModel $model
      * @param array $where
      * @return bool
      */
-    public static function checkExists(array $where): bool
+    public static function checkExists(BaseModel $model, array $where): bool
     {
-        return BaseModel::query()->where($where)->exists();
+        return $model::query()->where($where)->exists();
     }
 
 }

@@ -44,7 +44,7 @@ class RoleController
      */
     public function update(Request $request): Response
     {
-        if (SysRoleLogic::update($request->post(), $request->get('id'))) {
+        if (SysRoleLogic::update($request->post())) {
             return renderSuccess("更新角色成功");
         }
         return renderError("更新角色失败");
