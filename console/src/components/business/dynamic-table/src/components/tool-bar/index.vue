@@ -7,10 +7,12 @@
           <BasicHelp v-if="titleTooltip" class="ml-6px pt-3px" :text="titleTooltip"/>
         </div>
       </slot>
-
       <slot name="afterHeaderTitle"/>
     </div>
     <div>
+      <Space>
+        <slot name="toolbar"/>
+      </Space>
       <Divider v-if="$slots.toolbar && showTableSetting" type="vertical"/>
       <TableSetting v-if="showTableSetting"/>
     </div>
@@ -18,7 +20,7 @@
 </template>
 
 <script lang="ts" setup>
-import {Divider} from 'ant-design-vue';
+import {Divider, Space} from 'ant-design-vue';
 import TableSetting from '../table-settings/index.vue';
 import BasicHelp from '@/components/core/basic-help/index.vue';
 

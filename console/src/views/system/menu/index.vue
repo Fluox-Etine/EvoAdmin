@@ -7,11 +7,7 @@
       </div>
     </template>
     <template #toolbar>
-      <!--      <a-button type="primary" :disabled="!$auth('system:menu:create')" @click="openMenuModal({})">-->
-      <!--        新增-->
-      <!--      </a-button>-->
-
-      <a-button type="primary" @click="openMenuModal({})">
+      <a-button type="primary" :disabled="!$auth('system:menu:create')" @click="openMenuModal({})">
         新增
       </a-button>
     </template>
