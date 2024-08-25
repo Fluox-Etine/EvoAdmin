@@ -68,62 +68,6 @@
                    :scroll="{ x: 1024 }"
                    :pagination="false"
           >
-<!--            <template #headerCell="{ column }">-->
-<!--              <template v-if="column.dataIndex === 'IS_NULLABLE'">-->
-<!--                {{ column.title }}-->
-<!--                <a-tooltip placement="bottom">-->
-<!--                  <template #title>-->
-<!--                    <span>全选 / 全不选</span>-->
-<!--                  </template>-->
-<!--                  <a-checkbox :checked="allIsNullable" @change="handleAllChange('allIsNullable','IS_NULLABLE')"/>-->
-<!--                </a-tooltip>-->
-<!--              </template>-->
-<!--              <template v-else-if="column.dataIndex === 'LIST'">-->
-<!--                {{ column.title }}-->
-<!--                <a-tooltip placement="bottom">-->
-<!--                  <template #title>-->
-<!--                    <span>全选 / 全不选</span>-->
-<!--                  </template>-->
-<!--                  <a-checkbox :checked="allList" @change="handleAllChange('allList','LIST')"/>-->
-<!--                </a-tooltip>-->
-<!--              </template>-->
-<!--              <template v-else-if="column.dataIndex === 'CREATE'">-->
-<!--                {{ column.title }}-->
-<!--                <a-tooltip placement="bottom">-->
-<!--                  <template #title>-->
-<!--                    <span>全选 / 全不选</span>-->
-<!--                  </template>-->
-<!--                  <a-checkbox :checked="allCreate" @change="handleAllChange('allCreate','CREATE')"/>-->
-<!--                </a-tooltip>-->
-<!--              </template>-->
-<!--              <template v-else-if="column.dataIndex === 'UPDATE'">-->
-<!--                {{ column.title }}-->
-<!--                <a-tooltip placement="bottom">-->
-<!--                  <template #title>-->
-<!--                    <span>全选 / 全不选</span>-->
-<!--                  </template>-->
-<!--                  <a-checkbox :checked="allUpdate" @change="handleAllChange('allUpdate','UPDATE')"/>-->
-<!--                </a-tooltip>-->
-<!--              </template>-->
-<!--              <template v-else-if="column.dataIndex === 'DETAIL'">-->
-<!--                {{ column.title }}-->
-<!--                <a-tooltip placement="bottom">-->
-<!--                  <template #title>-->
-<!--                    <span>全选 / 全不选</span>-->
-<!--                  </template>-->
-<!--                  <a-checkbox :checked="allDetail" @change="handleAllChange('allDetail','DETAIL')"/>-->
-<!--                </a-tooltip>-->
-<!--              </template>-->
-<!--              <template v-else-if="column.dataIndex === 'FILTER'">-->
-<!--                {{ column.title }}-->
-<!--                <a-tooltip placement="bottom">-->
-<!--                  <template #title>-->
-<!--                    <span>全选 / 全不选</span>-->
-<!--                  </template>-->
-<!--                  <a-checkbox :checked="allFilter" @change="handleAllChange('allFilter','FILTER')"/>-->
-<!--                </a-tooltip>-->
-<!--              </template>-->
-<!--            </template>-->
             <template v-slot:bodyCell="{ column, record,index}">
               <!--              序列-->
               <template v-if="column.dataIndex === 'dataIndex'">
@@ -291,57 +235,11 @@ const formState: UnwrapRef<any> = reactive({
 
 const key = ref('field');
 
-// const allIsNullable = ref(false);
-//
-// const allList = ref(false);
-//
-// const allCreate = ref(false)
-//
-// const allUpdate = ref(false)
-//
-// const allDetail = ref(false)
-//
-// const allFilter = ref(false);
 /** 切换tab */
 const onTabChange = (value: string) => {
   key.value = value;
 };
 
-// const handleAllChange = (key: string, index: string) => {
-//   let value
-//   switch (key) {
-//     case 'allIsNullable':
-//       value = allIsNullable.value;
-//       allIsNullable.value = !allIsNullable.value;
-//       dataFieldsSource.value.forEach((item: any)  => {
-//         value === true ? item.allIsNullable = 0 : item.allIsNullable = 1;
-//       })
-//       break;
-//     case 'allList':
-//       value = allList.value;
-//       allList.value = !allList.value;
-//       dataFieldsSource.value.forEach((item: any)  => {
-//         value === true ? item.LIST = 0 : item.LIST = 1;
-//       })
-//       break;
-//     case 'allCreate':
-//       value = allCreate.value;
-//       allCreate.value = !allCreate.value;
-//       break;
-//     case 'allUpdate':
-//       value = allUpdate.value;
-//       allUpdate.value = !allUpdate.value;
-//       break;
-//     case 'allDetail':
-//       value = allDetail.value;
-//       allDetail.value = !allDetail.value;
-//       break;
-//     case 'allFilter':
-//       value = allFilter.value;
-//       allFilter.value = !allFilter.value;
-//       break;
-//   }
-// };
 /** 是否必填数据 */
 const handleIsNullableChange = (record: any) => {
   record.IS_NULLABLE = record.IS_NULLABLE ? 0 : 1;
