@@ -2,7 +2,7 @@ import { formProps, type FormProps } from 'ant-design-vue/es/form';
 import type { ColEx } from './types/component';
 import type { ExtractPublicPropTypes, ComponentInternalInstance, CSSProperties } from 'vue';
 import type { FieldMapToTime, FormSchema, RowProps } from './types/form';
-import type { ButtonProps } from '@/components/basic/button';
+import type { ButtonProps } from '@/components/core/button';
 import type { TableActionType } from '@/components/business/dynamic-table';
 import { isObject } from '@/utils/is';
 

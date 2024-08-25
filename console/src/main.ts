@@ -1,13 +1,13 @@
 import {createApp} from 'vue'
 import App from './App.vue'
+import 'highlight.js/styles/a11y-dark.css'
 import {setupRouter} from './router';
 import {setupStore} from '@/store';
-import {setupAntd, setupAssets, setupGlobalMethods} from '@/plugins';
 import {setupIcons} from "@/components/core/icon";
 import hljsVuePlugin from '@highlightjs/vue-plugin'
 import hljs from 'highlight.js/lib/core'
 import php from 'highlight.js/lib/languages/php'
-import 'highlight.js/styles/a11y-dark.css'
+import {setupAntd, setupAssets, setupGlobalMethods} from '@/plugins';
 
 const app = createApp(App)
 

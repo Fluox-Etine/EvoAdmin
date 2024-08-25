@@ -12,6 +12,7 @@
   import { Button } from 'ant-design-vue';
   import { buttonProps, buttonColorPrimary, aButtonTypes } from './button';
   import type { ButtonType, AButtonType } from './button';
+  import ProConfigProvider from "@/components/core/pro-config-provider/index.vue";
 
   defineOptions({
     name: 'AButton',

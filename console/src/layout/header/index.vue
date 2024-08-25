@@ -20,7 +20,7 @@
       <Space :size="20">
         <FullScreen />
         <Dropdown placement="bottomRight">
-          <Avatar :src="userInfo.avatar" :alt="userInfo.username">{{ userInfo.username }}</Avatar>
+          <Avatar :alt="userInfo.username">{{ userInfo.username }}</Avatar>
           <template #overlay>
             <Menu>
               <Menu.Item @click="$router.push({ name: 'account-settings' })">
@@ -42,7 +42,7 @@
 </template>
 
 <script lang="tsx" setup>
-import {computed, type CSSProperties, PropType} from 'vue';
+import {computed, type CSSProperties} from 'vue';
 import {useRouter, useRoute, createRouter as $router} from 'vue-router';
   import {
     QuestionCircleOutlined,
@@ -66,12 +66,13 @@ import {useRouter, useRoute, createRouter as $router} from 'vue-router';
   import { LOGIN_NAME } from '@/router/constant';
   import { useLayoutSettingStore } from '@/store/modules/layoutSetting';
 
-  defineProps({
+
+defineProps({
     collapsed: {
       type: Boolean,
     },
     theme: {
-      type: String as PropType<MenuTheme>,
+      type: String as () => MenuTheme,
     },
   });
   const emit = defineEmits(['update:collapsed']);

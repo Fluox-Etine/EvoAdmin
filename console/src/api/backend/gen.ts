@@ -7,7 +7,6 @@ export async function tableList(
     options?: RequestOptions,
 ) {
     return request<{
-        items?: API.RoleEntity[];
         meta?: API.Meta;
     }>('/gen/table/sheet', {
         method: 'GET',
@@ -26,8 +25,6 @@ export async function tableDetail(
     options?: RequestOptions,
 ) {
     return request<{
-        items?: API.RoleEntity[];
-        meta?: API.Meta;
     }>('/gen/table/sheet/detail', {
         method: 'GET',
         params: {

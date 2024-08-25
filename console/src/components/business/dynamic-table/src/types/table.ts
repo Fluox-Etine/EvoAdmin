@@ -2,7 +2,6 @@ import type { TableProps } from 'ant-design-vue';
 import type { TablePaginationConfig } from 'ant-design-vue/es/table';
 import type { DynamicTableProps, DynamicTableEmitFn } from '../dynamic-table';
 import type {
-  ExportData2Excel,
   TableForm,
   TableMethods,
   TableState,
@@ -50,7 +49,6 @@ export type OnCancel<T = any> = (
 ) => any | void;
 
 export type DynamicTableType = TableState &
-  ExportData2Excel &
   UseEditableType &
   TableForm &
   TableMethods & {

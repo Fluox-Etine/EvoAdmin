@@ -34,7 +34,14 @@
 <script lang="ts" setup>
 import {ref} from "vue";
 
-defineProps<{ code: object }>();
+interface CodeType {
+  controller?: string;
+  logic?: string;
+  model?: string;
+  // 其他可能的属性
+}
+
+defineProps<{ code: CodeType }>();
 
 const tabCodeList = [
   {

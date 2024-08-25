@@ -1,7 +1,6 @@
 import { tableProps } from 'ant-design-vue/es/table';
 import tableConfig from './dynamic-table.config';
 import type { PropType, ExtractPublicPropTypes } from 'vue';
-import type { BookType } from 'xlsx';
 import type { TableColumn, OnChangeCallbackParams, EditableType, OnSave, OnCancel } from './types/';
 import type { SchemaFormProps } from '@/components/business/schema-form';
 import type { GetRowKey } from 'ant-design-vue/es/table/interface';
@@ -83,11 +82,6 @@ export const dynamicTableProps = {
   /** 导出的文件名 */
   exportFileName: {
     type: String as PropType<string>,
-  },
-  /** xlsx的booktype */
-  exportBookType: {
-    type: String as PropType<BookType>,
-    default: 'xlsx',
   },
   /** 自动宽度 */
   exportAutoWidth: {

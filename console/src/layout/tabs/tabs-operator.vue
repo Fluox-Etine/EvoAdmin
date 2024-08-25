@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {computed, PropType, unref} from 'vue';
+import {computed, unref} from 'vue';
   import {
     DownOutlined,
     ReloadOutlined,
@@ -17,14 +17,17 @@ import {computed, PropType, unref} from 'vue';
   defineOptions({
     name: 'TabOperator',
   });
+type TabItemType = RouteLocationNormalizedLoaded;
 
-  const props = defineProps({
-    tabItem: {
-      type: Object as PropType<RouteLocationNormalizedLoaded>,
-      required: true,
-    },
-    isExtra: Boolean,
-  });
+const props = defineProps({
+  tabItem: {
+    type: Object as () => TabItemType,
+    required: true,
+  },
+  isExtra: {
+    type: Boolean,
+  },
+});
 
   const route = useRoute();
   const router = useRouter();

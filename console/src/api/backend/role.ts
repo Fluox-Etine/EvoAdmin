@@ -37,7 +37,7 @@ export async function roleInfo(
     params: API.QueryId,
     options?: RequestOptions,
 ) {
-    return request<API.RoleInfo>(`/system/role/detail`, {
+    return request<any>(`/system/role/detail`, {
         method: 'GET',
         params: {...params},
         ...(options || {}),
