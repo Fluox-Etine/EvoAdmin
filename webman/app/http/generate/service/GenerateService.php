@@ -20,29 +20,22 @@ class GenerateService
     {
         try {
             // 模块名
-            $moduleName = strtolower($params['module_name']);
+            $moduleName = strtolower($params['moduleName']);
             // 类目录
-            $classDir = $params['class_dir'];
+            $classDir = $params['classDir'];
             // 数据库表名
-            $tableName = self::getNoPrefixTableName($params['table_name']);
+            $tableName = self::getNoPrefixTableName($params['tableName']);
             // 包名
-            $upperCameName = self::underscoreToCamelCase($tableName);
+            $upperCameName = $params['upperCameName'];
             // 时间
             $date = date('Y/m/d H:i');
             // 类注释
-            $classComment = $params['class_comment'];
+            $classComment = $params['classComment'];
             // 包名
             $packageName = self::getPackageNameContent($classDir);
-            // curd 方法
-            $methods = [
-                'lists' => $params['lists'],
-                'create' => $params['create'],
-                'update' => $params['update'],
-                'delete' => $params['delete'],
-                'detail' => $params['detail']
-            ];
+
             // 删除方式
-            $deleteType = $params['delete_type'];
+            $deleteType = $params['deleteType'];
 
             // 生成控制器
             $tmpController = ControllerService::handleController([
@@ -52,15 +45,15 @@ class GenerateService
                 'upperCameName' => $upperCameName,
                 'classComment' => $classComment,
                 'packageName' => $packageName,
-                'methods' => $methods,
+                'methods' => $params['gen']['controller'],
                 'date' => $date
             ]);
-
+            var_dump($tmpController);
             // 生成逻辑层
-            $tmpLogic = LogicService::handleLogic([]);
-
-            // 生成模型
-            $tmpModel = ModelService::handleModel([]);
+//            $tmpLogic = LogicService::handleLogic([]);
+//
+//            // 生成模型
+//            $tmpModel = ModelService::handleModel([]);
 
             return true;
         } catch (\Throwable $e) {
@@ -88,29 +81,29 @@ class GenerateService
     }
 
 
-    /**
-     * 下划线转驼峰(首字母大写)
-     * @param string $underscoreName
-     * @param bool $firstCharacterUpper
-     * @return string
-     */
-    private static function underscoreToCamelCase(string $underscoreName, bool $firstCharacterUpper = true): string
-    {
-        // 将下划线命名法转换为数组
-        $parts = explode('_', $underscoreName);
-
-        // 处理每个部分，使其首字母大写
-        $parts = array_map('ucfirst', $parts);
-
-        // 将数组合并为字符串
-        $result = implode('', $parts);
-
-        // 如果需要首字母大写，转换第一个字符
-        if ($firstCharacterUpper) {
-            $result[0] = strtoupper($result[0]);
-        }
-        return $result;
-    }
+//    /**
+//     * 下划线转驼峰(首字母大写)
+//     * @param string $underscoreName
+//     * @param bool $firstCharacterUpper
+//     * @return string
+//     */
+//    private static function underscoreToCamelCase(string $underscoreName, bool $firstCharacterUpper = true): string
+//    {
+//        // 将下划线命名法转换为数组
+//        $parts = explode('_', $underscoreName);
+//
+//        // 处理每个部分，使其首字母大写
+//        $parts = array_map('ucfirst', $parts);
+//
+//        // 将数组合并为字符串
+//        $result = implode('', $parts);
+//
+//        // 如果需要首字母大写，转换第一个字符
+//        if ($firstCharacterUpper) {
+//            $result[0] = strtoupper($result[0]);
+//        }
+//        return $result;
+//    }
 
 
     /**
@@ -139,17 +132,18 @@ class GenerateService
      * 获取命名空间内容
      * @param string $moduleName // 模块名
      * @param string $classDir // 类目录
+     * @param string $upperCameName
      * @param string $component
      * @return string
      */
-    public static function getNameSpaceContent(string $moduleName, string $classDir, string $component): string
+    public static function getNameSpaceContent(string $moduleName, string $classDir, string $upperCameName, string $component): string
     {
         $lowerComponent = strtolower($component);
         if (empty($classDir)) {
             return "namespace app\\http\\$moduleName\\$lowerComponent;";
         }
         $ucfComponent = ucfirst($component);
-        return "namespace app\\http\\$moduleName\\{$lowerComponent}\\" . $classDir . $ucfComponent . ";";
+        return "namespace app\\http\\$moduleName\\{$lowerComponent}\\" . $classDir . '\\' . $upperCameName . $ucfComponent . ";";
     }
 
 

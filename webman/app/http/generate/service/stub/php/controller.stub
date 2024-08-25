@@ -11,6 +11,7 @@ use support\Response;
  * {CLASS_COMMENT}
  * Class {UPPER_CAMEL_NAME}Controller
  * @package app\http\{MODULE_NAME}\controller{PACKAGE_NAME}
+ * @date {DATE}
  */
 class {UPPER_CAMEL_NAME}Controller
 {

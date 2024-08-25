@@ -17,6 +17,7 @@ class ControllerService
             '{NAMESPACE}',
             '{USE}',
             '{CLASS_COMMENT}',
+            '{DATE}',
             '{UPPER_CAMEL_NAME}',
             '{MODULE_NAME}',
             '{PACKAGE_NAME}',
@@ -25,9 +26,10 @@ class ControllerService
 
         // 等待替换的内容
         $waitReplace = [
-            GenerateService::getNameSpaceContent($params['moduleName'], $params['classDir'], 'controller'),
+            GenerateService::getNameSpaceContent($params['moduleName'], $params['classDir'], $params['upperCameName'], 'controller'),
             self::getUseContent($params['moduleName'], $params['classDir'], $params['upperCameName']),
             $params['classComment'],
+            $params['date'],
             $params['upperCameName'],
             $params['moduleName'],
             $params['packageName'],
@@ -44,15 +46,15 @@ class ControllerService
      * 获取use内容
      * @param string $moduleName
      * @param string $classDir
-     * @param string $tableName
+     * @param string $upperCameName
      * @return string
      */
-    private static function getUseContent(string $moduleName, string $classDir, string $tableName): string
+    private static function getUseContent(string $moduleName, string $classDir, string $upperCameName): string
     {
         if (empty($classDir)) {
-            $tpl = "use app\\http\\$moduleName\\logic\\" . $classDir . "Logic;";
+            $tpl = "use app\\http\\$moduleName\\logic\\" . $upperCameName . "Logic;";
         } else {
-            $tpl = "use app\\http\\$moduleName\\logic\\" . $classDir . "\\" . $tableName . "Logic;";
+            $tpl = "use app\\http\\$moduleName\\logic\\" . $classDir . "\\" . $upperCameName . "Logic;";
         }
         return $tpl;
     }

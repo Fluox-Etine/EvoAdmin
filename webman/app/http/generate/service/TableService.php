@@ -62,17 +62,18 @@ class TableService
     {
         try {
             $database = config('database.connections.mysql.database');
-            $sqlFields = "SELECT COLUMN_NAME,COLUMN_DEFAULT,IS_NULLABLE,DATA_TYPE,CHARACTER_MAXIMUM_LENGTH,NUMERIC_PRECISION,NUMERIC_SCALE,DATA_TYPE AS COLUMN_TYPE,COLUMN_KEY,EXTRA,COLUMN_COMMENT FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = '{$database}' AND TABLE_NAME = '{$tableName}'";
+            $sqlFields = "SELECT COLUMN_NAME,COLUMN_DEFAULT,IS_NULLABLE,DATA_TYPE,CHARACTER_MAXIMUM_LENGTH,NUMERIC_SCALE,DATA_TYPE,COLUMN_KEY,COLUMN_COMMENT FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = '{$database}' AND TABLE_NAME = '{$tableName}'";
             $fields = Db::select($sqlFields);
             if (!empty($fields)) {
                 foreach ($fields as &$field) {
-                    if ($field->IS_NULLABLE === 'YES') {
+                    if ($field->IS_NULLABLE === 'NO' && $field->COLUMN_DEFAULT=== null && $field->COLUMN_KEY !== 'PRI') {
                         $field->IS_NULLABLE = 1;
                         $field->LIST = 1;
                         $field->CREATE = 1;
                         $field->UPDATE = 1;
                         $field->DETAIL = 1;
                         $field->FILTER = 1;
+                        $field->VALIDATE = ['1'];
                     } else {
                         $field->IS_NULLABLE = 0;
                         $field->LIST = 0;
@@ -80,6 +81,7 @@ class TableService
                         $field->UPDATE = 0;
                         $field->DETAIL = 0;
                         $field->FILTER = 0;
+                        $field->VALIDATE = [];
                     }
                 }
             }

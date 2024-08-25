@@ -52,4 +52,12 @@ class GenerateController
         $data = TableService::tableSheetDetail($tableName);
         return renderSuccess($data);
     }
+
+
+    public function generate(Request $request): Response
+    {
+        $data = $request->post();
+        GenerateService::generate($data);
+        return renderSuccess("生成成功");
+    }
 }
