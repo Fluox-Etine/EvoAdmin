@@ -36,3 +36,15 @@ export async function tableDetail(
         ...(options || {}),
     });
 }
+
+/** 生成代码 POST /gen/generate */
+export async function gen(body: any, options?: RequestOptions) {
+    return request<any>('/gen/generate', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        data: body,
+        ...(options || {successMsg: '生成成功'}),
+    });
+}

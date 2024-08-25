@@ -8,21 +8,29 @@
         @tabChange="key => onTabChange(key)"
     >
       <template #extra>
-        <a-button type="primary" :icon="h(CodeOutlined)">开始生成</a-button>
+        <a-button type="primary" :icon="h(CodeOutlined)" @click="handleStart">开始生成</a-button>
       </template>
       <a-form :model="formState">
         <div v-show="key === 'base'" style="width: 100%;">
-          <a-divider orientation="left">基础信息</a-divider>
+          <a-alert
+              message="温馨提示（基础配置）"
+              description="温馨提示，现在还没有什么提示"
+              type="success"
+              show-icon
+          />
+          <br>
+          <br>
           <a-row :gutter="[16,64]">
             <a-col :span="12">
               <a-form-item label="表名称" :labelCol="{ span: 4 }" :wrapperCol="{ span: 20 }">
                 <a-input v-model:value="formState.tableName" disabled/>
               </a-form-item>
-              <a-form-item label="删除方式" :labelCol="{ span: 4 }" :wrapperCol="{ span: 20 }">
-                <a-radio-group v-model:value="formState.deleteType">
-                  <a-radio :value="1">软删除</a-radio>
-                  <a-radio :value="2">物理删除</a-radio>
-                </a-radio-group>
+              <a-form-item label="表主键" :labelCol="{ span: 4 }" :wrapperCol="{ span: 20 }">
+                <a-input v-model:value="formState.PK" disabled/>
+              </a-form-item>
+              <a-form-item label="模块名" tooltip="模块名，例如：user，生成文件路径为：api / user" :labelCol="{ span: 4 }"
+                           :wrapperCol="{ span: 20 }">
+                <a-input v-model:value="formState.moduleName"/>
               </a-form-item>
               <a-form-item label="类目录" :labelCol="{ span: 4 }" :wrapperCol="{ span: 20 }"
                            tooltip="生成代码文件放在的目录，例如：api，生成文件路径为：api / test；不填写时，默认为对应根目录">
@@ -36,13 +44,19 @@
               <a-form-item label="表描述" :labelCol="{ span: 4 }" :wrapperCol="{ span: 20 }">
                 <a-input v-model:value="formState.tableComment"/>
               </a-form-item>
-              <a-form-item label="模块名" tooltip="模块名，例如：user，生成文件路径为：api / user" :labelCol="{ span: 4 }"
-                           :wrapperCol="{ span: 20 }">
-                <a-input v-model:value="formState.moduleName"/>
+              <a-form-item label="删除方式" :labelCol="{ span: 4 }" :wrapperCol="{ span: 20 }">
+                <a-radio-group v-model:value="formState.deleteType">
+                  <a-radio :value="1">软删除</a-radio>
+                  <a-radio :value="2">物理删除</a-radio>
+                </a-radio-group>
               </a-form-item>
               <a-form-item label="类名称" :labelCol="{ span: 4 }" :wrapperCol="{ span: 20 }"
-                           tooltip="生成代码文件名，例如 填写test,生成文件描述为TestController、TestLogic、TestModel">
+                           tooltip="生成代码文件名，例如 填写Test,生成文件描述为TestController、TestLogic、TestModel">
                 <a-input v-model:value="formState.upperCameName"/>
+              </a-form-item>
+              <a-form-item label="类注释" tooltip="类注释，例如：注释信息" :labelCol="{ span: 4 }"
+                           :wrapperCol="{ span: 20 }">
+                <a-input v-model:value="formState.classComment"/>
               </a-form-item>
               <a-form-item label="菜单构建" tooltip="自动构建：自动执行生成菜单sql。手动添加：自行添加菜单。"
                            :labelCol="{ span: 4 }" :wrapperCol="{ span: 20 }">
@@ -57,7 +71,7 @@
         </div>
         <div v-show="key === 'field'" style="width: 100%;">
           <a-alert
-              message="温馨提示"
+              message="温馨提示（字段配置）"
               description="温馨提示，现在还没有什么提示"
               type="success"
               show-icon
@@ -107,7 +121,7 @@
               <!--              查询方式-->
               <template v-else-if="column.dataIndex === 'QUERY_TYPE'">
                 <a-select
-                    ref="select"
+                    allowClear
                     v-model:value="record.QUERY_TYPE"
                     style="width: 120px"
                 >
@@ -126,14 +140,102 @@
 
               <template v-else-if="column.dataIndex === 'PAGE_CONTROL'">
                 <a-select
-                    ref="select"
                     v-model:value="record.PAGE_CONTROL"
                     style="width: 120px"
                 >
                 </a-select>
               </template>
+
+              <template v-else-if="column.dataIndex === 'VALIDATE'">
+                <a-select
+                    mode="multiple"
+                    :max-tag-count="1"
+                    v-model:value="record.VALIDATE"
+                    style="width: 120px"
+                >
+                  <a-select-option value="1">必填项</a-select-option>
+                  <a-select-option value="2">数据长度</a-select-option>
+                  <a-select-option value="3">邮箱验证</a-select-option>
+                  <a-select-option value="3">手机号验证</a-select-option>
+                  <a-select-option value="4">数字验证</a-select-option>
+                </a-select>
+              </template>
             </template>
           </a-table>
+        </div>
+
+        <div v-show="key === 'gen'" style="width: 100%;">
+          <a-alert
+              message="温馨提示（生成配置）"
+              description="温馨提示，现在还没有什么提示"
+              type="success"
+              show-icon
+          />
+          <br>
+          <a-row :gutter="[16,32]">
+            <a-col :span="24">
+              <a-space>
+                验证器：
+                <a-checkbox v-model:checked="formState.gen.validate.create">创建</a-checkbox>
+                <a-checkbox v-model:checked="formState.gen.validate.update">更新</a-checkbox>
+              </a-space>
+            </a-col>
+            <a-col :span="24">
+              <a-space>
+                控制器：
+                <a-checkbox v-model:checked="formState.gen.controller.list">列表</a-checkbox>
+                <a-checkbox v-model:checked="formState.gen.controller.create">创建</a-checkbox>
+                <a-checkbox v-model:checked="formState.gen.controller.update">更新</a-checkbox>
+                <a-checkbox v-model:checked="formState.gen.controller.delete">删除</a-checkbox>
+                <a-checkbox v-model:checked="formState.gen.controller.detail">详情</a-checkbox>
+              </a-space>
+            </a-col>
+            <a-col :span="24">
+              <a-space>
+                逻辑层：
+                <a-checkbox v-model:checked="formState.gen.logic.list">列表</a-checkbox>
+                <a-checkbox v-model:checked="formState.gen.logic.create">创建</a-checkbox>
+                <a-checkbox v-model:checked="formState.gen.logic.update">更新</a-checkbox>
+                <a-checkbox v-model:checked="formState.gen.logic.delete">删除</a-checkbox>
+                <a-checkbox v-model:checked="formState.gen.logic.detail">详情</a-checkbox>
+              </a-space>
+            </a-col>
+            <a-col :span="24">
+              <a-space>
+                模型层：
+                <a-checkbox v-model:checked="formState.gen.model">生成基础模型</a-checkbox>
+              </a-space>
+            </a-col>
+            <a-col :span="24">
+              <a-space>
+                分页方式：
+                <a-radio-group v-model:value="formState.gen.paginate">
+                  <a-radio :value="true">分页列表</a-radio>
+                  <a-radio :value="false">不分页列表</a-radio>
+                </a-radio-group>
+              </a-space>
+            </a-col>
+          </a-row>
+        </div>
+
+        <div v-show="key === 'relation'" style="width: 100%;">
+          <a-alert
+              message="温馨提示（关联配置）"
+              description="暂时不做，这个不重要"
+              type="success"
+              show-icon
+          />
+          <br>
+        </div>
+
+        <div v-show="key === 'code'" style="width: 100%;">
+          <a-alert
+              message="温馨提示（预览代码）"
+              description="温馨提示，现在还没有什么提示"
+              type="success"
+              show-icon
+          />
+          <br>
         </div>
       </a-form>
     </a-card>
@@ -155,12 +257,16 @@ const tabList = [
     tab: '字段配置',
   },
   {
-    key: 'menu',
-    tab: '菜单配置',
+    key: 'gen',
+    tab: '生成配置',
   },
   {
     key: 'relation',
     tab: '关联配置',
+  },
+  {
+    key: 'code',
+    tab: `预览代码`
   }
 ];
 
@@ -177,7 +283,7 @@ const columns = [
   },
   {
     title: '物理类型',
-    dataIndex: 'COLUMN_TYPE'
+    dataIndex: 'DATA_TYPE'
   },
   {
     title: '必填',
@@ -215,25 +321,54 @@ const columns = [
   },
   {
     title: '数据字典',
-    dataIndex: 'dataDict'
+    dataIndex: 'DATA_DICT'
+  },
+  {
+    title: '数据验证',
+    dataIndex: 'VALIDATE',
+    width: 150,
   }
 ];
-
-const dataFieldsSource = ref([]);
 
 const formState: UnwrapRef<any> = reactive({
   tableName: '',
   tableComment: '',
+  PK: '',
   classDir: '',
   deleteType: 1,
   menuName: '',
   tableDesc: '',
   moduleName: '',
   upperCameName: '',
-  menuBuild: 1
+  menuBuild: 1,
+  gen: {
+    validate: {
+      create: true,
+      update: true,
+    },
+    controller: {
+      list: true,
+      create: true,
+      update: true,
+      delete: true,
+      detail: false,
+    },
+    logic: {
+      list: true,
+      create: true,
+      update: true,
+      delete: true,
+      detail: false,
+    },
+    model: true,
+    paginate: true,
+  },
 });
 
-const key = ref('field');
+const key = ref('gen');
+
+const dataFieldsSource = ref([]);
+
 
 /** 切换tab */
 const onTabChange = (value: string) => {
@@ -273,13 +408,23 @@ const handleFilterableChange = (record: any) => {
   record.FILTER = record.FILTER ? 0 : 1;
 };
 
+/** 获取表信息 */
 const fetchTableDetailData = async () => {
   const {fields, table} = await Api.tableDetail({tableName: 'evo_test_goods'});
   formState.tableName = table.Name;
   formState.tableComment = table.Comment;
+  formState.PK = table.PK;
   dataFieldsSource.value = fields;
 }
 
+const handleStart = async () => {
+  console.log(formState)
+  let data = {
+    ...formState,
+    fields: dataFieldsSource.value
+  }
+  const response = await Api.gen(data);
+}
 fetchTableDetailData();
 </script>
 
