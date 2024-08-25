@@ -2,6 +2,8 @@
 
 namespace app\http\generate\service;
 
+use support\exception\RespBusinessException;
+
 /**
  * 生成代码服务
  * @package app\http\generate\service
@@ -14,9 +16,10 @@ class GenerateService
     /**
      * 生成代码
      * @param array $params
-     * @return bool
+     * @return array
+     * @throws RespBusinessException
      */
-    public static function generate(array $params): bool
+    public static function generate(array $params): array
     {
         try {
             // 模块名
@@ -27,52 +30,61 @@ class GenerateService
             $date = date('Y/m/d H:i');
             // 包名
             $packageName = self::getPackageNameContent($params['classDir']);
-
             // 生成控制器
-//            $tmpController = ControllerService::handleController([
-//                'moduleName' => $moduleName,
-//                'classDir' => $params['classDir'],
-//                'tableName' => $tableName,
-//                'upperCameName' => $params['upperCameName'],
-//                'classComment' => $params['classComment'],
-//                'packageName' => $packageName,
-//                'methods' => $params['gen']['controller'],
-//                'date' => $date
-//            ]);
-//            var_dump($tmpController);
+            $tmpController = '';
+            if (in_array(true, $params['gen']['controller'], true)) {
+                $tmpController = ControllerService::handleController([
+                    'moduleName' => $moduleName,
+                    'classDir' => $params['classDir'],
+                    'tableName' => $tableName,
+                    'upperCameName' => $params['upperCameName'],
+                    'classComment' => $params['classComment'],
+                    'packageName' => $packageName,
+                    'methods' => $params['gen']['controller'],
+                    'date' => $date
+                ]);
+            }
+
             // 生成逻辑层
-//            $tmpLogic = LogicService::handleLogic([
-//                'moduleName' => $moduleName,
-//                'classDir' => $params['classDir'],
-//                'tableName' => $tableName,
-//                'upperCameName' => $params['upperCameName'],
-//                'classComment' => $params['classComment'],
-//                'packageName' => $packageName,
-//                'gen' => $params['gen'],
-//                'date' => $date,
-//                'PK' => $params['PK'],
-//                'fields' => $params['fields'],
-//            ]);
-//            var_dump($tmpLogic);
+            $tmpLogic = '';
+            if (in_array(true, $params['gen']['logic'], true)) {
+                $tmpLogic = LogicService::handleLogic([
+                    'moduleName' => $moduleName,
+                    'classDir' => $params['classDir'],
+                    'tableName' => $tableName,
+                    'upperCameName' => $params['upperCameName'],
+                    'classComment' => $params['classComment'],
+                    'packageName' => $packageName,
+                    'gen' => $params['gen'],
+                    'date' => $date,
+                    'PK' => $params['PK'],
+                    'fields' => $params['fields'],
+                ]);
+            }
 
             // 生成模型
-            $tmpModel = ModelService::handleModel([
-                'moduleName' => $moduleName,
-                'classDir' => $params['classDir'],
-                'tableName' => $tableName,
-                'upperCameName' => $params['upperCameName'],
-                'classComment' => $params['classComment'],
-                'packageName' => $packageName,
-                'PK' => $params['PK'],
-                'deleteType' => $params['deleteType'],
-                'date' => $date
-            ]);
-
-            var_dump($tmpModel);
-            return true;
+            $tmpModel = '';
+            if ($params['gen']['model']) {
+                $tmpModel = ModelService::handleModel([
+                    'moduleName' => $moduleName,
+                    'classDir' => $params['classDir'],
+                    'tableName' => $tableName,
+                    'upperCameName' => $params['upperCameName'],
+                    'classComment' => $params['classComment'],
+                    'packageName' => $packageName,
+                    'PK' => $params['PK'],
+                    'deleteType' => $params['deleteType'],
+                    'date' => $date
+                ]);
+            }
+            return [
+                'controller' => $tmpController,
+                'logic' => $tmpLogic,
+                'model' => $tmpModel
+            ];
         } catch (\Throwable $e) {
             exceptionLog($e);
-            return false;
+            throw new RespBusinessException($e->getMessage());
         }
     }
 
@@ -82,7 +94,7 @@ class GenerateService
      * @param string $tableName
      * @return string
      */
-    private static function getNoPrefixTableName(string $tableName): string
+    public static function getNoPrefixTableName(string $tableName): string
     {
         $prefix = config('database.connections.mysql.prefix');
         $prefixIndex = strpos($tableName, $prefix);
@@ -99,7 +111,7 @@ class GenerateService
      * @param bool $firstCharacterUpper
      * @return string
      */
-    private static function underscoreToCamelCase(string $underscoreName, bool $firstCharacterUpper = true): string
+    public static function underscoreToCamelCase(string $underscoreName, bool $firstCharacterUpper = true): string
     {
         // 将下划线命名法转换为数组
         $parts = explode('_', $underscoreName);

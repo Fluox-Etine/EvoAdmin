@@ -130,7 +130,6 @@ class LogicService
 
         // 处理查询条件
         $formatQuery = self::getFormatQueryContent($queryColumn);
-
         // 处理字段显示问题
         $fields = '*';
         if (!empty($listColumn)) {
@@ -155,9 +154,9 @@ class LogicService
             $notes,
             $date,
             $upperCameName,
-            $formatQuery['content'],
-            $formatQuery['filterStr'],
-            $formatQuery['otherWhere'],
+            $formatQuery['content'] ?? '',
+            $formatQuery['filterStr'] ?? '',
+            $formatQuery['otherWhere'] ?? '',
             $fields,
             $methodList,
             $formatData

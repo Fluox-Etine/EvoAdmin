@@ -3,6 +3,7 @@
 namespace app\http\generate\service;
 
 use support\Db;
+use support\exception\RespBusinessException;
 
 class TableService
 {
@@ -64,7 +65,7 @@ class TableService
             $database = config('database.connections.mysql.database');
             $sqlTable = "SHOW TABLE STATUS WHERE  Name = " . "'{$tableName}'";
             $table = Db::select($sqlTable);
-            if (empty($table)){
+            if (empty($table)) {
                 throw new \Exception('数据表不存在');
             }
             $table = $table[0];
@@ -90,18 +91,25 @@ class TableService
                         $field->VALIDATE = [];
                     }
                     $field->QUERY_TYPE = '';
-                    if($field->COLUMN_KEY === 'PRI'){
+                    if ($field->COLUMN_KEY === 'PRI') {
                         $table->PK = $field->COLUMN_NAME;
                     }
                 }
             }
+            $tableName = GenerateService::getNoPrefixTableName($table->Name);
+            $tableNameArray = explode('_', $tableName);
+            $upperCameName = GenerateService::underscoreToCamelCase($tableName);
+            if (!empty($tableNameArray) && count($tableNameArray) > 1) {
+                $table->classDir = $tableNameArray[0];
+            }
+            $table->upperCameName = $upperCameName;
             return [
                 'fields' => $fields,
-                'table' => $table?? []
+                'table' => $table ?? []
             ];
         } catch (\Throwable $e) {
             exceptionLog($e);
-            return [];
+            throw new RespBusinessException($e->getMessage());
         }
     }
 }

@@ -1,5 +1,6 @@
 <?php
 
+use app\middleware\ActionMiddleware;
 use Webman\Route;
 
 Route::group('/v1', function () {
@@ -33,11 +34,11 @@ Route::group('/v1', function () {
                 // 获取菜单列表
                 Route::GET('/list', ['app\http\admin\controller\system\MenuController', 'list']);
                 // 新增菜单或权限
-                Route::POST('/create', ['app\http\admin\controller\system\MenuController', 'create']);
+                Route::POST('/create', ['app\http\admin\controller\system\MenuController', 'create'])->middleware(ActionMiddleware::class);
                 // 修改菜单或权限
-                Route::POST('/update', ['app\http\admin\controller\system\MenuController', 'update']);
+                Route::POST('/update', ['app\http\admin\controller\system\MenuController', 'update'])->middleware(ActionMiddleware::class);
                 // 删除菜单或权限
-                Route::POST('/delete', ['app\http\admin\controller\system\MenuController', 'delete']);
+                Route::POST('/delete', ['app\http\admin\controller\system\MenuController', 'delete'])->middleware(ActionMiddleware::class);
                 //获取后端定义的所有权限集
                 Route::GET('/permissions', ['app\http\admin\controller\system\MenuController', 'permissions']);
             });
@@ -46,11 +47,11 @@ Route::group('/v1', function () {
                 // 获取角色列表
                 Route::GET('/list', ['app\http\admin\controller\system\RoleController', 'list']);
                 // 新增角色
-                Route::POST('/create', ['app\http\admin\controller\system\RoleController', 'create']);
+                Route::POST('/create', ['app\http\admin\controller\system\RoleController', 'create'])->middleware(ActionMiddleware::class);
                 // 修改角色
-                Route::POST('/update', ['app\http\admin\controller\system\RoleController', 'update']);
+                Route::POST('/update', ['app\http\admin\controller\system\RoleController', 'update'])->middleware(ActionMiddleware::class);
                 // 删除角色
-                Route::GET('/delete', ['app\http\admin\controller\system\RoleController', 'delete']);
+                Route::GET('/delete', ['app\http\admin\controller\system\RoleController', 'delete'])->middleware(ActionMiddleware::class);
                 // 角色详情
                 Route::GET('/detail', ['app\http\admin\controller\system\RoleController', 'detail']);
             });

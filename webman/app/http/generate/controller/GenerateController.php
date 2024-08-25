@@ -4,6 +4,7 @@ namespace app\http\generate\controller;
 
 use app\http\generate\service\GenerateService;
 use app\http\generate\service\TableService;
+use support\exception\RespBusinessException;
 use support\Request;
 use support\Response;
 
@@ -15,18 +16,6 @@ class GenerateController
      */
     public function test(): Response
     {
-        $data = [
-            'module_name' => 'admin',
-            'class_dir' => '',
-            'table_name' => 'user',
-            'class_comment' => '用户管理',
-            'lists' => 1,
-            'create' => 0,
-            'update' => 1,
-            'delete' => 1,
-            'detail' => 0
-        ];
-        GenerateService::generate($data);
         return renderSuccess('生成成功');
     }
 
@@ -54,10 +43,16 @@ class GenerateController
     }
 
 
+    /**
+     * 生成代码
+     * @param Request $request
+     * @return Response
+     * @throws RespBusinessException
+     */
     public function generate(Request $request): Response
     {
         $data = $request->post();
-        GenerateService::generate($data);
-        return renderSuccess("生成成功");
+        $result = GenerateService::generate($data);
+        return renderSuccess($result);
     }
 }
