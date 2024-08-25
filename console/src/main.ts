@@ -4,9 +4,15 @@ import {setupRouter} from './router';
 import {setupStore} from '@/store';
 import {setupAntd, setupAssets, setupGlobalMethods} from '@/plugins';
 import {setupIcons} from "@/components/core/icon";
+import hljsVuePlugin from '@highlightjs/vue-plugin'
+import hljs from 'highlight.js/lib/core'
+import php from 'highlight.js/lib/languages/php'
+import 'highlight.js/styles/a11y-dark.css'
 
 const app = createApp(App)
 
+
+hljs.registerLanguage('php', php)
 function setupPlugins() {
     // 安装图标
     setupIcons();
@@ -24,4 +30,4 @@ setupStore(app);
 await setupRouter(app);
 setupPlugins();
 
-app.mount('#app');
+app.use(hljsVuePlugin).mount('#app');

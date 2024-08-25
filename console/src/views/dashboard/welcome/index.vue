@@ -3,18 +3,18 @@
     <a-card
         style="width: 100%;margin-bottom: 20px"
         title="代码生成器"
-        :tab-list="tabList"
-        :active-tab-key="key"
-        @tabChange="key => onTabChange(key)"
+        :tab-list="tabBaseList"
+        :active-tab-key="baseKey"
+        @tabChange="key => onBaseTabChange(key)"
     >
       <template #extra>
         <a-button type="primary" :icon="h(CodeOutlined)" @click="handleStart">开始生成</a-button>
       </template>
       <a-form :model="formState">
-        <div v-show="key === 'base'" style="width: 100%;">
+        <div v-show="baseKey === 'base'" style="width: 100%;">
           <a-alert
               message="温馨提示（基础配置）"
-              description="温馨提示，现在还没有什么提示"
+              description="Github地址：https://github.com/Fluox-Etine/Evo-PHP-Admin"
               type="success"
               show-icon
           />
@@ -69,10 +69,10 @@
             </a-col>
           </a-row>
         </div>
-        <div v-show="key === 'field'" style="width: 100%;">
+        <div v-show="baseKey === 'field'" style="width: 100%;">
           <a-alert
               message="温馨提示（字段配置）"
-              description="温馨提示，现在还没有什么提示"
+              description="Gitee地址：https://gitee.com/old-friends-come-again/Evo-PHP-Admin"
               type="success"
               show-icon
           />
@@ -164,7 +164,7 @@
           </a-table>
         </div>
 
-        <div v-show="key === 'gen'" style="width: 100%;">
+        <div v-show="baseKey === 'gen'" style="width: 100%;">
           <a-alert
               message="温馨提示（生成配置）"
               description="温馨提示，现在还没有什么提示"
@@ -218,7 +218,7 @@
           </a-row>
         </div>
 
-        <div v-show="key === 'relation'" style="width: 100%;">
+        <div v-show="baseKey === 'relation'" style="width: 100%;">
           <a-alert
               message="温馨提示（关联配置）"
               description="暂时不做，这个不重要"
@@ -228,14 +228,8 @@
           <br>
         </div>
 
-        <div v-show="key === 'code'" style="width: 100%;">
-          <a-alert
-              message="温馨提示（预览代码）"
-              description="温馨提示，现在还没有什么提示"
-              type="success"
-              show-icon
-          />
-          <br>
+        <div v-show="baseKey === 'code'" style="width: 100%;">
+          <CodeView :code='codeData'></CodeView>
         </div>
       </a-form>
     </a-card>
@@ -246,8 +240,10 @@
 import {h, reactive, ref, type UnwrapRef} from 'vue';
 import {CodeOutlined} from '@ant-design/icons-vue';
 import * as Api from '@/api/backend/gen'
+import {message as $message} from "ant-design-vue/es/components";
+import CodeView from "@/views/dashboard/welcome/modules/codeView.vue";
 
-const tabList = [
+const tabBaseList = [
   {
     key: 'base',
     tab: '基础配置',
@@ -266,9 +262,10 @@ const tabList = [
   },
   {
     key: 'code',
-    tab: `预览代码`
+    tab: `代码预览`
   }
 ];
+
 
 const columns = [
   {
@@ -287,23 +284,28 @@ const columns = [
   },
   {
     title: '必填',
-    dataIndex: 'IS_NULLABLE'
+    dataIndex: 'IS_NULLABLE',
+    width: 50,
   },
   {
     title: '列表操作',
-    dataIndex: 'LIST'
+    dataIndex: 'LIST',
+    width: 70,
   },
   {
     title: '创建操作',
-    dataIndex: 'CREATE'
+    dataIndex: 'CREATE',
+    width: 70,
   },
   {
     title: '更新操作',
-    dataIndex: 'UPDATE'
+    dataIndex: 'UPDATE',
+    width: 70,
   },
   {
     title: '详情操作',
-    dataIndex: 'DETAIL'
+    dataIndex: 'DETAIL',
+    width: 70,
   },
   {
     title: '列表筛选',
@@ -338,7 +340,7 @@ const formState: UnwrapRef<any> = reactive({
   deleteType: 1,
   menuName: '',
   tableDesc: '',
-  moduleName: '',
+  moduleName: 'api',
   upperCameName: '',
   menuBuild: 1,
   gen: {
@@ -365,15 +367,22 @@ const formState: UnwrapRef<any> = reactive({
   },
 });
 
-const key = ref('gen');
+
+const baseKey = ref('base');
 
 const dataFieldsSource = ref([]);
 
+const codeData = ref({
+  controller: '',
+  logic: '',
+  model: ''
+});
 
 /** 切换tab */
-const onTabChange = (value: string) => {
-  key.value = value;
+const onBaseTabChange = (value: string) => {
+  baseKey.value = value;
 };
+
 
 /** 是否必填数据 */
 const handleIsNullableChange = (record: any) => {
@@ -414,16 +423,27 @@ const fetchTableDetailData = async () => {
   formState.tableName = table.Name;
   formState.tableComment = table.Comment;
   formState.PK = table.PK;
+  formState.classComment = table.Comment;
+  formState.upperCameName = table.upperCameName;
+  formState.classDir = table.classDir;
   dataFieldsSource.value = fields;
 }
 
 const handleStart = async () => {
-  console.log(formState)
+// 拦截数据
+  if (!formState.upperCameName) {
+    baseKey.value = 'base';
+    $message.error('请填写类名');
+    return
+  }
   let data = {
     ...formState,
     fields: dataFieldsSource.value
   }
   const response = await Api.gen(data);
+  const {controller, logic, model} = response;
+  Object.assign(codeData.value, {controller, logic, model});
+  baseKey.value = 'code';
 }
 fetchTableDetailData();
 </script>
