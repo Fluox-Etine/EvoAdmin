@@ -8,7 +8,7 @@
     public static function handleDelete(array $params): bool
     {
         try {
-            return {UPPER_CAMEL_NAME}Model::query()->where('{PK}', $params['{PK}'])->delete() != false;
+            return {UPPER_CAMEL_NAME}Model::query()->where('{PK}', $params['{WHERE_PK}'])->delete() != false;
         } catch (\Exception $e) {
             return false;
         }

@@ -62,11 +62,17 @@ class TableService
     {
         try {
             $database = config('database.connections.mysql.database');
+            $sqlTable = "SHOW TABLE STATUS WHERE  Name = " . "'{$tableName}'";
+            $table = Db::select($sqlTable);
+            if (empty($table)){
+                throw new \Exception('数据表不存在');
+            }
+            $table = $table[0];
             $sqlFields = "SELECT COLUMN_NAME,COLUMN_DEFAULT,IS_NULLABLE,DATA_TYPE,CHARACTER_MAXIMUM_LENGTH,NUMERIC_SCALE,DATA_TYPE,COLUMN_KEY,COLUMN_COMMENT FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = '{$database}' AND TABLE_NAME = '{$tableName}'";
             $fields = Db::select($sqlFields);
             if (!empty($fields)) {
                 foreach ($fields as &$field) {
-                    if ($field->IS_NULLABLE === 'NO' && $field->COLUMN_DEFAULT=== null && $field->COLUMN_KEY !== 'PRI') {
+                    if ($field->IS_NULLABLE === 'NO' && $field->COLUMN_DEFAULT === null && $field->COLUMN_KEY !== 'PRI') {
                         $field->IS_NULLABLE = 1;
                         $field->LIST = 1;
                         $field->CREATE = 1;
@@ -83,15 +89,17 @@ class TableService
                         $field->FILTER = 0;
                         $field->VALIDATE = [];
                     }
+                    $field->QUERY_TYPE = '';
+                    if($field->COLUMN_KEY === 'PRI'){
+                        $table->PK = $field->COLUMN_NAME;
+                    }
                 }
             }
-            $sqlTable = "SHOW TABLE STATUS WHERE  Name = " . "'{$tableName}'";
-            $table = Db::select($sqlTable);
             return [
                 'fields' => $fields,
-                'table' => $table[0] ?? []
+                'table' => $table?? []
             ];
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             exceptionLog($e);
             return [];
         }

@@ -21,45 +21,57 @@ class GenerateService
         try {
             // 模块名
             $moduleName = strtolower($params['moduleName']);
-            // 类目录
-            $classDir = $params['classDir'];
             // 数据库表名
             $tableName = self::getNoPrefixTableName($params['tableName']);
-            // 包名
-            $upperCameName = $params['upperCameName'];
             // 时间
             $date = date('Y/m/d H:i');
-            // 类注释
-            $classComment = $params['classComment'];
             // 包名
-            $packageName = self::getPackageNameContent($classDir);
-
-            // 删除方式
-            $deleteType = $params['deleteType'];
+            $packageName = self::getPackageNameContent($params['classDir']);
 
             // 生成控制器
-            $tmpController = ControllerService::handleController([
+//            $tmpController = ControllerService::handleController([
+//                'moduleName' => $moduleName,
+//                'classDir' => $params['classDir'],
+//                'tableName' => $tableName,
+//                'upperCameName' => $params['upperCameName'],
+//                'classComment' => $params['classComment'],
+//                'packageName' => $packageName,
+//                'methods' => $params['gen']['controller'],
+//                'date' => $date
+//            ]);
+//            var_dump($tmpController);
+            // 生成逻辑层
+//            $tmpLogic = LogicService::handleLogic([
+//                'moduleName' => $moduleName,
+//                'classDir' => $params['classDir'],
+//                'tableName' => $tableName,
+//                'upperCameName' => $params['upperCameName'],
+//                'classComment' => $params['classComment'],
+//                'packageName' => $packageName,
+//                'gen' => $params['gen'],
+//                'date' => $date,
+//                'PK' => $params['PK'],
+//                'fields' => $params['fields'],
+//            ]);
+//            var_dump($tmpLogic);
+
+            // 生成模型
+            $tmpModel = ModelService::handleModel([
                 'moduleName' => $moduleName,
-                'classDir' => $classDir,
+                'classDir' => $params['classDir'],
                 'tableName' => $tableName,
-                'upperCameName' => $upperCameName,
-                'classComment' => $classComment,
+                'upperCameName' => $params['upperCameName'],
+                'classComment' => $params['classComment'],
                 'packageName' => $packageName,
-                'methods' => $params['gen']['controller'],
+                'PK' => $params['PK'],
+                'deleteType' => $params['deleteType'],
                 'date' => $date
             ]);
-            var_dump($tmpController);
-            // 生成逻辑层
-//            $tmpLogic = LogicService::handleLogic([]);
-//
-//            // 生成模型
-//            $tmpModel = ModelService::handleModel([]);
 
+            var_dump($tmpModel);
             return true;
         } catch (\Throwable $e) {
-            var_dump('GenerateService===getMessage===' . $e->getMessage());
-            var_dump('GenerateService===getFile===' . $e->getFile());
-            var_dump('GenerateService===getLine===' . $e->getLine());
+            exceptionLog($e);
             return false;
         }
     }
@@ -81,29 +93,40 @@ class GenerateService
     }
 
 
-//    /**
-//     * 下划线转驼峰(首字母大写)
-//     * @param string $underscoreName
-//     * @param bool $firstCharacterUpper
-//     * @return string
-//     */
-//    private static function underscoreToCamelCase(string $underscoreName, bool $firstCharacterUpper = true): string
-//    {
-//        // 将下划线命名法转换为数组
-//        $parts = explode('_', $underscoreName);
-//
-//        // 处理每个部分，使其首字母大写
-//        $parts = array_map('ucfirst', $parts);
-//
-//        // 将数组合并为字符串
-//        $result = implode('', $parts);
-//
-//        // 如果需要首字母大写，转换第一个字符
-//        if ($firstCharacterUpper) {
-//            $result[0] = strtoupper($result[0]);
-//        }
-//        return $result;
-//    }
+    /**
+     * 下划线转驼峰(首字母大写)
+     * @param string $underscoreName
+     * @param bool $firstCharacterUpper
+     * @return string
+     */
+    private static function underscoreToCamelCase(string $underscoreName, bool $firstCharacterUpper = true): string
+    {
+        // 将下划线命名法转换为数组
+        $parts = explode('_', $underscoreName);
+
+        // 处理每个部分，使其首字母大写
+        $parts = array_map('ucfirst', $parts);
+
+        // 将数组合并为字符串
+        $result = implode('', $parts);
+
+        // 如果需要首字母大写，转换第一个字符
+        if ($firstCharacterUpper) {
+            $result[0] = strtoupper($result[0]);
+        }
+        return $result;
+    }
+
+
+    /**
+     * 蛇形转小驼峰
+     * @param $snakeCase
+     * @return string
+     */
+    public static function snakeToCamelCase($snakeCase): string
+    {
+        return lcfirst(str_replace('_', '', ucwords($snakeCase, '_')));
+    }
 
 
     /**
@@ -138,14 +161,18 @@ class GenerateService
      */
     public static function getNameSpaceContent(string $moduleName, string $classDir, string $upperCameName, string $component): string
     {
+        if (empty($moduleName)) {
+            $tplStr = "namespace app\\http";
+        } else {
+            $tplStr = "namespace app\\http\\$moduleName";
+        }
         $lowerComponent = strtolower($component);
         if (empty($classDir)) {
-            return "namespace app\\http\\$moduleName\\$lowerComponent;";
+            return $tplStr . "\\$lowerComponent;";
         }
         $ucfComponent = ucfirst($component);
-        return "namespace app\\http\\$moduleName\\{$lowerComponent}\\" . $classDir . '\\' . $upperCameName . $ucfComponent . ";";
+        return $tplStr . "\\$lowerComponent\\" . $classDir . '\\' . $upperCameName . $ucfComponent . ";";
     }
-
 
     /**
      * 替换文件数据

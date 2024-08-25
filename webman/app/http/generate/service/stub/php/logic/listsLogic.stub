@@ -9,13 +9,14 @@
     {
         try {
             $filter = [];
-            $param = setQueryDefaultValue($param, [
+            $param = setQueryDefaultValue($params, [{
 {QUERY_CONDITION}
+                }
             ]);
 
-            {{QUERY_DATA}}
-            $list = {UPPER_CAMEL_NAME}Model::query()->where($filter)->orderBy({ORDER_BY_DATA})->{METHOD_LIST};
-            return formattedPaginate($list);
+{FILTER_DATA}
+            $list = {UPPER_CAMEL_NAME}Model::query()->where($filter){OTHER_WHERE}->select({FIELDS})->{METHOD_LIST};
+            {FORMAT_DATA}
         } catch (\Exception $e) {
             return [];
         }

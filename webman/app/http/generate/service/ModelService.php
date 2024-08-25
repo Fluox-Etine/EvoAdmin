@@ -17,15 +17,16 @@ class ModelService
             '{NAMESPACE}',
             '{USE}',
             '{CLASS_COMMENT}',
+            '{DATE}',
             '{UPPER_CAMEL_NAME}',
             '{MODULE_NAME}',
             '{PACKAGE_NAME}',
             '{DELETE_USE}',
-            'TABLE_NAME',
-            'PRIMARY_KEY'
+            '{TABLE_NAME}',
+            '{PRIMARY_KEY}'
         ];
         $deleteUse = '';
-        if ($params['deleteType'] == 2) {
+        if ($params['deleteType'] === 1) {
             // 2 软删除
             $deleteUse = 'use SoftDeletes;' . PHP_EOL;
         }
@@ -34,12 +35,13 @@ class ModelService
             self::getNameSpaceContent($params['classDir']),
             self::getUserContent($params['deleteType']),
             $params['classComment'],
+            $params['date'],
             $params['upperCameName'],
             $params['moduleName'],
             $params['packageName'],
             $deleteUse,
             $params['tableName'],
-            $params['pk']
+            $params['PK']
         ];
         $templatePath = GenerateService::getTemplatePath('php/model');
         return GenerateService::replaceFileData($needReplace, $waitReplace, $templatePath);
@@ -68,7 +70,7 @@ class ModelService
     private static function getUserContent(int $deleteType): string
     {
         $content = '';
-        if ($deleteType == 2) {
+        if ($deleteType == 1) {
             $content .= 'use Illuminate\Database\Eloquent\SoftDeletes;' . PHP_EOL;
         }
         return $content;

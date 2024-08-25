@@ -17,6 +17,7 @@ class LogicService
             '{NAMESPACE}',
             '{USE}',
             '{CLASS_COMMENT}',
+            '{DATE}',
             '{UPPER_CAMEL_NAME}',
             '{MODULE_NAME}',
             '{PACKAGE_NAME}',
@@ -25,15 +26,15 @@ class LogicService
 
         // 等待替换的内容
         $waitReplace = [
-            GenerateService::getNameSpaceContent($params['moduleName'], $params['classDir'], 'logic'),
+            GenerateService::getNameSpaceContent($params['moduleName'], $params['classDir'], $params['upperCameName'], 'logic'),
             self::getUseContent($params['classDir'], $params['upperCameName']),
             $params['classComment'],
+            $params['date'],
             $params['upperCameName'],
             $params['moduleName'],
             $params['packageName'],
-            self::handleFunctions($params['methods'], $params['classComment'], $params['date'], $params['upperCameName'], $params['pk'], $params['queryColumn'], $params['createColumn'], $params['updateColumn'], $params['fields'])
+            self::handleFunctions($params['gen'], $params['classComment'], $params['date'], $params['upperCameName'], $params['PK'], $params['fields'])
         ];
-
         $templatePath = GenerateService::getTemplatePath('php/logic');
         // 替换内容
         return GenerateService::replaceFileData($needReplace, $waitReplace, $templatePath);
@@ -59,34 +60,45 @@ class LogicService
 
     /**
      * 处理方法
-     * @param array $method
+     * @param array $gen
      * @param string $notes
      * @param string $date
      * @param string $upperCameName
-     * @param string $pk
-     * @param array $queryColumn
-     * @param array $createColumn
-     * @param array $updateColumn
+     * @param string $PK
      * @param array $fields
      * @return string
      */
-    private static function handleFunctions(array $method, string $notes, string $date, string $upperCameName, string $pk, array $queryColumn, array $createColumn, array $updateColumn, array $fields): string
+    private static function handleFunctions(array $gen, string $notes, string $date, string $upperCameName, string $PK, array $fields): string
     {
+        $action = [
+            'list' => [],
+            'create' => [],
+            'update' => [],
+            'detail' => [],
+            'query' => []
+        ];
+        foreach ($fields as $field) {
+            if ($field['LIST']) $action['list'][] = $field;
+            if ($field['CREATE']) $action['create'][] = $field;
+            if ($field['UPDATE']) $action['update'][] = $field;
+            if ($field['DETAIL']) $action['detail'][] = $field;
+            if ($field['QUERY_TYPE']) $action['query'][] = $field;
+        }
         $content = '';
-        if ($method['lists']) {
-            $content .= self::handleLists($notes, $date, $upperCameName, $queryColumn);
+        if ($gen['logic']['list']) {
+            $content .= self::handleLists($notes, $date, $upperCameName, $action['query'], $action['list'], $gen['paginate']) . PHP_EOL;
         }
-        if ($method['create']) {
-            $content .= self::handleCreate($notes, $date, $upperCameName, $createColumn);
+        if ($gen['logic']['create']) {
+            $content .= self::handleCreate($notes, $date, $upperCameName, $action['create']) . PHP_EOL;
         }
-        if ($method['update']) {
-            $content .= self::handleUpdate($notes, $date, $upperCameName, $pk, $updateColumn);
+        if ($gen['logic']['update']) {
+            $content .= self::handleUpdate($notes, $date, $upperCameName, $PK, $action['update']) . PHP_EOL;
         }
-        if ($method['detail']) {
-            $content .= self::handleDetail($notes, $date, $upperCameName, $pk, $fields);
+        if ($gen['logic']['detail']) {
+            $content .= self::handleDetail($notes, $date, $upperCameName, $PK, $action['detail']) . PHP_EOL;
         }
-        if ($method['delete']) {
-            $content .= self::handleDelete($notes, $date, $upperCameName, $pk);
+        if ($gen['logic']['delete']) {
+            $content .= self::handleDelete($notes, $date, $upperCameName, $PK);
         }
         return $content;
     }
@@ -97,24 +109,58 @@ class LogicService
      * @param string $date
      * @param string $upperCameName
      * @param array $queryColumn
+     * @param $listColumn
+     * @param bool $paginate
      * @return string
      */
-    private static function handleLists(string $notes, string $date, string $upperCameName, array $queryColumn): string
+    private static function handleLists(string $notes, string $date, string $upperCameName, array $queryColumn, $listColumn, bool $paginate): string
     {
         // 需要替换的变量
         $needReplace = [
             '{NOTES}',
             '{DATE}',
             '{UPPER_CAMEL_NAME}',
-            'QUERY_CONDITION'
+            '{QUERY_CONDITION}',
+            '{FILTER_DATA}',
+            '{OTHER_WHERE}',
+            '{FIELDS}',
+            '{METHOD_LIST}',
+            '{FORMAT_DATA}'
         ];
-        $queryCondition = self::getFormatQueryContent($queryColumn);
+
+        // 处理查询条件
+        $formatQuery = self::getFormatQueryContent($queryColumn);
+
+        // 处理字段显示问题
+        $fields = '*';
+        if (!empty($listColumn)) {
+            $fields = '';
+            foreach ($listColumn as $value) {
+                $fields .= "'" . $value['COLUMN_NAME'] . "'" . ',';
+            }
+            // 去除最后一个逗号
+            $fields = substr($fields, 0, -1);
+        }
+
+        // 处理分页问题
+        if ($paginate) {
+            $methodList = 'paginate($params["pageSize"] ?? 10);';
+            $formatData = 'return formattedPaginate($list);';
+        } else {
+            $methodList = 'get()';
+            $formatData = 'return empty($list) ? [] : $list->toArray();';
+        }
         // 等待替换的内容
         $waitReplace = [
             $notes,
             $date,
             $upperCameName,
-            $queryCondition
+            $formatQuery['content'],
+            $formatQuery['filterStr'],
+            $formatQuery['otherWhere'],
+            $fields,
+            $methodList,
+            $formatData
         ];
         $templatePath = GenerateService::getTemplatePath('php/logic/listsLogic');
         return GenerateService::replaceFileData($needReplace, $waitReplace, $templatePath);
@@ -166,6 +212,7 @@ class LogicService
             '{DATE}',
             '{UPPER_CAMEL_NAME}',
             '{PK}',
+            '{WHERE_PK}',
             'UPDATE_DATA'
         ];
         $createData = self::getFormatDataContent($updateColumn);
@@ -175,6 +222,7 @@ class LogicService
             $date,
             $upperCameName,
             $pk,
+            GenerateService::snakeToCamelCase($pk),
             $createData
         ];
         $templatePath = GenerateService::getTemplatePath('php/logic/updateLogic');
@@ -197,14 +245,16 @@ class LogicService
             '{NOTES}',
             '{DATE}',
             '{UPPER_CAMEL_NAME}',
-            '{PK}'
+            '{PK}',
+            '{WHERE_PK}'
         ];
         // 等待替换的内容
         $waitReplace = [
             $notes,
             $date,
             $upperCameName,
-            $pk
+            $pk,
+            GenerateService::snakeToCamelCase($pk),
         ];
         $templatePath = GenerateService::getTemplatePath('php/logic/deleteLogic');
         return GenerateService::replaceFileData($needReplace, $waitReplace, $templatePath);
@@ -228,14 +278,25 @@ class LogicService
             '{DATE}',
             '{UPPER_CAMEL_NAME}',
             '{PK}',
+            '{WHERE_PK}',
             '{FIELDS}'
         ];
+        $fields = '*';
+        if (!empty($listColumn)) {
+            $fields = '';
+            foreach ($listColumn as $value) {
+                $fields .= "'" . $value['COLUMN_NAME'] . "'" . ',';
+            }
+            // 去除最后一个逗号
+            $fields = substr($fields, 0, -1);
+        }
         // 等待替换的内容
         $waitReplace = [
             $notes,
             $date,
             $upperCameName,
             $pk,
+            GenerateService::snakeToCamelCase($pk),
             $fields
         ];
         $templatePath = GenerateService::getTemplatePath('php/logic/detailLogic');
@@ -276,34 +337,69 @@ class LogicService
      */
     private static function formatColumn(array $column): string
     {
-        if ($column['column_type'] == 'int' && $column['view_type'] == 'datetime') {
-            // 物理类型为int，显示类型选择日期的情况
-            $content = "'" . $column['column_name'] . "' => " . 'strtotime($params[' . "'" . $column['column_name'] . "'" . ']),' . PHP_EOL;
-        } else {
-            $content = "'" . $column['column_name'] . "' => " . '$params[' . "'" . $column['column_name'] . "'" . '],' . PHP_EOL;
-        }
-        return $content;
+//        if ($column['column_type'] == 'int' && $column['view_type'] == 'datetime') {
+//            // 物理类型为int，显示类型选择日期的情况
+//            $content = "'" . $column['column_name'] . "' => " . 'strtotime($params[' . "'" . $column['column_name'] . "'" . ']),' . PHP_EOL;
+//        } else {
+        //        }
+        $columnName = GenerateService::snakeToCamelCase($column['COLUMN_NAME']);
+        return "'" . $column['COLUMN_NAME'] . "' => " . '$params[' . "'" . $columnName . "'" . '],' . PHP_EOL;
     }
 
 
     /**
      * 获取查询条件
      * @param array $tableColumn
-     * @return string
+     * @return array
      */
-    private static function getFormatQueryContent(array $tableColumn): string
+    private static function getFormatQueryContent(array $tableColumn): array
     {
         if (empty($tableColumn)) {
-            return '';
+            return [];
         }
         $content = '';
+
+        $filterStr = '';
+        $filterWhere = '';
         foreach ($tableColumn as $column) {
-            $content .= $content = "'" . $column['column_name'] . "' => " . null . ',' . PHP_EOL;
+            $content .= "'" . $column['COLUMN_NAME'] . "' => " . 'null' . ',' . PHP_EOL;
+            if (!empty($column['QUERY_TYPE'])) {
+                $columnName = GenerateService::snakeToCamelCase($column['COLUMN_NAME']);
+                $value = '$param[\'' . $columnName . '\']';
+                if (in_array($column['QUERY_TYPE'], ['=', '!=', '>', '>=', '<', '<=', 'LIKE'])) {
+                    $filter = '$filter';
+                    $operators = [
+                        '=' => "'=', $value",
+                        '!=' => "'!=', $value",
+                        '>' => "'>', $value",
+                        '>=' => "'>=', $value",
+                        '<' => "'<', $value",
+                        '<=' => "'<=', $value",
+                        'LIKE' => "'like','%'. $value. '%'"
+                    ];
+                    if (isset($operators[$column['QUERY_TYPE']])) {
+                        $filterStr .= "!empty(" . $value . "） && " . "{$filter}[] = [" . "'{$column['COLUMN_NAME']}'" . ',' . $operators[$column['QUERY_TYPE']] . ']' . PHP_EOL;
+                    }
+                } elseif ($column['QUERY_TYPE'] === 'IN') {
+                    $filterWhere .= "->whereIn('{$column['COLUMN_NAME']}', explode(',', $value))";
+                } elseif ($column['QUERY_TYPE'] === 'BETWEEN') {
+                    $filterWhere .= "->whereBetween('{$column['COLUMN_NAME']}', explode(',', $value))";
+                } elseif ($column['QUERY_TYPE'] === 'NOT IN') {
+                    $filterWhere .= "->whereNotIn('{$column['COLUMN_NAME']}', explode(',', $value))";
+                }
+            }
         }
-        if (empty($content)) {
-            return $content;
+        if (!empty($content)) {
+            $content = substr($content, 0, -2);
+            $content = GenerateService::setBlankSpace($content, "                ");
         }
-        $content = substr($content, 0, -2);
-        return GenerateService::setBlankSpace($content, "                ");
+        if (!empty($filterStr)) {
+            $filterStr = GenerateService::setBlankSpace($filterStr, "            ");
+        }
+        return [
+            'content' => $content,
+            'filterStr' => $filterStr,
+            'otherWhere' => $filterWhere
+        ];
     }
 }

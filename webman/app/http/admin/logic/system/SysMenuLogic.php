@@ -110,24 +110,22 @@ class SysMenuLogic
         try {
             self::checkMenuParams($params);
 
-            SysMenuModel::insert(
-                [
-                    'name' => $params['name'],
-                    'parent_id' => $params['parent_id'],
-                    'path' => $params['path'],
-                    'icon' => $params['icon'],
-                    'is_ext' => $params['is_ext'],
-                    'order_no' => $params['order_no'],
-                    'show' => $params['show'],
-                    'status' => $params['status'],
-                    'type' => $params['type'],
-                    'permission' => $params['permission'],
-                    'created_at' => time(),
-                    'updated_at' => time(),
-                    'component' => $params['component'],
-                    'keep_alive' => $params['keep_alive'] ?? 1
-                ]
-            );
+            SysMenuModel::insert([
+                'name' => $params['name'],
+                'parent_id' => $params['parent_id'],
+                'path' => $params['path'],
+                'icon' => $params['icon'],
+                'is_ext' => $params['is_ext'],
+                'order_no' => $params['order_no'],
+                'show' => $params['show'],
+                'status' => $params['status'],
+                'type' => $params['type'],
+                'permission' => $params['permission'],
+                'created_at' => time(),
+                'updated_at' => time(),
+                'component' => $params['component'],
+                'keep_alive' => $params['keep_alive'] ?? 1
+            ]);
             return true;
         } catch (\Exception $e) {
             throw new RespBusinessException($e->getMessage());

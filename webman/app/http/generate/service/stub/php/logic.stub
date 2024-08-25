@@ -1,14 +1,14 @@
 <?php
 declare (strict_types=1);
 
-{{NAMESPACE}
-
+{NAMESPACE}
 {USE}
 
 /**
  * {CLASS_COMMENT}
  * Class {UPPER_CAMEL_NAME}Logic
  * @package app\{MODULE_NAME}\logic{PACKAGE_NAME}
+ * @date {DATE}
  */
 class {UPPER_CAMEL_NAME}Logic
 {

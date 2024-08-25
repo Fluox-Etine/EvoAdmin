@@ -1,7 +1,7 @@
 <?php
 declare (strict_types=1);
 
-{{NAMESPACE}
+{NAMESPACE}
 
 use app\common\model\BaseModel;
 {USE}
@@ -10,6 +10,7 @@ use app\common\model\BaseModel;
  * {CLASS_COMMENT}
  * Class {UPPER_CAMEL_NAME}
  * @package app\common\model{PACKAGE_NAME}
+ * @date {DATE}
  */
 class {UPPER_CAMEL_NAME} extends BaseModel
 {
