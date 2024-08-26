@@ -322,9 +322,9 @@ class LogicService
             return $content;
         }
         if ($flag == 'create') {
-            $content .= "'created_at' => " . time() . ',' . PHP_EOL;
+            $content .= "'created_at' => " . 'time()' . ',' . PHP_EOL;
         }
-        $content .= "'updated_at' => " . time();
+        $content .= "'updated_at' => " . 'time()';
         $content = substr($content, 0, -2);
         return GenerateService::setBlankSpace($content, "                ");
     }
