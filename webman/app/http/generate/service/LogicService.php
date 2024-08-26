@@ -324,8 +324,8 @@ class LogicService
         if ($flag == 'create') {
             $content .= "'created_at' => " . 'time()' . ',' . PHP_EOL;
         }
-        $content .= "'updated_at' => " . 'time()';
-        $content = substr($content, 0, -2);
+        $content .= "'updated_at' => " . 'time()' . ',';
+        $content = substr($content, 0, -1);
         return GenerateService::setBlankSpace($content, "                ");
     }
 
