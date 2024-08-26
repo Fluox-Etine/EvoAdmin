@@ -13,7 +13,6 @@
 {QUERY_CONDITION}
                 }
             ]);
-
 {FILTER_DATA}
             $list = {UPPER_CAMEL_NAME}Model::query()->where($filter){OTHER_WHERE}->select({FIELDS})->{METHOD_LIST};
             {FORMAT_DATA}
