@@ -2,44 +2,26 @@
   <div>
     <a-alert
         message="温馨提示（数据表配置）"
-        description="不建议通过SQL语句分析字段信息，正则匹配有可能会有误，最好导入数据库表再生成"
+        description="请点击数据表获取到表数据字段详情"
         type="success"
         show-icon
     />
     <br>
-    <a-card
-        style="width: 100%;margin-bottom: 20px;height: 100%"
-        :tab-list="tabTableList"
-        :active-tab-key="tableKey"
-        @tabChange="key => onTableTabChange(key)"
-    >
-      <template #extra>
-        <a-button type="primary" ghost :icon="h(RedoOutlined)" @click="fetchTableSheetData()"></a-button>
-      </template>
-      <div v-show="tableKey === 'database'" style="width: 100%;">
-        <div style="width: 280px;margin: 20px;height: 200px;display: inline-block;" v-for="(item,index) in tableList"
-             :key="index">
-          <a-card :title="`数据表 ${index + 1}`">
-            <template #extra>
-              <a-button type="primary" ghost :icon="h(CheckOutlined)" @click="handleCheckTable(item.name)"></a-button>
-            </template>
-            <p>表名称：{{ item.name }}</p>
-            <p>表注释：{{ item.comment }}</p>
-            <p>表引擎：{{ item.engine }}</p>
-            <p>表创建时间：{{ item.create_time }}</p>
-          </a-card>
-          <br>
-        </div>
-      </div>
-      <div v-show="tableKey === 'sql'" style="width: 100%;">
-        <a-card title="建表语句">
+    <div style="width: 100%;">
+      <div style="width: 280px;margin: 20px;height: 200px;display: inline-block;" v-for="(item,index) in tableList"
+           :key="index">
+        <a-card :title="`数据表 ${index + 1}`">
           <template #extra>
-            <a-button type="primary" :icon="h(CodeOutlined)">开始转换</a-button>
+            <a-button type="primary" ghost :icon="h(CheckOutlined)" @click="handleCheckTable(item.name)"></a-button>
           </template>
-          <a-textarea :rows="15" v-model:value="SQL" placeholder="建表语句"/>
+          <p>表名称：{{ item.name }}</p>
+          <p>表注释：{{ item.comment }}</p>
+          <p>表引擎：{{ item.engine }}</p>
+          <p>表创建时间：{{ item.create_time }}</p>
         </a-card>
+        <br>
       </div>
-    </a-card>
+    </div>
   </div>
 </template>
 <script lang="ts" setup>
