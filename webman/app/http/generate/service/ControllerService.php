@@ -71,7 +71,7 @@ class ControllerService
     {
         $content = '';
         $methods = [
-            'lists' => 'handleLists',
+            'list' => 'handleLists',
             'create' => 'handleCreate',
             'update' => 'handleUpdate',
             'delete' => 'handleDelete',

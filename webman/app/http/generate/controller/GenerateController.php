@@ -11,22 +11,22 @@ use support\Response;
 class GenerateController
 {
     /**
-     * 测试
+     * sql分析
+     * @param Request $request
      * @return Response
      */
-    public function test(): Response
+    public function tableSql(Request $request): Response
     {
-        return renderSuccess('生成成功');
+        return renderSuccess([]);
     }
 
     /**
      * 获取所有数据表
-     * @param Request $request
      * @return Response
      */
-    public function dataSheet(Request $request): Response
+    public function dataSheet(): Response
     {
-        $list = TableService::tableSheet($request->get());
+        $list = TableService::tableSheet();
         return renderSuccess($list);
     }
 
@@ -34,6 +34,7 @@ class GenerateController
      * 获取表详情
      * @param Request $request
      * @return Response
+     * @throws RespBusinessException
      */
     public function dataSheetDetail(Request $request): Response
     {

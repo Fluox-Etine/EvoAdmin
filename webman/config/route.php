@@ -60,10 +60,10 @@ Route::group('/v1', function () {
 
         /** 代码生成器 **/
         Route::group('/gen', function () {
-            // 测试
-            Route::get('/test', [app\http\generate\controller\GenerateController::class, 'test']);
             // 所有数据表
             Route::get('/table/sheet', [app\http\generate\controller\GenerateController::class, 'dataSheet']);
+            // SQL 语句
+            Route::post('/table/sql', [app\http\generate\controller\GenerateController::class, 'tableSql']);
             // 数据表详情
             Route::get('/table/sheet/detail', [app\http\generate\controller\GenerateController::class, 'dataSheetDetail']);
             // 开始生成

@@ -10,19 +10,15 @@ class TableService
 
     /**
      * 获取所有数据表
-     * @param array $params
      * @return array
      */
-    public static function tableSheet(array $params): array
+    public static function tableSheet(): array
     {
         try {
-            $param = setQueryDefaultValue($params, [
-                'name' => null,
-                'comment' => null
-            ]);
-            $sql = 'SHOW TABLE STATUS WHERE 1=1 ';
-            !empty($param['name']) && $sql .= " AND Name LIKE '%" . $params['name'] . "%'";
-            !empty($param['comment']) && $sql .= " AND Comment LIKE '%" . $params['comment'] . "%'";
+
+            $sql = 'SHOW TABLE STATUS';
+//            !empty($param['name']) && $sql .= " AND Name LIKE '%" . $params['name'] . "%'";
+//            !empty($param['comment']) && $sql .= " AND Comment LIKE '%" . $params['comment'] . "%'";
             $list = Db::select($sql);
             $excludeTable = config('env.generate.exclude_table');
             $data = [];
@@ -33,18 +29,11 @@ class TableService
                 $data[] = [
                     'name' => $value->Name,
                     'comment' => $value->Comment,
+                    'engine' => $value->Engine,
                     'create_time' => $value->Create_time,
-                    'update_time' => $value->Update_time,
                 ];
             }
-            $offset = max(0, ((int)$params['page'] - 1) * 15);
-            $count = count($data);
-            $data = array_slice($data, $offset, 15, true);
             return [
-                'total' => $count,
-                'current_page' => (int)$params['page'],
-                'per_page' => 15,
-                'last_page' => ceil($count / 15),
                 'data' => $data,
             ];
         } catch (\Throwable $e) {
@@ -58,6 +47,7 @@ class TableService
      * 获取表详情
      * @param string $tableName
      * @return array
+     * @throws RespBusinessException
      */
     public static function tableSheetDetail(string $tableName): array
     {
