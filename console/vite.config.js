@@ -58,7 +58,7 @@ export default (function () {
             open: true,
             proxy: {
                 '^/api': {
-                    target: 'https://gen.ntgo.cn/v1/console',
+                    target: 'http://127.0.0.1:19878/v1/console',
                     changeOrigin: true,
                     rewrite: function (path) { return path.replace(/^\/api/, ''); },
                 },

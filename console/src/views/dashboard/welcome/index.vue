@@ -11,6 +11,10 @@
         <a-button type="primary" :icon="h(CodeOutlined)" @click="handleStart">开始生成</a-button>
       </template>
       <a-form :model="formState">
+        <div v-show="baseKey === 'table'" style="width: 100%;">
+          <TableSheet :code='codeData' :handleCheckTable="fetchTableDetailData"></TableSheet>
+        </div>
+
         <div v-show="baseKey === 'base'" style="width: 100%;">
           <a-alert
               message="温馨提示（基础配置）"
@@ -26,7 +30,7 @@
                 <a-input v-model:value="formState.tableName" disabled/>
               </a-form-item>
               <a-form-item label="表主键" :labelCol="{ span: 4 }" :wrapperCol="{ span: 20 }">
-                <a-input v-model:value="formState.PK" disabled/>
+                <a-input v-model:value="formState.PK"/>
               </a-form-item>
               <a-form-item label="模块名" tooltip="模块名，例如：user，生成文件路径为：api / user" :labelCol="{ span: 4 }"
                            :wrapperCol="{ span: 20 }">
@@ -69,6 +73,7 @@
             </a-col>
           </a-row>
         </div>
+
         <div v-show="baseKey === 'field'" style="width: 100%;">
           <a-alert
               message="温馨提示（字段配置）"
@@ -242,8 +247,13 @@ import {CodeOutlined} from '@ant-design/icons-vue';
 import * as Api from '@/api/backend/gen'
 import {message as $message} from "ant-design-vue/es/components";
 import CodeView from "@/views/dashboard/welcome/modules/codeView.vue";
+import TableSheet from "@/views/dashboard/welcome/modules/tableSheet.vue";
 
 const tabBaseList = [
+  {
+    key: 'table',
+    tab: '数据表配置'
+  },
   {
     key: 'base',
     tab: '基础配置',
@@ -368,7 +378,7 @@ const formState: UnwrapRef<any> = reactive({
 });
 
 
-const baseKey = ref('base');
+const baseKey = ref('table');
 
 const dataFieldsSource = ref([]);
 
@@ -380,6 +390,12 @@ const codeData = ref({
 
 /** 切换tab */
 const onBaseTabChange = (value: string) => {
+  if (value !== 'table' && formState.tableName == '') {
+    console.log(12132)
+    $message.error('请先选择数据表');
+    baseKey.value = 'table';
+    return;
+  }
   baseKey.value = value;
 };
 
@@ -418,8 +434,8 @@ const handleFilterableChange = (record: any) => {
 };
 
 /** 获取表信息 */
-const fetchTableDetailData = async () => {
-  const {fields, table} = await Api.tableDetail({tableName: 'evo_test_goods'});
+const fetchTableDetailData = async (tableName: string) => {
+  const {fields, table} = await Api.tableDetail({tableName: tableName});
   formState.tableName = table.Name;
   formState.tableComment = table.Comment;
   formState.PK = table.PK;
@@ -427,10 +443,15 @@ const fetchTableDetailData = async () => {
   formState.upperCameName = table.upperCameName;
   formState.classDir = table.classDir;
   dataFieldsSource.value = fields;
+  baseKey.value = 'base';
 }
 
 const handleStart = async () => {
-// 拦截数据
+  if (!formState.PK) {
+    $message.error('请填写数据表主键');
+    return
+  }
+  // 拦截数据
   if (!formState.upperCameName) {
     baseKey.value = 'base';
     $message.error('请填写类名');
@@ -445,6 +466,5 @@ const handleStart = async () => {
   Object.assign(codeData.value, {controller, logic, model});
   baseKey.value = 'code';
 }
-fetchTableDetailData();
 </script>
 
