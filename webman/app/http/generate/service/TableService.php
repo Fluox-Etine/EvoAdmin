@@ -91,6 +91,8 @@ class TableService
             $upperCameName = GenerateService::underscoreToCamelCase($tableName);
             if (!empty($tableNameArray) && count($tableNameArray) > 1) {
                 $table->classDir = $tableNameArray[0];
+            }else{
+                $table->classDir = '';
             }
             $table->upperCameName = $upperCameName;
             return [

@@ -27,37 +27,16 @@
 <script lang="ts" setup>
 import {h, ref} from "vue";
 import * as Api from "@/api/backend/gen.ts"
-import {CheckOutlined, CodeOutlined, RedoOutlined} from "@ant-design/icons-vue";
+import {CheckOutlined} from "@ant-design/icons-vue";
 
 defineProps({
   handleCheckTable: {
     type: Function
   }
 })
-
-const tabTableList = [
-  {
-    key: 'database',
-    tab: '数据库'
-  },
-  {
-    key: 'sql',
-    tab: 'SQL语句'
-  },
-];
-
-const tableKey = ref('database');
-
+ref('database');
 const tableList = ref([]);
-
-const SQL = ref<string>('');
-
-/** 切换tab */
-const onTableTabChange = (value: string) => {
-  tableKey.value = value;
-};
-
-
+ref<string>('');
 /** 获取数据库列表 */
 const fetchTableSheetData = async () => {
   const response = await Api.tableSheet();
