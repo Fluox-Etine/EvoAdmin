@@ -93,6 +93,9 @@
                 {{ index + 1 }}
               </template>
 
+              <template v-else-if="column.dataIndex === 'COLUMN_COMMENT'">
+                <a-input v-model:value="record.COLUMN_COMMENT" placeholder="这个作为验证字段描述"/>
+              </template>
               <!--              必填-->
               <template v-else-if="column.dataIndex === 'IS_NULLABLE'">
                 <a-checkbox :checked="record.IS_NULLABLE === 1" @change="handleIsNullableChange(record)"/>
@@ -158,11 +161,15 @@
                     v-model:value="record.VALIDATE"
                     style="width: 120px"
                 >
-                  <a-select-option value="1">必填项</a-select-option>
-                  <a-select-option value="2">数据长度</a-select-option>
-                  <a-select-option value="3">邮箱验证</a-select-option>
-                  <a-select-option value="3">手机号验证</a-select-option>
-                  <a-select-option value="4">数字验证</a-select-option>
+                  <a-select-option :value="1">必填项校验</a-select-option>
+                  <a-select-option :value="2">长度校验</a-select-option>
+                  <a-select-option :value="3">数字验证</a-select-option>
+                  <a-select-option :value="4">字符串校验</a-select-option>
+                  <a-select-option :value="5">邮箱校验</a-select-option>
+                  <a-select-option :value="6">手机号校验</a-select-option>
+                  <a-select-option :value="7">整数校验</a-select-option>
+                  <a-select-option :value="8">字母校验</a-select-option>
+                  <a-select-option :value="9">IP校验</a-select-option>
                 </a-select>
               </template>
             </template>
@@ -462,8 +469,8 @@ const handleStart = async () => {
     fields: dataFieldsSource.value
   }
   const response = await Api.gen(data);
-  const {controller, logic, model} = response;
-  Object.assign(codeData.value, {controller, logic, model});
+  const {controller, logic, model, validate} = response;
+  Object.assign(codeData.value, {controller, logic, model, validate});
   baseKey.value = 'code';
 }
 </script>

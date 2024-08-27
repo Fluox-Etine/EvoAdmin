@@ -26,6 +26,7 @@
         <a-empty v-else/>
       </div>
       <div v-show="codeKey === 'validate'" style="width: 100%;">
+        <highlightjs v-if="code.validate" language="php" :code="code.validate"/>
         <a-empty/>
       </div>
     </a-card>
@@ -38,7 +39,7 @@ interface CodeType {
   controller?: string;
   logic?: string;
   model?: string;
-  // 其他可能的属性
+  validate?: string
 }
 
 defineProps<{ code: CodeType }>();
