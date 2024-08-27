@@ -40,7 +40,7 @@ class GenerateService
                     'upperCameName' => $params['upperCameName'],
                     'classComment' => $params['classComment'],
                     'packageName' => $packageName,
-                    'methods' => $params['gen']['controller'],
+                    'gen' => $params['gen'],
                     'date' => $date
                 ]);
             }

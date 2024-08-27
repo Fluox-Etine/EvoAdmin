@@ -7,7 +7,7 @@
      */
     public function create(Request $request): Response
     {
-        $params = $request->post();
+        $params = $request->post();{VALIDATE}
         $result = {UPPER_CAMEL_NAME}Logic::handleCreate($params);
         return $result ? renderSuccess('添加成功') : renderError('添加失败');
     }

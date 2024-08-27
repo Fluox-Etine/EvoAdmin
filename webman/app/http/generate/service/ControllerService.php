@@ -27,13 +27,13 @@ class ControllerService
         // 等待替换的内容
         $waitReplace = [
             GenerateService::getNameSpaceContent($params['moduleName'], $params['classDir'], $params['upperCameName'], 'controller'),
-            self::getUseContent($params['moduleName'], $params['classDir'], $params['upperCameName']),
-            $params['classComment'].'控制器类',
+            self::getUseContent($params['moduleName'], $params['classDir'], $params['upperCameName'], $params['gen']),
+            $params['classComment'] . '控制器类',
             $params['date'],
             $params['upperCameName'],
             $params['moduleName'],
             $params['packageName'],
-            self::handleFunctions($params['methods'], $params['classComment'], $params['date'], $params['upperCameName'])
+            self::handleFunctions($params['gen'], $params['classComment'], $params['date'], $params['upperCameName'])
         ];
 
         $templatePath = GenerateService::getTemplatePath('php/controller');
@@ -47,27 +47,38 @@ class ControllerService
      * @param string $moduleName
      * @param string $classDir
      * @param string $upperCameName
+     * @param array $gen
      * @return string
      */
-    private static function getUseContent(string $moduleName, string $classDir, string $upperCameName): string
+    private static function getUseContent(string $moduleName, string $classDir, string $upperCameName, array $gen): string
     {
-        if (empty($classDir)) {
-            $tpl = "use app\\http\\$moduleName\\logic\\" . $upperCameName . "Logic;";
-        } else {
+        $isValidate = false;
+        // 判断是否有验证器
+        if ($gen['validate']['create'] || $gen['validate']['update']) {
+            $isValidate = true;
+        }
+        $tpl = "use app\\http\\$moduleName\\logic\\" . $upperCameName . "Logic;";
+        if ($isValidate) {
+            $tpl .= PHP_EOL . "use app\\http\\validate\\" . $upperCameName . "Validate;";
+        }
+        if (!empty($classDir)) {
             $tpl = "use app\\http\\$moduleName\\logic\\" . $classDir . "\\" . $upperCameName . "Logic;";
+            if ($isValidate) {
+                $tpl .= PHP_EOL . "use app\\http\\$moduleName\\validate\\" . $classDir . "\\" . $upperCameName . "Validate;";
+            }
         }
         return $tpl;
     }
 
     /**
      * 处理方法
-     * @param array $method
+     * @param array $gen
      * @param string $notes
      * @param string $date
      * @param string $upperCameName
      * @return string
      */
-    private static function handleFunctions(array $method, string $notes, string $date, string $upperCameName): string
+    private static function handleFunctions(array $gen, string $notes, string $date, string $upperCameName): string
     {
         $content = '';
         $methods = [
@@ -78,8 +89,8 @@ class ControllerService
             'detail' => 'handleDetail', // 假设存在 handleDetail 方法
         ];
         foreach ($methods as $action => $methodName) {
-            if (isset($method[$action]) && $method[$action]) {
-                $content .= self::$methodName($notes, $date, $upperCameName) . PHP_EOL;
+            if (isset($gen['controller'][$action]) && $gen['controller'][$action]) {
+                $content .= self::$methodName($notes, $date, $upperCameName, $gen['validate']) . PHP_EOL;
             }
         }
         return $content;
@@ -116,22 +127,30 @@ class ControllerService
      * @param string $notes
      * @param string $date
      * @param string $upperCameName
+     * @param array $validate
      * @return string
      */
-    private static function handleCreate(string $notes, string $date, string $upperCameName): string
+    private static function handleCreate(string $notes, string $date, string $upperCameName, array $validate): string
     {
         // 需要替换的变量
         $needReplace = [
             '{NOTES}',
             '{DATE}',
-            '{UPPER_CAMEL_NAME}'
+            '{UPPER_CAMEL_NAME}',
+            '{VALIDATE}'
         ];
 
+        $validateStr = '';
+        if ($validate['create']) {
+            $validateStr = PHP_EOL . $upperCameName . 'Validate($params);';
+            $validateStr = GenerateService::setBlankSpace($validateStr, "        ");
+        }
         // 等待替换的内容
         $waitReplace = [
             $notes,
             $date,
-            $upperCameName
+            $upperCameName,
+            $validateStr
         ];
         $templatePath = GenerateService::getTemplatePath('php/controller/createController');
         return GenerateService::replaceFileData($needReplace, $waitReplace, $templatePath);
@@ -143,22 +162,30 @@ class ControllerService
      * @param string $notes
      * @param string $date
      * @param string $upperCameName
+     * @param array $validate
      * @return string
      */
-    private static function handleUpdate(string $notes, string $date, string $upperCameName): string
+    private static function handleUpdate(string $notes, string $date, string $upperCameName, array $validate): string
     {
         // 需要替换的变量
         $needReplace = [
             '{NOTES}',
             '{DATE}',
-            '{UPPER_CAMEL_NAME}'
+            '{UPPER_CAMEL_NAME}',
+            '{VALIDATE}'
         ];
 
+        $validateStr = '';
+        if ($validate['create']) {
+            $validateStr = PHP_EOL . $upperCameName . 'Validate($params);';
+            $validateStr = GenerateService::setBlankSpace($validateStr, "        ");
+        }
         // 等待替换的内容
         $waitReplace = [
             $notes,
             $date,
-            $upperCameName
+            $upperCameName,
+            $validateStr
         ];
         $templatePath = GenerateService::getTemplatePath('php/controller/updateController');
         return GenerateService::replaceFileData($needReplace, $waitReplace, $templatePath);
