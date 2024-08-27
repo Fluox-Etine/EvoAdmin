@@ -1,12 +1,13 @@
+import 'core-js/actual/promise/with-resolvers';
 import {createApp} from 'vue'
+import hljsVuePlugin from '@highlightjs/vue-plugin';
+import hljs from 'highlight.js/lib/core';
+import php from 'highlight.js/lib/languages/php';
 import App from './App.vue'
+import {setupIcons} from "@/components/core/icon";
 import 'highlight.js/styles/a11y-dark.css'
 import {setupRouter} from './router';
 import {setupStore} from '@/store';
-import {setupIcons} from "@/components/core/icon";
-import hljsVuePlugin from '@highlightjs/vue-plugin'
-import hljs from 'highlight.js/lib/core'
-import php from 'highlight.js/lib/languages/php'
 import {setupAntd, setupAssets, setupGlobalMethods} from '@/plugins';
 
 const app = createApp(App)
@@ -24,10 +25,16 @@ function setupPlugins() {
     setupGlobalMethods(app);
 }
 
-// 挂载vuex状态管理
-setupStore(app);
-// 挂载路由
-await setupRouter(app);
+async function setupApp() {
+    // 挂载vuex状态管理
+    setupStore(app);
+    // 挂载路由
+    await setupRouter(app);
+
+    app.use(hljsVuePlugin).mount('#app');
+}
+
 setupPlugins();
 
-app.use(hljsVuePlugin).mount('#app');
+setupApp();
+

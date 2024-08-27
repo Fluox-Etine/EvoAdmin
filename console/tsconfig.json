@@ -35,10 +35,12 @@
     "types": ["node", "vite/client"],
     "paths": {
       "@/*": ["src/*"]
-    },
+    }
   },
   "include": [
     "**/*.d.ts",
+    "mock/**/*",
+    "mocks/**/*",
     "src/**/*.ts",
     "src/**/*.tsx",
     "src/**/*.vue",
