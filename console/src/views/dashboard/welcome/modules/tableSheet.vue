@@ -10,7 +10,7 @@
     <div style="width: 100%;">
       <div style="width: 280px;margin: 20px;height: 200px;display: inline-block;" v-for="(item,index) in tableList"
            :key="index">
-        <a-card :title="`数据表 ${index + 1}`">
+        <a-card :title="`${item.name + 1}`">
           <template #extra>
             <a-button type="primary" ghost :icon="h(CheckOutlined)" @click="handleCheckTable(item.name)"></a-button>
           </template>

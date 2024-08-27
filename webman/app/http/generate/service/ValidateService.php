@@ -49,11 +49,9 @@ class ValidateService
         $content = '';
         //判断是否开启添加验证
         if (isset($action['create']) && $action['create']) {
-            var_dump(12);
             $content .= self::handleCreateValidate($fields, $date) . PHP_EOL;
         }
         if (isset($action['update']) && $action['update']) {
-            var_dump(22);
             $content .= self::handleUpdateValidate($fields, $date) . PHP_EOL;
         }
         return $content;
