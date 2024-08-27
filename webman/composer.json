@@ -32,7 +32,8 @@
     "illuminate/database": "^10.48",
     "illuminate/redis": "^10.48",
     "illuminate/events": "^10.48",
-    "ext-bcmath": "*"
+    "ext-bcmath": "*",
+    "workerman/validation": "^3.1"
   },
   "suggest": {
     "ext-event": "For better performance. "

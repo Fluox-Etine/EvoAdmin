@@ -77,10 +77,27 @@ class GenerateService
                     'date' => $date
                 ]);
             }
+
+            // 生成验证器类
+            $tmpValidate = '';
+            if (in_array(true, $params['gen']['validate'], true)) {
+                $tmpValidate = ValidateService::handleValidate([
+                    'moduleName' => $moduleName,
+                    'classDir' => $params['classDir'],
+                    'tableName' => $tableName,
+                    'upperCameName' => $params['upperCameName'],
+                    'classComment' => $params['classComment'],
+                    'packageName' => $packageName,
+                    'validate' => $params['gen']['validate'],
+                    'date' => $date,
+                    'fields' => $params['fields']
+                ]);
+            }
             return [
                 'controller' => $tmpController,
                 'logic' => $tmpLogic,
-                'model' => $tmpModel
+                'model' => $tmpModel,
+                'validate' => $tmpValidate,
             ];
         } catch (\Throwable $e) {
             exceptionLog($e);

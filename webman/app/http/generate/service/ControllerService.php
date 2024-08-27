@@ -28,7 +28,7 @@ class ControllerService
         $waitReplace = [
             GenerateService::getNameSpaceContent($params['moduleName'], $params['classDir'], $params['upperCameName'], 'controller'),
             self::getUseContent($params['moduleName'], $params['classDir'], $params['upperCameName']),
-            $params['classComment'],
+            $params['classComment'].'控制器类',
             $params['date'],
             $params['upperCameName'],
             $params['moduleName'],

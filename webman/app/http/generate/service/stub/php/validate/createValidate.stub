@@ -1,0 +1,18 @@
+
+    /**
+     * 创建数据验证
+     * @param array $params
+     * @return void
+     * @throws RespBusinessException
+     * @date {DATE}
+     */
+    public static function createValidate(array $params)
+    {
+        try {
+             v::input($params, [
+{CREATE_VALIDATE}
+            ]);
+        } catch (ValidationException $e) {
+            throw new RespBusinessException($e->getMessage());
+        }
+    }

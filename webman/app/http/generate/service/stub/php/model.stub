@@ -8,11 +8,11 @@ use app\common\model\BaseModel;
 
 /**
  * {CLASS_COMMENT}
- * Class {UPPER_CAMEL_NAME}
+ * Class {UPPER_CAMEL_NAME}Model
  * @package app\common\model{PACKAGE_NAME}
  * @date {DATE}
  */
-class {UPPER_CAMEL_NAME} extends BaseModel
+class {UPPER_CAMEL_NAME}Model extends BaseModel
 {
     {DELETE_USE}
     /** 与模型关联的表名 * @var string */

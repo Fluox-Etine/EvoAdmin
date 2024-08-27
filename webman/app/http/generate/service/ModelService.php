@@ -34,7 +34,7 @@ class ModelService
         $waitReplace = [
             self::getNameSpaceContent($params['classDir']),
             self::getUserContent($params['deleteType']),
-            $params['classComment'],
+            $params['classComment'].'模型类',
             $params['date'],
             $params['upperCameName'],
             $params['moduleName'],

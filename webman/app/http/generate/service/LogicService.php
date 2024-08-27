@@ -28,7 +28,7 @@ class LogicService
         $waitReplace = [
             GenerateService::getNameSpaceContent($params['moduleName'], $params['classDir'], $params['upperCameName'], 'logic'),
             self::getUseContent($params['classDir'], $params['upperCameName']),
-            $params['classComment'],
+            $params['classComment'].'逻辑类',
             $params['date'],
             $params['upperCameName'],
             $params['moduleName'],
