@@ -121,9 +121,7 @@ export default ({mode}: ConfigEnv): UserConfig => {
                     // minifyInternalExports: false,
                     manualChunks(id) {
                         //TODO fix circular imports
-                        if (id.includes("/src/locales/helper.ts")) {
-                            return "antdv";
-                        } else if (id.includes("node_modules/ant-design-vue/")) {
+                        if (id.includes("node_modules/ant-design-vue/")) {
                             return "antdv";
                         } else if (/node_modules\/(vue|vue-router|pinia)\//.test(id)) {
                             return "vue";
