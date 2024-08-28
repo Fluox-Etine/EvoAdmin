@@ -3,6 +3,7 @@
 use app\middleware\ActionMiddleware;
 use Webman\Route;
 
+Route::post('/test', [app\http\admin\controller\TestController::class, 'test']);
 Route::group('/v1', function () {
 
     /** 后台管理 */
@@ -54,6 +55,11 @@ Route::group('/v1', function () {
                 Route::GET('/delete', ['app\http\admin\controller\system\RoleController', 'delete'])->middleware(ActionMiddleware::class);
                 // 角色详情
                 Route::GET('/detail', ['app\http\admin\controller\system\RoleController', 'detail']);
+            });
+            // 系统监控
+            Route::group('/monitor', function () {
+                // 服务监控
+                Route::POST('/server', ['app\http\admin\controller\system\MonitorController', 'server']);
             });
         });
 
