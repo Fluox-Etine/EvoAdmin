@@ -143,7 +143,6 @@ class SysMenuLogic
     {
         try {
             self::checkMenuParams($params);
-            $params = array_key_to_underline($params);
             $params['updated_at'] = time();
             return SysMenuModel::query()->where('id', $params['id'])->update($params) != false;
         } catch (\Exception $e) {
