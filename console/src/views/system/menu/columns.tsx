@@ -66,12 +66,12 @@ export const baseColumns: TableColumnItem[] = [
   {
     title: '排序',
     width: 50,
-    dataIndex: 'orderNo',
+    dataIndex: 'order_no',
     hideInSearch: true,
   },
   {
     title: '路由缓存',
-    dataIndex: 'keepalive',
+    dataIndex: 'keep_alive',
     width: 80,
     hideInSearch: true,
     customRender: ({ record }) => record.type === 1 && (record.keepAlive ? '是' : '否'),
@@ -105,7 +105,7 @@ export const baseColumns: TableColumnItem[] = [
   {
     title: '更新时间',
     width: 180,
-    dataIndex: 'updatedAt',
+    dataIndex: 'created_at',
     hideInSearch: true,
     customRender({ text }) {
       return formatToDateTime(text);
