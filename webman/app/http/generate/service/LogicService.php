@@ -221,7 +221,7 @@ class LogicService
             $date,
             $upperCameName,
             $pk,
-            GenerateService::snakeToCamelCase($pk),
+            $pk,
             $createData
         ];
         $templatePath = GenerateService::getTemplatePath('php/logic/updateLogic');
@@ -253,7 +253,7 @@ class LogicService
             $date,
             $upperCameName,
             $pk,
-            GenerateService::snakeToCamelCase($pk),
+            $pk,
         ];
         $templatePath = GenerateService::getTemplatePath('php/logic/deleteLogic');
         return GenerateService::replaceFileData($needReplace, $waitReplace, $templatePath);
@@ -295,7 +295,7 @@ class LogicService
             $date,
             $upperCameName,
             $pk,
-            GenerateService::snakeToCamelCase($pk),
+            $pk,
             $fields
         ];
         $templatePath = GenerateService::getTemplatePath('php/logic/detailLogic');
@@ -341,8 +341,9 @@ class LogicService
 //            $content = "'" . $column['column_name'] . "' => " . 'strtotime($params[' . "'" . $column['column_name'] . "'" . ']),' . PHP_EOL;
 //        } else {
         //        }
-        $columnName = GenerateService::snakeToCamelCase($column['COLUMN_NAME']);
-        return "'" . $column['COLUMN_NAME'] . "' => " . '$params[' . "'" . $columnName . "'" . '],' . PHP_EOL;
+        // TODO 取消字段蛇形转换为驼峰
+//        $columnName = GenerateService::snakeToCamelCase($column['COLUMN_NAME']);
+        return "'" . $column['COLUMN_NAME'] . "' => " . '$params[' . "'" . $column['COLUMN_NAME'] . "'" . '],' . PHP_EOL;
     }
 
 
@@ -363,7 +364,8 @@ class LogicService
         foreach ($tableColumn as $column) {
             $content .= "'" . $column['COLUMN_NAME'] . "' => " . 'null' . ',' . PHP_EOL;
             if (!empty($column['QUERY_TYPE'])) {
-                $columnName = GenerateService::snakeToCamelCase($column['COLUMN_NAME']);
+//                $columnName = GenerateService::snakeToCamelCase($column['COLUMN_NAME']);
+                $columnName = $column['COLUMN_NAME'];
                 $value = '$param[\'' . $columnName . '\']';
                 if (in_array($column['QUERY_TYPE'], ['=', '!=', '>', '>=', '<', '<=', 'LIKE'])) {
                     $filter = '$filter';

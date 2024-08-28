@@ -70,7 +70,7 @@ class TableService
                         $field->UPDATE = 1;
                         $field->DETAIL = 1;
                         $field->FILTER = 1;
-                        $field->VALIDATE = ['1'];
+                        $field->VALIDATE = [1];
                     } else {
                         $field->IS_NULLABLE = 0;
                         $field->LIST = 0;
@@ -91,7 +91,7 @@ class TableService
             $upperCameName = GenerateService::underscoreToCamelCase($tableName);
             if (!empty($tableNameArray) && count($tableNameArray) > 1) {
                 $table->classDir = $tableNameArray[0];
-            }else{
+            } else {
                 $table->classDir = '';
             }
             $table->upperCameName = $upperCameName;
