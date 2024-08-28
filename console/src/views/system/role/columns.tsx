@@ -52,7 +52,7 @@ export const baseColumns: TableColumnItem[] = [
   },
   {
     title: '创建时间',
-    dataIndex: 'createdAt',
+    dataIndex: 'created_at',
     hideInSearch: true,
     customRender: ({ record }) => {
       return formatToDateTime(record.createdAt);
@@ -60,7 +60,7 @@ export const baseColumns: TableColumnItem[] = [
   },
   {
     title: '更新时间',
-    dataIndex: 'updatedAt',
+    dataIndex: 'updated_at',
     hideInSearch: true,
     customRender: ({ record }) => {
       return formatToDateTime(record.createdAt);

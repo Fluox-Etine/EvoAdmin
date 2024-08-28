@@ -26,8 +26,8 @@ declare namespace API {
         /** 是否默认用户 */
         default: boolean;
         id: number;
-        createdAt: string;
-        updatedAt: string;
+        created_at: string;
+        updated_at: string;
     };
 
     type RoleDto = {

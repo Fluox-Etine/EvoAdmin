@@ -38,23 +38,23 @@ declare namespace API {
         /** 菜单类型 */
         type: 0 | 1 | 2;
         /** 父级菜单 */
-        parentId: number;
+        parent_id: number;
         /** 菜单或权限名称 */
         name: string;
         /** 排序 */
-        orderNo: number;
+        order_no: number;
         /** 前端路由地址 */
         path: string;
         /** 是否外链 */
         isExt: boolean;
         /** 外链打开方式 */
-        extOpenMode: 1 | 2;
+        ext_open_mode: 1 | 2;
         /** 菜单是否显示 */
         show: 0 | 1;
         /** 设置当前路由高亮的菜单项，一般用于详情页 */
-        activeMenu?: string;
+        active_menu?: string;
         /** 是否开启页面缓存 */
-        keepAlive: 0 | 1;
+        keep_alive: 0 | 1;
         /** 状态 */
         status: 0 | 1;
         /** 菜单图标 */
@@ -69,23 +69,23 @@ declare namespace API {
         /** 菜单类型 */
         type?: 0 | 1 | 2;
         /** 父级菜单 */
-        parentId?: number;
+        parent_id?: number;
         /** 菜单或权限名称 */
         name?: string;
         /** 排序 */
-        orderNo?: number;
+        order_no?: number;
         /** 前端路由地址 */
         path?: string;
         /** 是否外链 */
         isExt?: boolean;
         /** 外链打开方式 */
-        extOpenMode?: 1 | 2;
+        ext_open_mode?: 1 | 2;
         /** 菜单是否显示 */
         show?: 0 | 1;
         /** 设置当前路由高亮的菜单项，一般用于详情页 */
-        activeMenu?: string;
+        active_menu?: string;
         /** 是否开启页面缓存 */
-        keepAlive?: 0 | 1;
+        keep_alive?: 0 | 1;
         /** 状态 */
         status?: 0 | 1;
         /** 菜单图标 */

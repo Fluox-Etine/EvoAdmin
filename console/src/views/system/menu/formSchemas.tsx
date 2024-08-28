@@ -2,7 +2,7 @@ import {h} from 'vue';
 import type {FormSchema} from '@/components/business/schema-form/';
 import {Icon, IconPicker} from '@/components/core/icon';
 import {asyncRoutes} from '@/router/asyncModules';
-import  * as Api from '@/api/backend/menu';
+import * as Api from '@/api/backend/menu';
 import {findPath, str2tree} from '@/utils/common';
 
 /** 菜单类型 0: 目录 | 1: 菜单 | 2: 按钮 */
@@ -41,7 +41,7 @@ export const useMenuSchemas = (): FormSchema<API.MenuDto>[] => [
         rules: [{required: true, type: 'string'}],
     },
     {
-        field: 'parentId',
+        field: 'parent_id',
         component: 'TreeSelect',
         label: '上级节点',
         componentProps: {
@@ -52,9 +52,9 @@ export const useMenuSchemas = (): FormSchema<API.MenuDto>[] => [
             request: async ({schema, formModel}) => {
                 const menuTree = await Api.menuList({});
                 schema.value.componentProps.treeDefaultExpandedKeys = [-1].concat(
-                    findPath(menuTree, formModel['parentId']) || [],
+                    findPath(menuTree, formModel['parent_id']) || [],
                 );
-                return [{id: -1, name: '根目录', children: menuTree}];
+                return [{id: 0, name: '根目录', children: menuTree}];
             },
             getPopupContainer: () => document.body,
         },
@@ -118,7 +118,7 @@ export const useMenuSchemas = (): FormSchema<API.MenuDto>[] => [
         field: 'component',
         component: 'Cascader',
         label: '文件路径',
-        vIf: ({formModel}) => isMenu(formModel['type']) && !formModel['isExt'],
+        vIf: ({formModel}) => isMenu(formModel['type']) && !formModel['is_ext'],
         componentProps: {
             options: Object.keys(asyncRoutes).reduce(
                 (prev, curr) => (str2tree(curr, prev, '/'), prev),
@@ -134,7 +134,7 @@ export const useMenuSchemas = (): FormSchema<API.MenuDto>[] => [
         vIf: ({formModel}) => !isButton(formModel['type']),
     },
     {
-        field: 'orderNo',
+        field: 'order_no',
         component: 'InputNumber',
         label: '排序号',
         defaultValue: 255,
@@ -145,7 +145,7 @@ export const useMenuSchemas = (): FormSchema<API.MenuDto>[] => [
         },
     },
     {
-        field: 'isExt',
+        field: 'is_ext',
         component: 'RadioGroup',
         label: '是否外链',
         defaultValue: false,
@@ -164,11 +164,11 @@ export const useMenuSchemas = (): FormSchema<API.MenuDto>[] => [
         vIf: ({formModel}) => !isButton(formModel['type']),
     },
     {
-        field: 'extOpenMode',
+        field: 'ext_open_mode',
         component: 'RadioGroup',
         label: '打开方式',
         defaultValue: 1,
-        vIf: ({formModel}) => !isButton(formModel['type']) && formModel['isExt'],
+        vIf: ({formModel}) => !isButton(formModel['type']) && formModel['is_ext'],
         colProps: {
             span: 12,
         },
@@ -188,7 +188,7 @@ export const useMenuSchemas = (): FormSchema<API.MenuDto>[] => [
         },
     },
     {
-        field: 'keepAlive',
+        field: 'keep_alive',
         component: 'RadioGroup',
         label: '是否缓存',
         defaultValue: 0,
@@ -225,7 +225,7 @@ export const useMenuSchemas = (): FormSchema<API.MenuDto>[] => [
         vIf: ({formModel}) => !isButton(formModel['type']),
     },
     {
-        field: 'activeMenu',
+        field: 'active_menu',
         component: 'Input',
         label: '高亮菜单项',
         colProps: {

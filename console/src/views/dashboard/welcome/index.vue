@@ -1,9 +1,30 @@
 <template>
   <div>
     <a-alert
-        message="系统性bug"
-        description="为了做字段安全性问题，数据库字段是蛇形，但是我想要前端传递小驼峰，但是前后字段不一致。间接性导致系统管理部分添加和编辑问题。周末系统性测试和系统性修复前后字段保持一致（全部蛇形）。"
-        type="error"
+        message="下一步计划安排"
+        description="计划准备生成前端的接口文件，table表格文件"
+        type="success"
+        show-icon
+    />
+    <br>
+    <a-alert
+        message="2024-8-27"
+        description="解决后端验证器代码生成"
+        type="info"
+        show-icon
+    />
+    <br>
+    <a-alert
+        message="2024-8-26"
+        description="解决前端代码打包bug问题"
+        type="info"
+        show-icon
+    />
+    <br>
+    <a-alert
+        message="2024-8-28"
+        description="控制器、逻辑层、模型层代码生成完毕"
+        type="info"
         show-icon
     />
   </div>

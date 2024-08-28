@@ -86,7 +86,6 @@ class MenuController
      */
     private function processRequestData($request): array
     {
-        $data = array_key_to_underline($request->post());
         // 从请求中获取参数值，如果参数不存在则设置为默认值
         $parentId = $request->post('parent_id', null);
         $path = $request->post('path', null);
@@ -97,7 +96,7 @@ class MenuController
         $show = $request->post('show', 1);
         $isExt = $request->post('is_ext', 0);
         // 将参数合并到一个新数组中
-        return array_merge($data, [
+        return array_merge($request->post(), [
             'parent_id' => $parentId,
             'path' => $path,
             'permission' => $permission,
