@@ -46,7 +46,9 @@ class MenuController
      */
     public function update(Request $request): Response
     {
-        if (SysMenuLogic::update($request->post())) {
+        $data = $this->processRequestData($request);
+        var_dump($data);
+        if (SysMenuLogic::update($data)) {
             return renderSuccess("更新菜单成功");
         }
         return renderError("更新菜单失败");
@@ -84,23 +86,26 @@ class MenuController
      */
     private function processRequestData($request): array
     {
+        $data = array_key_to_underline($request->post());
         // 从请求中获取参数值，如果参数不存在则设置为默认值
-        $parent_id = $request->post('parent_id', null);
+        $parentId = $request->post('parent_id', null);
         $path = $request->post('path', null);
         $permission = $request->post('permission', null);
         $icon = $request->post('icon', '');
         $component = $request->post('component', null);
-        $keep_alive = $request->post('keep_alive', 1);
+        $keepAlive = $request->post('keep_alive', 1);
         $show = $request->post('show', 1);
+        $isExt = $request->post('is_ext', 0);
         // 将参数合并到一个新数组中
-        return array_merge($request->post(), [
-            'parent_id' => $parent_id,
+        return array_merge($data, [
+            'parent_id' => $parentId,
             'path' => $path,
             'permission' => $permission,
             'icon' => $icon,
             'component' => $component,
-            'keep_alive' => $keep_alive,
+            'keep_alive' => $keepAlive,
             'show' => $show,
+            'is_ext' => $isExt,
         ]);
     }
 }
