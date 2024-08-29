@@ -1,6 +1,6 @@
 <?php
 
-namespace app\http\generate\service;
+namespace app\http\generate\service\backend;
 
 use support\Db;
 use support\exception\RespBusinessException;

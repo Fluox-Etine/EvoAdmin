@@ -2,8 +2,8 @@
 
 namespace app\http\generate\controller;
 
-use app\http\generate\service\GenerateService;
-use app\http\generate\service\TableService;
+use app\http\generate\service\backend\GenerateService;
+use app\http\generate\service\backend\TableService;
 use support\exception\RespBusinessException;
 use support\Request;
 use support\Response;
