@@ -88,11 +88,11 @@ export default ({mode}: ConfigEnv): UserConfig => {
                     changeOrigin: true,
                     rewrite: (path) => path.replace(/^\/api/, ""),
                 },
-                "^/upload": {
-                    target: "https://nest-api.buqiyuan.site/upload",
-                    changeOrigin: true,
-                    rewrite: (path) => path.replace(new RegExp(`^/upload`), ""),
-                },
+                // "^/upload": {
+                //     target: "https://nest-api.buqiyuan.site/upload",
+                //     changeOrigin: true,
+                //     rewrite: (path) => path.replace(new RegExp(`^/upload`), ""),
+                // },
             },
             // 提前转换和缓存文件以进行预热。可以在服务器启动时提高初始页面加载速度，并防止转换瀑布。
             warmup: {

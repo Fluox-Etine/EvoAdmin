@@ -23,6 +23,7 @@ declare module 'vue' {
     AFormItem: typeof import('ant-design-vue/es')['FormItem']
     AFormItemRest: typeof import('ant-design-vue/es')['FormItemRest']
     AInput: typeof import('ant-design-vue/es')['Input']
+    AInputSearch: typeof import('ant-design-vue/es')['InputSearch']
     AMenu: typeof import('ant-design-vue/es')['Menu']
     AMenuDivider: typeof import('ant-design-vue/es')['MenuDivider']
     AMenuItem: typeof import('ant-design-vue/es')['MenuItem']
@@ -71,5 +72,6 @@ declare module 'vue' {
     TableAction: typeof import('./../src/components/business/dynamic-table/src/components/table-action.vue')['default']
     TableSettings: typeof import('./../src/components/business/dynamic-table/src/components/table-settings/index.vue')['default']
     ToolBar: typeof import('./../src/components/business/dynamic-table/src/components/tool-bar/index.vue')['default']
+    UploadModal: typeof import('./../src/components/business/upload-modal/index.vue')['default']
   }
 }

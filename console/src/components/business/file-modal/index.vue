@@ -7,10 +7,7 @@
         </a-col>
         <a-col :span="10">
           <a-flex justify="flex-end">
-            <a-upload :multiple="true" :customRequest="handleUpload"
-                      :show-upload-list="false">
-              <a-button type="primary"> 本地上传</a-button>
-            </a-upload>
+            <a-button type="primary" @click="handleUpload"> 本地上传</a-button>
             <a-button type="dashed" style="margin: 0 10px 0 10px">添加分组</a-button>
           </a-flex>
         </a-col>
@@ -27,20 +24,17 @@
           {{ item.name }}
         </a-tab-pane>
       </a-tabs>
+      <!--      <a-modal v-model:open="visible" width="1240px" title="上传文件">-->
+      <!--      </a-modal>-->
+      <UploadModal ref="UploadModalRef"/>
     </div>
-
   </a-modal>
 </template>
 
 <script setup lang="ts">
 import {ref} from "vue";
-import {message, type UploadProps} from "ant-design-vue";
 
-const open = ref<boolean>(true);
-
-const openFileModal = () => {
-  open.value = true
-}
+const open = ref<boolean>(false);
 
 const groupList = ref([
   {
@@ -53,35 +47,19 @@ const groupList = ref([
   }
 ])
 
+const UploadModalRef = ref();
 const activeKey = ref(0);
 
 
-/** 上传文件之前钩子 */
-const beforeUpload: UploadProps['beforeUpload'] = async (file) => {
-  if (file.size / 1024 / 1024 > 2) {
-    message.error('单个文件不超过2MB');
-  } else {
-    const item: FileItem = {
-      file,
-      uid: file.uid,
-      name: file.name,
-      size: file.size,
-      status: '',
-      percent: 0,
-      thumbUrl: await fileToBase64(file),
-    };
-    fileList.value.push(item);
-  }
-  return false;
-};
-
-const handleUpload = (options, file, onSuccess, onError, OnProgress) => {
-  console.log(options)
-  console.log(file)
-  console.log(onSuccess)
-  console.log(onError)
-  console.log(OnProgress)
+const openFileModal = () => {
+  open.value = true
 }
+
+/** 打开上传文件弹窗 */
+const handleUpload = () => {
+  UploadModalRef.value.openUploadModal()
+}
+
 // 暴露方法
 defineExpose({
   openFileModal

@@ -53,7 +53,7 @@ const FilesModal = ref<any>();
 
 /** 打开文件选择器 */
 const handleSelectImage = () => {
-  console.log('打开文件选择器')
+  console.log( FilesModal.value)
   FilesModal.value.openFileModal();
 }
 
