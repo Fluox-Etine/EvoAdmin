@@ -199,8 +199,7 @@ class GenerateService
         if (empty($classDir)) {
             return $tplStr . "\\$lowerComponent;";
         }
-        $ucfComponent = ucfirst($component);
-        return $tplStr . "\\$lowerComponent\\" . $classDir . '\\' . $upperCameName . $ucfComponent . ";";
+        return $tplStr . "\\$lowerComponent\\" . $classDir . ";";
     }
 
     /**
@@ -230,5 +229,35 @@ class GenerateService
             $content[$line] = $blankpace . $text;
         }
         return (implode(PHP_EOL, $content));
+    }
+
+
+    /**
+     * 获取最后一个驼峰单词
+     * @param $string
+     * @return array
+     */
+    public static function getLastCamelCaseWord($string): array
+    {
+        // 从字符串末尾开始查找第一个小写字母的位置
+        preg_match_all('/[A-Z][a-z]*/', $string, $matches);
+        $count = count($matches[0]);
+        if ($count == 1) {
+            return [
+                $matches[0][0],
+                $count
+            ];
+        } else {
+            // 去掉第一个单词
+            $word = '';
+            for ($i = 1; $i < $count; $i++) {
+                $word .= $matches[0][$i];
+            }
+            return [
+                $word,
+                $count,
+                $matches[0][0]
+            ];
+        }
     }
 }

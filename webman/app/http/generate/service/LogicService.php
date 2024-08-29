@@ -30,7 +30,7 @@ class LogicService
             self::getUseContent($params['classDir'], $params['upperCameName']),
             $params['classComment'].'逻辑类',
             $params['date'],
-            $params['upperCameName'],
+            GenerateService::getLastCamelCaseWord($params['upperCameName'])[0],
             $params['moduleName'],
             $params['packageName'],
             self::handleFunctions($params['gen'], $params['classComment'], $params['date'], $params['upperCameName'], $params['PK'], $params['fields'])
@@ -44,15 +44,21 @@ class LogicService
     /**
      * 获取use内容
      * @param string $classDir
-     * @param string $tableName
+     * @param string $upperCameName
      * @return string
      */
-    private static function getUseContent(string $classDir, string $tableName): string
+    private static function getUseContent(string $classDir, string $upperCameName): string
     {
-        if (empty($classDir)) {
-            $tpl = "use app\\common\\model\\" . $classDir . "Model;";
+        $upperCameNameArray = GenerateService::getLastCamelCaseWord($upperCameName);
+        if ($upperCameNameArray[1] === 1) {
+            $upperCameNameModelStr = $upperCameNameArray[0] . "Model;";
         } else {
-            $tpl = "use app\\common\\model\\" . $classDir . "\\" . $tableName . "Model;";
+            $upperCameNameModelStr = $upperCameNameArray[0] . "Model as " . $upperCameName . "Model;";
+        }
+        if (empty($classDir)) {
+            $tpl = "use app\\common\\model\\" . $upperCameNameModelStr;
+        } else {
+            $tpl = "use app\\common\\model\\" . $classDir . "\\" . $upperCameNameModelStr;
         }
         return $tpl;
     }

@@ -36,7 +36,7 @@ class ModelService
             self::getUserContent($params['deleteType']),
             $params['classComment'].'模型类',
             $params['date'],
-            $params['upperCameName'],
+            GenerateService::getLastCamelCaseWord($params['upperCameName'])[0],
             $params['moduleName'],
             $params['packageName'],
             $deleteUse,

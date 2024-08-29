@@ -27,7 +27,7 @@ class ValidateService
             GenerateService::getNameSpaceContent($params['moduleName'], $params['classDir'], $params['upperCameName'], 'validate'),
             $params['classComment'] . '验证器类',
             $params['date'],
-            $params['upperCameName'],
+            GenerateService::getLastCamelCaseWord($params['upperCameName'])[0],
             $params['moduleName'],
             $params['packageName'],
             self::handleFunctions($params['validate'], $params['fields'], $params['date'])

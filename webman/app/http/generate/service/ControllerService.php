@@ -30,7 +30,7 @@ class ControllerService
             self::getUseContent($params['moduleName'], $params['classDir'], $params['upperCameName'], $params['gen']),
             $params['classComment'] . '控制器类',
             $params['date'],
-            $params['upperCameName'],
+            GenerateService::getLastCamelCaseWord($params['upperCameName'])[0],
             $params['moduleName'],
             $params['packageName'],
             self::handleFunctions($params['gen'], $params['classComment'], $params['date'], $params['upperCameName'])
@@ -57,14 +57,22 @@ class ControllerService
         if ($gen['validate']['create'] || $gen['validate']['update']) {
             $isValidate = true;
         }
-        $tpl = "use app\\http\\$moduleName\\logic\\" . $upperCameName . "Logic;";
+        $upperCameNameArray = GenerateService::getLastCamelCaseWord($upperCameName);
+        if ($upperCameNameArray[1] === 1) {
+            $upperCameNameLogicStr = $upperCameNameArray[0] . "Logic;";
+            $upperCameNameValidateStr = $upperCameName . "Validate;";
+        } else {
+            $upperCameNameLogicStr = $upperCameNameArray[0] . "Logic as " . $upperCameName . "Logic;";
+            $upperCameNameValidateStr = $upperCameNameArray[0] . "Validate as " . $upperCameName . "Validate;";
+        }
+        $tpl = "use app\\http\\$moduleName\\logic\\" . $upperCameNameLogicStr;
         if ($isValidate) {
-            $tpl .= PHP_EOL . "use app\\http\\validate\\" . $upperCameName . "Validate;";
+            $tpl .= PHP_EOL . "use app\\http\\validate\\" . $upperCameNameValidateStr;
         }
         if (!empty($classDir)) {
-            $tpl = "use app\\http\\$moduleName\\logic\\" . $classDir . "\\" . $upperCameName . "Logic;";
+            $tpl = "use app\\http\\$moduleName\\logic\\" . $classDir . "\\" . $upperCameNameLogicStr;
             if ($isValidate) {
-                $tpl .= PHP_EOL . "use app\\http\\$moduleName\\validate\\" . $classDir . "\\" . $upperCameName . "Validate;";
+                $tpl .= PHP_EOL . "use app\\http\\$moduleName\\validate\\" . $classDir . "\\" . $upperCameNameValidateStr;
             }
         }
         return $tpl;
