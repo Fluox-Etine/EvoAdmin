@@ -32,6 +32,8 @@ class GenerateService
             $packageName = self::getPackageNameContent($params['classDir']);
             // 生成控制器
             $tmpController = '';
+            // 生成接口路由
+            $tmpRoute = '';
             if (in_array(true, $params['gen']['controller'], true)) {
                 $tmpController = ControllerService::handleController([
                     'moduleName' => $moduleName,
@@ -41,6 +43,15 @@ class GenerateService
                     'classComment' => $params['classComment'],
                     'packageName' => $packageName,
                     'gen' => $params['gen'],
+                    'date' => $date
+                ]);
+                $tmpRoute = RouteService::handleRoute([
+                    'moduleName' => $moduleName,
+                    'classDir' => $params['classDir'],
+                    'upperCameName' => $params['upperCameName'],
+                    'classComment' => $params['classComment'],
+                    'packageName' => $packageName,
+                    'controller' => $params['gen']['controller'],
                     'date' => $date
                 ]);
             }
@@ -98,6 +109,7 @@ class GenerateService
                 'logic' => $tmpLogic,
                 'model' => $tmpModel,
                 'validate' => $tmpValidate,
+                'route' => $tmpRoute,
             ];
         } catch (\Throwable $e) {
             exceptionLog($e);
