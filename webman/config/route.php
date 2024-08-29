@@ -68,6 +68,21 @@ Route::group('/v1', function () {
             // 文件上传
             Route::post('/upload', [app\http\admin\controller\common\UploadController::class, 'upload']);
         });
+
+        /** 文件部分 */
+        Route::group('/upload', function () {
+            // 文件分组
+            Route::group('/group', function () {
+                // 获取分组列表
+                Route::get('/list', ['app\http\admin\controller\upload\GroupController', 'list']);
+                // 新增分组
+                Route::post('/create', ['app\http\admin\controller\upload\GroupController', 'create']);
+                // 修改分组
+                Route::post('/update', ['app\http\admin\controller\upload\GroupController', 'update']);
+                // 删除分组
+                Route::post('/delete', ['app\http\admin\controller\upload\GroupController', 'delete']);
+            });
+        });
         /** 代码生成器 **/
         Route::group('/gen', function () {
             // 所有数据表
