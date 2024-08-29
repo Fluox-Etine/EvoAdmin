@@ -115,17 +115,17 @@ pnpm build
 
 ## 演示图片 还在高温锻造中。。。囊中羞涩只能展示几个图
 
-<img src="http://sizkaqcsl.hn-bkt.clouddn.com/1.png"/>
-<img src="http://sizkaqcsl.hn-bkt.clouddn.com/2.png"/>
-<img src="http://sizkaqcsl.hn-bkt.clouddn.com/3.png"/>
-<img src="http://sizkaqcsl.hn-bkt.clouddn.com/4.png"/>
-<img src="http://sizkaqcsl.hn-bkt.clouddn.com/5.png"/>
-<img src="http://sizkaqcsl.hn-bkt.clouddn.com/6.png"/>
-<img src="http://sizkaqcsl.hn-bkt.clouddn.com/7.png"/>
-<img src="http://sizkaqcsl.hn-bkt.clouddn.com/8.png"/>
-<img src="http://sizkaqcsl.hn-bkt.clouddn.com/9.png"/>
+<img src="https://gen.ntgo.cn/github/1.png"/>
+<img src="https://gen.ntgo.cn/github/2.png"/>
+<img src="https://gen.ntgo.cn/github/3.png"/>
+<img src="https://gen.ntgo.cn/github/4.png"/>
+<img src="https://gen.ntgo.cn/github/5.png"/>
+<img src="https://gen.ntgo.cn/github/6.png"/>
+<img src="https://gen.ntgo.cn/github/7.png"/>
+<img src="https://gen.ntgo.cn/github/8.png"/>
+<img src="https://gen.ntgo.cn/github/9.png"/>
 
 #### 鄙人联系方式（请注明来意）
-<img src="http://sizkaqcsl.hn-bkt.clouddn.com/10.jpeg" style="width: 200px;"/>
+<img src="https://gen.ntgo.cn/github/10.jpeg" style="width: 200px;"/>
 
 
