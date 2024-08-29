@@ -2,7 +2,7 @@
   <div class="login-box">
     <div class="login-logo">
       <img src="~@/assets/images/logo.png" width="45" alt="logo"/>
-      <h1 class="mb-0 ml-2 text-3xl font-bold">Evo PHP Admin</h1>
+      <h1 class="mb-0 ml-2 text-3xl font-bold">Evo Admin</h1>
     </div>
     <a-form layout="horizontal" :model="loginFormModel" @submit.prevent="handleSubmit">
       <a-form-item>

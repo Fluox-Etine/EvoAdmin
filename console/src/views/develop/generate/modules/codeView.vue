@@ -15,6 +15,7 @@
     >
       <div v-show="codeKey === 'controller'" style="width: 100%;">
         <highlightjs v-if="code.controller" language="php" :code="code.controller"/>
+        <CopyOutlined v-if="code.controller" style="position: fixed; top: 120px; right: 20px;">我是按钮阿</CopyOutlined>
         <a-empty v-else/>
       </div>
       <div v-show="codeKey === 'logic'" style="width: 100%;">
@@ -38,6 +39,7 @@
 </template>
 <script lang="ts" setup>
 import {ref} from "vue";
+import { CopyOutlined } from '@ant-design/icons-vue';
 
 interface CodeType {
   controller?: string;

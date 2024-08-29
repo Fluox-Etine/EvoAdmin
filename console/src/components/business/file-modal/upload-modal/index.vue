@@ -8,23 +8,24 @@
       @ok="onOk"
       @cancel="onCancel"
   >
-<!--    <a-flex justify="space-between" align="center">-->
+    <a-flex justify="space-between" align="center">
       <a-alert message="普通上传单个文件不超过5MB，最多只能上传10个文件" type="info" show-icon/>
       <a-upload :multiple="true" :before-upload="beforeUpload" :show-upload-list="false">
         <a-button type="primary"> 普通上传</a-button>
       </a-upload>
-<!--    </a-flex>-->
+    </a-flex>
     <DynamicTable :search="false" :data-source="fileList" :columns="columns"/>
   </DraggableModal>
 </template>
 
 <script setup lang="tsx">
-import {ref, computed} from 'vue';
+import {computed, ref} from 'vue';
 import {message, type UploadProps} from 'ant-design-vue';
-import {UploadResultStatus, fileListColumns, type FileItem} from './columns.tsx';
+import {type FileItem, fileListColumns, UploadResultStatus} from './columns.tsx';
 import {DraggableModal} from '@/components/business/draggable-modal/index.ts';
-import {useTable, type TableColumn} from '@/components/business/dynamic-table';
+import {type TableColumn, useTable} from '@/components/business/dynamic-table';
 import * as Api from '@/api/backend/upload.ts';
+import type {FileTypeEnum} from "@/enums/fileTypeEnum.ts";
 
 const emit = defineEmits(['uploadSuccess']);
 
@@ -32,6 +33,8 @@ const [DynamicTable] = useTable();
 
 const visible = ref(false);
 const fileList = ref<FileItem[]>([]);
+const fileType = ref<FileTypeEnum>(10);
+const groupId = ref<number>(0)
 
 const disabledUpload = computed(() => {
   return !fileList.value.some((n) => n.status !== UploadResultStatus.SUCCESS);
@@ -66,10 +69,10 @@ const onOk = async () => {
   await Promise.all(
       uploadFileList.map(async (item) => {
         try {
-          await Api.uploadUpload({file: item.file}, undefined, {
+          console.log(fileType.value)
+          await Api.uploadUpload({file: item.file, type: fileType.value._value, group: groupId.value._value}, undefined, {
             onUploadProgress(progressEvent) {
-              const complete = ((progressEvent.loaded / progressEvent.total!) * 100) | 0;
-              item.percent = complete;
+              item.percent = ((progressEvent.loaded / progressEvent.total!) * 100) | 0;
               item.status = UploadResultStatus.UPLOADING;
             },
           });
@@ -122,9 +125,10 @@ const columns: TableColumn<FileItem>[] = [
   },
 ];
 
-const openUploadModal = () => {
-  console.log(12321)
+const openUploadModal = (type: FileTypeEnum, group: number) => {
   visible.value = true
+  fileType.value = type
+  groupId.value = group
 }
 
 // 暴露方法

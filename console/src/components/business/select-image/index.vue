@@ -23,6 +23,7 @@
 
 import {ref} from "vue";
 import {PlusOutlined} from '@ant-design/icons-vue';
+import {FileTypeEnum} from "@/enums/fileTypeEnum.ts";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const props = defineProps({
@@ -53,8 +54,7 @@ const FilesModal = ref<any>();
 
 /** 打开文件选择器 */
 const handleSelectImage = () => {
-  console.log( FilesModal.value)
-  FilesModal.value.openFileModal();
+  FilesModal.value.openFileModal(FileTypeEnum.IMAGE);
 }
 
 const handleSelectImageSubmit = (result) => {

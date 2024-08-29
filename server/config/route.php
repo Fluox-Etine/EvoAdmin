@@ -82,6 +82,14 @@ Route::group('/v1', function () {
                 // 删除分组
                 Route::post('/delete', ['app\http\admin\controller\upload\GroupController', 'delete']);
             });
+
+            /** 文件 @date 2024/08/29 20:49 */
+            Route::group('/file', function () {
+                // 列表接口
+                Route::post('/list', ['app\http\admin\controller\upload\FileController', 'list']);
+                // 删除接口
+                Route::post('/delete', ['app\http\admin\controller\upload\FileController', 'delete']);
+            });
         });
         /** 代码生成器 **/
         Route::group('/gen', function () {

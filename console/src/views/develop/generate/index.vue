@@ -18,7 +18,7 @@
         <div v-show="baseKey === 'base'" style="width: 100%;">
           <a-alert
               message="温馨提示（基础配置）"
-              description="Github地址：https://github.com/Fluox-Etine/Evo-PHP-Admin"
+              description="Github地址：https://github.com/Fluox-Etine/EvoAdmin"
               type="success"
               show-icon
           />
@@ -77,7 +77,7 @@
         <div v-show="baseKey === 'field'" style="width: 100%;">
           <a-alert
               message="温馨提示（字段配置）"
-              description="Gitee地址：https://gitee.com/old-friends-come-again/Evo-PHP-Admin"
+              description="Gitee地址：https://gitee.com/old-friends-come-again/EvoAdmin"
               type="success"
               show-icon
           />
@@ -357,7 +357,7 @@ const formState: UnwrapRef<any> = reactive({
   deleteType: 1,
   menuName: '',
   tableDesc: '',
-  moduleName: 'api',
+  moduleName: 'admin',
   upperCameName: '',
   menuBuild: 1,
   gen: {

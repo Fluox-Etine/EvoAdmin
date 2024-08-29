@@ -45,6 +45,7 @@ class UploadService
      */
     private static function getFileCode(string $filePath): int
     {
+        // TODO 其他文件的code验证，百度不到，只能自己一个个实验，获取到了。
         $fp = fopen($filePath, 'rb');
         $bin = fread($fp, 2);
         fclose($fp);
