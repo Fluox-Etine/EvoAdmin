@@ -25,7 +25,7 @@ class RouteService
         $waitReplace = [
             $params['classComment'],
             $params['date'],
-            $upperCameNameArray[0],
+            '/'.$upperCameNameArray[0],
             self::getFrontRoutes($params, $upperCameNameArray),
         ];
 
@@ -45,7 +45,7 @@ class RouteService
     {
         $frontRoutes = '';
         if (count($upperCameNameArray) > 1) {
-            $frontRoutes .= "Route::group('" . $upperCameNameArray[1] . "',function(){" . PHP_EOL;
+            $frontRoutes .= "Route::group('/" . $upperCameNameArray[1] . "',function(){" . PHP_EOL;
         }
         $controller = GenerateService::getNameSpaceContent($params['moduleName'], $params['classDir'], $params['upperCameName'], 'controller');
 
@@ -61,7 +61,6 @@ class RouteService
             }
         }
         $frontRoutes .= "   });";
-        var_dump($frontRoutes);
         return $frontRoutes;
     }
 }
