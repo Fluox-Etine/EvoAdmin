@@ -2,6 +2,7 @@
 declare (strict_types=1);
 
 {NAMESPACE}
+
 use Respect\Validation\Validator as v;
 use Respect\Validation\Exceptions\ValidationException;
 use support\exception\RespBusinessException;
