@@ -11,7 +11,7 @@
  Target Server Version : 80200 (8.2.0)
  File Encoding         : 65001
 
- Date: 29/08/2024 09:13:11
+ Date: 29/08/2024 12:04:38
 */
 
 SET NAMES utf8mb4;
@@ -231,5 +231,51 @@ CREATE TABLE `evo_test_goods`  (
 -- ----------------------------
 -- Records of evo_test_goods
 -- ----------------------------
+
+-- ----------------------------
+-- Table structure for evo_upload_file
+-- ----------------------------
+DROP TABLE IF EXISTS `evo_upload_file`;
+CREATE TABLE `evo_upload_file`  (
+  `id` int UNSIGNED NOT NULL AUTO_INCREMENT,
+  `group_id` int UNSIGNED NOT NULL DEFAULT 0 COMMENT '文件分组',
+  `channel` tinyint UNSIGNED NOT NULL DEFAULT 10 COMMENT '上传来源(10管理端 20用户端)',
+  `file_type` tinyint UNSIGNED NOT NULL DEFAULT 10 COMMENT '文件类型(10图片 20附件 30视频)',
+  `file_name` varchar(50) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL COMMENT '文件名称',
+  `file_path` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL COMMENT '文件路径',
+  `file_size` bigint UNSIGNED NOT NULL COMMENT '文件大小',
+  `file_ext` varchar(10) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL COMMENT '文件后缀名',
+  `uploader_id` int UNSIGNED NOT NULL COMMENT '上传者id',
+  `created_at` bigint NULL DEFAULT NULL COMMENT '创建时间',
+  `updated_at` bigint NULL DEFAULT NULL COMMENT '更新时间',
+  `deleted_at` datetime NULL DEFAULT NULL COMMENT '删除时间',
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `group_id`(`group_id` ASC) USING BTREE,
+  INDEX `uploader_id`(`uploader_id` ASC, `channel` ASC) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8mb3 COLLATE = utf8mb3_general_ci COMMENT = '文件上传表' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of evo_upload_file
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for evo_upload_group
+-- ----------------------------
+DROP TABLE IF EXISTS `evo_upload_group`;
+CREATE TABLE `evo_upload_group`  (
+  `id` int UNSIGNED NOT NULL AUTO_INCREMENT,
+  `name` varchar(15) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT '分组名称',
+  `sort` int UNSIGNED NOT NULL DEFAULT 255 COMMENT '排序(数字越小越靠前)',
+  `created_at` bigint NULL DEFAULT NULL COMMENT '创建时间',
+  `updated_at` bigint NULL DEFAULT NULL COMMENT '更新时间',
+  `deleted_at` datetime NULL DEFAULT NULL COMMENT '删除时间',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8mb3 COLLATE = utf8mb3_general_ci COMMENT = '文件分组' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of evo_upload_group
+-- ----------------------------
+INSERT INTO `evo_upload_group` VALUES (1, '开发分组', 257, 1724903098, 1724903189, NULL);
+INSERT INTO `evo_upload_group` VALUES (3, '开发分组', 255, 1724903199, 1724903199, '2024-08-29 11:49:06');
 
 SET FOREIGN_KEY_CHECKS = 1;
