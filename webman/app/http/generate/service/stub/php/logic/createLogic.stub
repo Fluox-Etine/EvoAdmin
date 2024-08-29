@@ -9,7 +9,7 @@
     {
         try {
             return {UPPER_CAMEL_NAME}Model::create([
-CREATE_DATA
+{CREATE_DATA}
             ]) != false;
         } catch (\Exception $e) {
             return false;

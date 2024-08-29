@@ -28,7 +28,7 @@ class LogicService
         $waitReplace = [
             GenerateService::getNameSpaceContent($params['moduleName'], $params['classDir'], $params['upperCameName'], 'logic'),
             self::getUseContent($params['classDir'], $params['upperCameName']),
-            $params['classComment'].'逻辑类',
+            $params['classComment'] . '逻辑类',
             $params['date'],
             GenerateService::getLastCamelCaseWord($params['upperCameName'])[0],
             $params['moduleName'],
@@ -126,18 +126,20 @@ class LogicService
             '{NOTES}',
             '{DATE}',
             '{UPPER_CAMEL_NAME}',
-            '{QUERY_CONDITION}',
             '{FILTER_DATA}',
-            '{OTHER_WHERE}',
-            '{FIELDS}',
-            '{METHOD_LIST}',
+            '{SQL_CHAIN}',
             '{FORMAT_DATA}'
         ];
 
         // 处理查询条件
         $formatQuery = self::getFormatQueryContent($queryColumn);
+
+        $sqlChain = '';
+        if (!empty($formatQuery)) {
+            $sqlChain = '->where($filter)';
+        }
         // 处理字段显示问题
-        $fields = '*';
+        $fields = "'" . '*' . "'";
         if (!empty($listColumn)) {
             $fields = '';
             foreach ($listColumn as $value) {
@@ -146,25 +148,23 @@ class LogicService
             // 去除最后一个逗号
             $fields = substr($fields, 0, -1);
         }
-
+        $sqlChain .= '->select(' . $fields . ')';
         // 处理分页问题
         if ($paginate) {
-            $methodList = 'paginate($params["pageSize"] ?? 10);';
+            $sqlChain .= '->paginate($params["pageSize"] ?? 10);';
             $formatData = 'return formattedPaginate($list);';
         } else {
-            $methodList = 'get()';
+            $sqlChain .= '->get();';
             $formatData = 'return empty($list) ? [] : $list->toArray();';
         }
+        var_dump($formatData);
         // 等待替换的内容
         $waitReplace = [
             $notes,
             $date,
             $upperCameName,
-            $formatQuery['content'] ?? '',
-            $formatQuery['filterStr'] ?? '',
-            $formatQuery['otherWhere'] ?? '',
-            $fields,
-            $methodList,
+            $formatQuery,
+            $sqlChain,
             $formatData
         ];
         $templatePath = GenerateService::getTemplatePath('php/logic/listsLogic');
@@ -186,7 +186,7 @@ class LogicService
             '{NOTES}',
             '{DATE}',
             '{UPPER_CAMEL_NAME}',
-            'CREATE_DATA'
+            '{CREATE_DATA}'
         ];
         $updateData = self::getFormatDataContent($createColumn, 'create');
         // 等待替换的内容
@@ -356,12 +356,12 @@ class LogicService
     /**
      * 获取查询条件
      * @param array $tableColumn
-     * @return array
+     * @return string
      */
-    private static function getFormatQueryContent(array $tableColumn): array
+    private static function getFormatQueryContent(array $tableColumn): string
     {
         if (empty($tableColumn)) {
-            return [];
+            return '';
         }
         $content = '';
 
@@ -385,7 +385,7 @@ class LogicService
                         'LIKE' => "'like','%'. $value. '%'"
                     ];
                     if (isset($operators[$column['QUERY_TYPE']])) {
-                        $filterStr .= "!empty(" . $value . "） && " . "{$filter}[] = [" . "'{$column['COLUMN_NAME']}'" . ',' . $operators[$column['QUERY_TYPE']] . ']' . PHP_EOL;
+                        $filterStr .= "!empty(" . $value . ") && " . "{$filter}[] = [" . "'{$column['COLUMN_NAME']}'" . ',' . $operators[$column['QUERY_TYPE']] . '];' . PHP_EOL;
                     }
                 } elseif ($column['QUERY_TYPE'] === 'IN') {
                     $filterWhere .= "->whereIn('{$column['COLUMN_NAME']}', explode(',', $value))";
@@ -403,10 +403,14 @@ class LogicService
         if (!empty($filterStr)) {
             $filterStr = GenerateService::setBlankSpace($filterStr, "            ");
         }
-        return [
-            'content' => $content,
-            'filterStr' => $filterStr,
-            'otherWhere' => $filterWhere
-        ];
+
+        $str = GenerateService::setBlankSpace('$filter = [];' . PHP_EOL, "            ");
+        $str .= '$param = setQueryDefaultValue(' . '$params,[' . PHP_EOL
+            . $content . PHP_EOL;
+        $str .= GenerateService::setBlankSpace(']);', "            ");
+        $str .= PHP_EOL . PHP_EOL;
+        $str .= $filterStr;
+        $str .= PHP_EOL . $filterWhere;
+        return PHP_EOL.substr($str, 0, -8);
     }
 }

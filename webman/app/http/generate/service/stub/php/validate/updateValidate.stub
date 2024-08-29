@@ -6,7 +6,7 @@
      * @throws RespBusinessException
      * @date {DATE}
      */
-    public static function updateValidate(array $params)
+    public static function updateValidate(array $params): void
     {
         try {
              v::input($params, [

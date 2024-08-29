@@ -7,14 +7,8 @@
      */
     public static function handleLists(array $params): array
     {
-        try {
-            $filter = [];
-            $param = setQueryDefaultValue($params, [{
-{QUERY_CONDITION}
-                }
-            ]);
-{FILTER_DATA}
-            $list = {UPPER_CAMEL_NAME}Model::query()->where($filter){OTHER_WHERE}->select({FIELDS})->{METHOD_LIST}
+        try {{FILTER_DATA}
+            $list = {UPPER_CAMEL_NAME}Model::query(){SQL_CHAIN}
             {FORMAT_DATA}
         } catch (\Exception $e) {
             return [];
