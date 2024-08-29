@@ -3,6 +3,7 @@
      * 更新{NOTES}
      * @param array $params
      * @return bool
+     * @throws RespBusinessException
      * @date {DATE}
      */
     public static function handleUpdate(array $params): bool
@@ -12,6 +13,6 @@
 UPDATE_DATA
             ]) != false;
         } catch (\Exception $e) {
-            return false;
+            throw new RespBusinessException('编辑数据异常');
         }
     }

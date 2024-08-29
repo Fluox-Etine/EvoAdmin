@@ -3,6 +3,7 @@
      * 获取{NOTES}详情
      * @param Request $request
      * @return Response
+     * @throws RespBusinessException
      * @date {DATE}
      */
     public function detail(Request $request): Response

@@ -3,6 +3,7 @@
      * 添加{NOTES}
      * @param array $params
      * @return bool
+     * @throws RespBusinessException
      * @date {DATE}
      */
     public static function handleCreate(array $params): bool
@@ -12,6 +13,6 @@
 {CREATE_DATA}
             ]) != false;
         } catch (\Exception $e) {
-            return false;
+            throw new RespBusinessException('创建数据异常');
         }
     }

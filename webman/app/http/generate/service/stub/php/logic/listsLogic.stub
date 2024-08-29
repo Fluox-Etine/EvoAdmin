@@ -3,6 +3,7 @@
      * 获取{NOTES}列表
      * @param array $params
      * @return array
+     * @throws RespBusinessException
      * @date {DATE}
      */
     public static function handleLists(array $params): array
@@ -11,6 +12,6 @@
             $list = {UPPER_CAMEL_NAME}Model::query(){SQL_CHAIN}
             {FORMAT_DATA}
         } catch (\Exception $e) {
-            return [];
+            throw new RespBusinessException('查询数据异常');
         }
     }

@@ -150,7 +150,7 @@ class ControllerService
 
         $validateStr = '';
         if ($validate['create']) {
-            $validateStr = PHP_EOL . $upperCameName . 'Validate($params);';
+            $validateStr = PHP_EOL . $upperCameName . 'Validate::createValidate($params);';
             $validateStr = GenerateService::setBlankSpace($validateStr, "        ");
         }
         // 等待替换的内容
@@ -185,7 +185,7 @@ class ControllerService
 
         $validateStr = '';
         if ($validate['create']) {
-            $validateStr = PHP_EOL . $upperCameName . 'Validate($params);';
+            $validateStr = PHP_EOL . $upperCameName . 'Validate::updateValidate($params);';
             $validateStr = GenerateService::setBlankSpace($validateStr, "        ");
         }
         // 等待替换的内容

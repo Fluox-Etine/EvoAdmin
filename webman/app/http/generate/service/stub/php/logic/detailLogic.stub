@@ -3,6 +3,7 @@
      * {NOTES}详情
      * @param array $params
      * @return array
+     * @throws RespBusinessException
      * @date {DATE}
      */
     public static function handleDetail(array $params): array
@@ -15,6 +16,6 @@
             }
             return $detail->toArray();
         } catch (\Exception $e) {
-            return false;
+            throw new RespBusinessException('查询数据详情异常');
         }
     }
