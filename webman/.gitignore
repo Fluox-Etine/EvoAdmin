@@ -8,3 +8,4 @@
 /tests/.phpunit.result.cache
 /config/database.php
 /config/redis.php
+/public/uploads

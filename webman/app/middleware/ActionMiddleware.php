@@ -20,7 +20,10 @@ class ActionMiddleware implements MiddlewareInterface
      */
     public function process(Request $request, callable $handler): Response
     {
-
-        return renderError('演示站点不支持此操作');
+        if (config('app.debug')) {
+            return renderError('演示站点不支持此操作');
+        } else {
+            return $handler($request);
+        }
     }
 }
