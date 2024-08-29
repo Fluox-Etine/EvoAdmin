@@ -155,7 +155,7 @@ class LogicService
             $formatData = 'return formattedPaginate($list);';
         } else {
             $sqlChain .= '->get();';
-            $formatData = 'return empty($list) ? [] : $list->toArray();';
+            $formatData = 'return $list->isEmpty() ? [] : $list->toArray();';
         }
         var_dump($formatData);
         // 等待替换的内容

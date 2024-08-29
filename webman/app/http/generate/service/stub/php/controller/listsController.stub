@@ -10,5 +10,5 @@
     {
         $params = $request->post();
         $list = {UPPER_CAMEL_NAME}Logic::handleLists($params);
-        return renderSuccess(compact('list'),'列表获取成功');
+        return renderSuccess($list,'列表获取成功');
     }
