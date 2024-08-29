@@ -12,7 +12,7 @@ class UploadService
      */
     public static function handleUpload($file): array
     {
-        $typeCode = self::getFileCode($file->getPathname());
+        $typeCode = self::getFileCode($file->getRealPath());
         $allowExt = config('env.upload.allow_ext');
         // 验证格式类型
         if (!isset($allowExt[$typeCode])) {
