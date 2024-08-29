@@ -9,7 +9,7 @@
     public static function handleCreate(array $params): bool
     {
         try {
-            return {UPPER_CAMEL_NAME}Model::create([
+            return {UPPER_CAMEL_NAME}Model::insert([
 {CREATE_DATA}
             ]) != false;
         } catch (\Exception $e) {

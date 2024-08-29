@@ -157,7 +157,6 @@ class LogicService
             $sqlChain .= '->get();';
             $formatData = 'return $list->isEmpty() ? [] : $list->toArray();';
         }
-        var_dump($formatData);
         // 等待替换的内容
         $waitReplace = [
             $notes,
