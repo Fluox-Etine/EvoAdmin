@@ -1,11 +1,5 @@
-import {Tag, Tooltip, Image, Progress} from 'ant-design-vue';
+import {Tag, Image, Progress} from 'ant-design-vue';
 import type {TableColumn} from '@/components/core/dynamic-table';
-import type {FormSchema} from '@/components/core/schema-form';
-import {formatToDateTime} from '@/utils/dateUtil';
-import {baseApiUrl} from '@/utils/request';
-
-export type TableListItem = API.StorageInfo;
-export type TableColumnItem = TableColumn<TableListItem>;
 
 export type FileItem = {
     file: File;
@@ -80,14 +74,5 @@ export const fileListColumns: TableColumn<FileItem>[] = [
 
             return text || '待上传';
         },
-    },
-];
-
-export const searchFormSchema: FormSchema[] = [
-    {
-        field: 'name',
-        label: '名称',
-        component: 'Input',
-        colProps: {span: 8},
     },
 ];

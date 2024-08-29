@@ -8,13 +8,12 @@
       @ok="onOk"
       @cancel="onCancel"
   >
-    <a-flex justify="space-between" align="center">
-      <a-alert message="单个文件不超过2MB，最多只能上传10个文件" type="info" show-icon/>
+<!--    <a-flex justify="space-between" align="center">-->
+      <a-alert message="普通上传单个文件不超过5MB，最多只能上传10个文件" type="info" show-icon/>
       <a-upload :multiple="true" :before-upload="beforeUpload" :show-upload-list="false">
-        <a-button type="primary"> 选择文件</a-button>
+        <a-button type="primary"> 普通上传</a-button>
       </a-upload>
-    </a-flex>
-
+<!--    </a-flex>-->
     <DynamicTable :search="false" :data-source="fileList" :columns="columns"/>
   </DraggableModal>
 </template>
@@ -22,8 +21,8 @@
 <script setup lang="tsx">
 import {ref, computed} from 'vue';
 import {message, type UploadProps} from 'ant-design-vue';
-import {UploadResultStatus, fileListColumns, type FileItem} from './columns';
-import {DraggableModal} from '@/components/business/draggable-modal';
+import {UploadResultStatus, fileListColumns, type FileItem} from './columns.tsx';
+import {DraggableModal} from '@/components/business/draggable-modal/index.ts';
 import {useTable, type TableColumn} from '@/components/business/dynamic-table';
 import * as Api from '@/api/backend/upload.ts';
 
@@ -84,8 +83,8 @@ const onOk = async () => {
 };
 
 const beforeUpload: UploadProps['beforeUpload'] = async (file) => {
-  if (file.size / 1024 / 1024 > 2) {
-    message.error('单个文件不超过2MB');
+  if (file.size / 1024 / 1024 > 5) {
+    message.error('单个文件不超过5MB');
   } else {
     const item: FileItem = {
       file,

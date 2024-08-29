@@ -1,5 +1,5 @@
 <template>
-  <a-modal v-model:open="open" width="1240px" title="文件资源库">
+  <a-modal v-model:open="open" width="960px" title="文件资源库">
     <div style="width: 600px;float: right">
       <a-row>
         <a-col :span="14">
@@ -13,12 +13,12 @@
         </a-col>
       </a-row>
     </div>
-    <div style="height: 700px;">
+    <div style="height: 650px;">
       <br>
       <a-tabs
           v-model:activeKey="activeKey"
           tab-position="left"
-          :style="{ height: '700px'}"
+          :style="{ height: '650px'}"
       >
         <a-tab-pane v-for="(item,index) in groupList" :key="index" :tab="`${item.name}`">
           {{ item.name }}
