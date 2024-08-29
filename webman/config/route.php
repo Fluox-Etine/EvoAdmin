@@ -63,7 +63,11 @@ Route::group('/v1', function () {
             });
         });
 
-
+        /** 公共部分接口 */
+        Route::group('/common', function () {
+            // 文件上传
+            Route::post('/upload', [app\http\admin\controller\common\UploadController::class, 'upload']);
+        });
         /** 代码生成器 **/
         Route::group('/gen', function () {
             // 所有数据表

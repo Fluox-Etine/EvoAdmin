@@ -31,6 +31,7 @@ class UploadService
                 'file_path' => config('env.upload.upload_dir') . $fileName,
                 'file_size' => $fileSize,
                 'file_type' => $fileExt,
+                'preview_url' => config('env.upload.domain') . config('env.upload.upload_dir') . $fileName,
             ];
         }
         throw new \Exception('文件上传失败');
