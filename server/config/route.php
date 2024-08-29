@@ -74,7 +74,7 @@ Route::group('/v1', function () {
             // 文件分组
             Route::group('/group', function () {
                 // 获取分组列表
-                Route::get('/list', ['app\http\admin\controller\upload\GroupController', 'list']);
+                Route::post('/list', ['app\http\admin\controller\upload\GroupController', 'list']);
                 // 新增分组
                 Route::post('/create', ['app\http\admin\controller\upload\GroupController', 'create']);
                 // 修改分组
@@ -94,6 +94,7 @@ Route::group('/v1', function () {
             // 开始生成
             Route::post('/generate', [app\http\generate\controller\GenerateController::class, 'generate']);
         });
+
     });
 });
 Route::disableDefaultRoute();

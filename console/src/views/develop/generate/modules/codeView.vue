@@ -27,7 +27,11 @@
       </div>
       <div v-show="codeKey === 'validate'" style="width: 100%;">
         <highlightjs v-if="code.validate" language="php" :code="code.validate"/>
-        <a-empty/>
+        <a-empty v-else/>
+      </div>
+      <div v-show="codeKey === 'route'" style="width: 100%;">
+        <highlightjs v-if="code.route" language="php" :code="code.route"/>
+        <a-empty v-else/>
       </div>
     </a-card>
   </div>
@@ -39,7 +43,8 @@ interface CodeType {
   controller?: string;
   logic?: string;
   model?: string;
-  validate?: string
+  validate?: string;
+  route?: string;
 }
 
 defineProps<{ code: CodeType }>();
@@ -60,6 +65,10 @@ const tabCodeList = [
   {
     key: 'validate',
     tab: '验证器'
+  },
+  {
+    key: 'route',
+    tab: '后端路由'
   }
 ];
 
