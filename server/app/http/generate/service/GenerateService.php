@@ -1,7 +1,12 @@
 <?php
 
-namespace app\http\generate\service\backend;
+namespace app\http\generate\service;
 
+use app\http\generate\service\backend\ControllerService;
+use app\http\generate\service\backend\LogicService;
+use app\http\generate\service\backend\ModelService;
+use app\http\generate\service\backend\RouteService;
+use app\http\generate\service\backend\ValidateService;
 use support\exception\RespBusinessException;
 
 /**

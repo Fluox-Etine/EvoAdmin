@@ -2,6 +2,7 @@
 
 namespace app\http\generate\service\backend;
 
+use app\http\generate\service\GenerateService;
 use support\Db;
 use support\exception\RespBusinessException;
 
