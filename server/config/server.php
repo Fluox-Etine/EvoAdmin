@@ -4,7 +4,7 @@ return [
     'listen' => 'http://0.0.0.0:19878',
     'transport' => 'tcp',
     'context' => [],
-    'name' => 'Evo-PHP-Admin',
+    'name' => 'EvoAdmin',
     'count' => cpu_count(),
     'user' => '',
     'group' => '',

@@ -15,7 +15,7 @@ class SlowSQL implements Bootstrap
         if (config('env.show_sql.enable')) {
             $slowSqlData = [];
             Db::listen(function ($query) use (&$slowSqlData) {
-                // 这里去除框线的心跳ping
+                // 这里去除的心跳ping
                 if (strlen($query->sql) > 10) {
                     // 执行时间
                     if ($query->time > config('env.show_sql.limit')) {
