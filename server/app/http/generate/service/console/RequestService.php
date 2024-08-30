@@ -20,20 +20,38 @@ class RequestService
             'create' => [],
             'update' => [],
             'detail' => [],
-            'query' => []
         ];
         foreach ($params['fields'] as $field) {
-            if ($field['LIST']) $action['list'][] = $field;
             if ($field['CREATE']) $action['create'][] = $field;
             if ($field['UPDATE']) $action['update'][] = $field;
             if ($field['DETAIL']) $action['detail'][] = $field;
-            if ($field['QUERY_TYPE']) $action['query'][] = $field;
+            if ($field['QUERY_TYPE']) $action['list'][] = $field;
         }
-
-        $request = self::handleRequestFunctions(!empty($action['query']), $params['upperCameName'], $params['classComment'], $params['gen']);
+        if (empty($action['update'])) {
+            $action['update'][] = [
+                'COLUMN_NAME' => $params['pk'],
+                'COLUMN_COMMENT' => '主键',
+                'DATA_TYPE' => 'int',
+            ];
+        }
+        $isPk = false;
+        foreach ($action['update'] as $item) {
+            if ($item['COLUMN_KEY'] == "PRI") {
+                $isPk = true;
+            }
+        }
+        if (!$isPk) {
+            $action['update'][] = [
+                'COLUMN_NAME' => $params['pk'],
+                'COLUMN_COMMENT' => '主键',
+                'DATA_TYPE' => 'int',
+            ];
+        }
+        $request = self::handleRequestFunctions(!empty($action['list']), $params['upperCameName'], $params['classComment'], $params['gen']);
+        $types = self::handleTypes($action, $params['upperCameName'], $params['gen']);
         return [
             'request' => $request,
-            'types' => ''
+            'types' => $types
         ];
     }
 
@@ -113,5 +131,54 @@ class RequestService
             $str
         ];
         return GenerateService::replaceFileData($needReplace, $waitReplace, GenerateService::getTemplatePath('vue/api/request'));
+    }
+
+
+    /**
+     * 生成请求文件类型
+     * @param array $files
+     * @param string $upperCameName
+     * @param array $gen
+     * @return string
+     */
+    private static function handleTypes(array $files, string $upperCameName, array $gen)
+    {
+        // 需要替换的变量
+        $needReplace = [
+            '{TYPES}'
+        ];
+        $str = '';
+        $function = ['list' => '列表', 'create' => '创建', 'update' => '更新', 'detail' => '详情'];
+        foreach ($function as $key => $value) {
+            if (empty($gen[$key]) || empty($files[$key])) continue;
+            $str .= '   /** ' . $value . '参数 */' . PHP_EOL;
+            $str .= '   type ' . $upperCameName . ucfirst($key) . 'Dto = {' . PHP_EOL;
+            foreach ($files[$key] as $file) {
+                $types = 'string';
+                if ($file['DATA_TYPE'] == 'int' || $file['DATA_TYPE'] == 'bigint' || $file['DATA_TYPE'] == 'tinyint' || $file['DATA_TYPE'] == 'smallint') {
+                    $types = 'number';
+                } elseif ($file['DATA_TYPE'] == 'float' || $file['DATA_TYPE'] == 'double' || $file['DATA_TYPE'] == 'decimal') {
+                    $types = 'float';
+                }
+                $str .= vsprintf(
+                    "        /** %s */\n" .
+                    "        %s?: %s;\n",
+                    [
+                        $file['COLUMN_COMMENT'], // 替换 {COMMENT}
+                        $file['COLUMN_NAME'], // 替换 {FILE}
+                        $types
+                    ]
+                );
+            }
+            $str .= '   };' . PHP_EOL;
+            $str .= PHP_EOL;
+        }
+        $str = substr($str, 0, -2);
+
+        // 等待替换的内容
+        $waitReplace = [
+            $str
+        ];
+        return GenerateService::replaceFileData($needReplace, $waitReplace, GenerateService::getTemplatePath('vue/api/types'));
     }
 }

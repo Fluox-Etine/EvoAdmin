@@ -453,7 +453,8 @@ const codeData = ref({
   model: '',
   validate: '',
   route: '',
-  request: ''
+  request: '',
+  types: ''
 });
 
 /** 切换tab */
@@ -530,8 +531,8 @@ const handleStart = async () => {
     fields: dataFieldsSource.value
   }
   const response = await Api.gen(data);
-  const {controller, logic, model, validate, route, request} = response;
-  Object.assign(codeData.value, {controller, logic, model, validate, route, request});
+  const {controller, logic, model, validate, route, request, types} = response;
+  Object.assign(codeData.value, {controller, logic, model, validate, route, request, types});
   baseKey.value = 'code';
 }
 </script>

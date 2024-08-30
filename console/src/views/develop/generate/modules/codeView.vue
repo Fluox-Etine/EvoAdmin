@@ -35,7 +35,11 @@
         <a-empty v-else/>
       </div>
       <div v-show="codeKey === 'request'" style="width: 100%;">
-        <highlightjs v-if="code.request" language="js" :code="code.request"/>
+        <highlightjs v-if="code.request" language="ts" :code="code.request"/>
+        <a-empty v-else/>
+      </div>
+      <div v-show="codeKey === 'types'" style="width: 100%;">
+        <highlightjs v-if="code.types" language="ts" :code="code.types"/>
         <a-empty v-else/>
       </div>
     </a-card>
@@ -52,6 +56,7 @@ interface CodeType {
   validate?: string;
   route?: string;
   request?: string;
+  types?: string;
 }
 
 defineProps<{ code: CodeType }>();
@@ -80,6 +85,10 @@ const tabCodeList = [
   {
     key: 'request',
     tab: '前端请求'
+  },
+  {
+    key: 'types',
+    tab: '类型声明'
   }
 ];
 

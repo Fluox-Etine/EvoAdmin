@@ -7,6 +7,7 @@ use app\http\generate\service\backend\LogicService;
 use app\http\generate\service\backend\ModelService;
 use app\http\generate\service\backend\RouteService;
 use app\http\generate\service\backend\ValidateService;
+use app\http\generate\service\console\RequestService;
 use support\exception\RespBusinessException;
 
 /**
@@ -109,12 +110,29 @@ class GenerateService
                     'fields' => $params['fields']
                 ]);
             }
+
+            // 生成请求文件
+            $tmpRequest = [
+                'request' => '',
+                'types' => ''
+            ];
+            if (in_array(true, $params['gen']['request'], true)) {
+                $tmpRequest = RequestService::handleRequest([
+                    'upperCameName' => $params['upperCameName'],
+                    'classComment' => $params['classComment'],
+                    'fields' => $params['fields'],
+                    'gen' => $params['gen']['request'],
+                    'pk' => $params['PK']
+                ]);
+            }
             return [
                 'controller' => $tmpController,
                 'logic' => $tmpLogic,
                 'model' => $tmpModel,
                 'validate' => $tmpValidate,
                 'route' => $tmpRoute,
+                'request' => $tmpRequest['request'],
+                'types' => $tmpRequest['types']
             ];
         } catch (\Throwable $e) {
             exceptionLog($e);
