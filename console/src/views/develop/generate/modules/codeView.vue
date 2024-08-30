@@ -34,12 +34,16 @@
         <highlightjs v-if="code.route" language="php" :code="code.route"/>
         <a-empty v-else/>
       </div>
+      <div v-show="codeKey === 'request'" style="width: 100%;">
+        <highlightjs v-if="code.request" language="js" :code="code.request"/>
+        <a-empty v-else/>
+      </div>
     </a-card>
   </div>
 </template>
 <script lang="ts" setup>
 import {ref} from "vue";
-import { CopyOutlined } from '@ant-design/icons-vue';
+import {CopyOutlined} from '@ant-design/icons-vue';
 
 interface CodeType {
   controller?: string;
@@ -47,6 +51,7 @@ interface CodeType {
   model?: string;
   validate?: string;
   route?: string;
+  request?: string;
 }
 
 defineProps<{ code: CodeType }>();
@@ -71,6 +76,10 @@ const tabCodeList = [
   {
     key: 'route',
     tab: '后端路由'
+  },
+  {
+    key: 'request',
+    tab: '前端请求'
   }
 ];
 

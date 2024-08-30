@@ -7,7 +7,12 @@ use app\http\generate\service\GenerateService;
 class RequestService
 {
 
-    public static function handleRequest(array $params): string
+    /**
+     * 生成请求文件
+     * @param array $params
+     * @return array
+     */
+    public static function handleRequest(array $params): array
     {
 
         $action = [
@@ -25,19 +30,23 @@ class RequestService
             if ($field['QUERY_TYPE']) $action['query'][] = $field;
         }
 
-        $request = self::handleRequestFunctions($params['query'], $params['upperCameName'], $params['classComment'], $action);
+        $request = self::handleRequestFunctions(!empty($action['query']), $params['upperCameName'], $params['classComment'], $params['gen']);
+        return [
+            'request' => $request,
+            'types' => ''
+        ];
     }
 
 
     /**
      * 生成请求文件方法
-     * @param string $query
+     * @param bool $query
      * @param string $upperCameName
      * @param string $classComment
      * @param array $gen
      * @return string
      */
-    protected static function handleRequestFunctions(string $query, string $upperCameName, string $classComment, array $gen): string
+    protected static function handleRequestFunctions(bool $query, string $upperCameName, string $classComment, array $gen): string
     {
         // 需要替换的变量
         $needReplace = [
@@ -54,16 +63,16 @@ class RequestService
         foreach ($function as $key => $value) {
             if (empty($gen[$key])) continue;
             $endpoint = strtolower($key);
-            $bodyRequest = ' body: API.' . $upperCameName . ucfirst($value) . 'Dto, ';
+            $bodyRequest = ' body: API.' . $upperCameName . ucfirst($key) . 'Dto, ';
             if ($key != 'list') {
                 $text = '操作成功';
-                $successMessageKey = 'successMsg:' . '"' . $text . '"';
+                $successMessageKey = ' successMsg:' . "'" . $text . "' ";
                 if ($key == 'deleted' || $key == 'detail') {
-                    $bodyRequest = ' body: API.QueryId';
+                    $bodyRequest = ' body: API.QueryId, ';
                 }
             } else {
                 $successMessageKey = '';
-                if (!empty($query)) {
+                if (!$query) {
                     $bodyRequest = '';
                 }
             }
@@ -73,15 +82,15 @@ class RequestService
             }
             // 格式化字符串
             $str .= vsprintf(
-                "/** {%s} POST %s */\n" .
-                "export async function {%s}({%s}options?: RequestOptions,) {\n" .
-                "    return request<%s>('{%s}', {\n" .
+                "/** %s POST %s */\n" .
+                "export async function %s(%soptions?: RequestOptions) {\n" .
+                "    return request<%s>('%s', {\n" .
                 "        method: 'POST',\n" .
                 "        headers: {\n" .
                 "            'Content-Type': 'application/json',\n" .
                 "        },\n" .
-                "       {%s}\n" .
-                "        ...(options || {'%s'}),\n" .
+                "       %s\n" .
+                "        ...(options || {%s}),\n" .
                 "    });\n" .
                 "}",
                 [
@@ -89,12 +98,13 @@ class RequestService
                     $path, // 替换 {PATH}
                     $endpoint,
                     $bodyRequest, // 替换 {BODY}
-                    $path, // request<%s>
+                    'any', // request<%s>
                     $path, // 替换 {PATH} 再次出现
                     $bodyData,
                     $successMessageKey, // 替换 SUCCESS_MSG 键
                 ]
             );
+            $str .= PHP_EOL;
             $str .= PHP_EOL;
         }
 
@@ -102,6 +112,6 @@ class RequestService
         $waitReplace = [
             $str
         ];
-        return GenerateService::replaceFileData($needReplace, $waitReplace, GenerateService::getTemplatePath('console/vue/request'));
+        return GenerateService::replaceFileData($needReplace, $waitReplace, GenerateService::getTemplatePath('vue/api/request'));
     }
 }

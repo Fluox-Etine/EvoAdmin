@@ -185,6 +185,7 @@
           />
           <br>
           <a-row :gutter="[16,32]">
+            <a-divider orientation="left" style="border-color: #7cb305" dashed>后端代码</a-divider>
             <a-col :span="24">
               <a-space>
                 验证器：
@@ -224,6 +225,50 @@
                 <a-radio-group v-model:value="formState.gen.paginate">
                   <a-radio :value="true">分页列表</a-radio>
                   <a-radio :value="false">不分页列表</a-radio>
+                </a-radio-group>
+              </a-space>
+            </a-col>
+            <a-divider orientation="right" style="border-color: #7cb305" dashed>前端代码</a-divider>
+            <a-col :span="24">
+              <a-space>
+                请求方法：
+                <a-checkbox v-model:checked="formState.gen.request.list">列表</a-checkbox>
+                <a-checkbox v-model:checked="formState.gen.request.create">创建</a-checkbox>
+                <a-checkbox v-model:checked="formState.gen.request.update">更新</a-checkbox>
+                <a-checkbox v-model:checked="formState.gen.request.deleted">删除</a-checkbox>
+                <a-checkbox v-model:checked="formState.gen.request.detail">详情</a-checkbox>
+              </a-space>
+            </a-col>
+            <a-col :span="24">
+              <a-space>
+                表格控件：
+                <a-checkbox v-model:checked="formState.gen.page.table">表格</a-checkbox>
+              </a-space>
+            </a-col>
+            <a-col :span="24">
+              <a-space>
+                创建控件：
+                <a-radio-group v-model:value="formState.gen.page.create">
+                  <a-radio :value="true">创建Modal</a-radio>
+                  <a-radio :value="false">创建页面</a-radio>
+                </a-radio-group>
+              </a-space>
+            </a-col>
+            <a-col :span="24">
+              <a-space>
+                更新控件：
+                <a-radio-group v-model:value="formState.gen.page.update">
+                  <a-radio :value="true">更新Modal</a-radio>
+                  <a-radio :value="false">更新页面</a-radio>
+                </a-radio-group>
+              </a-space>
+            </a-col>
+            <a-col :span="24">
+              <a-space>
+                详情控件：
+                <a-radio-group v-model:value="formState.gen.page.detail">
+                  <a-radio :value="true">详情Modal</a-radio>
+                  <a-radio :value="false">详情页面</a-radio>
                 </a-radio-group>
               </a-space>
             </a-col>
@@ -379,8 +424,21 @@ const formState: UnwrapRef<any> = reactive({
       delete: true,
       detail: false,
     },
+    request: {
+      list: true,
+      create: true,
+      update: true,
+      deleted: true,
+      detail: false,
+    },
     model: true,
     paginate: true,
+    page: {
+      table: true,
+      create: true,
+      update: true,
+      detail: true
+    }
   },
 });
 
@@ -395,6 +453,7 @@ const codeData = ref({
   model: '',
   validate: '',
   route: '',
+  request: ''
 });
 
 /** 切换tab */
@@ -471,8 +530,8 @@ const handleStart = async () => {
     fields: dataFieldsSource.value
   }
   const response = await Api.gen(data);
-  const {controller, logic, model, validate, route} = response;
-  Object.assign(codeData.value, {controller, logic, model, validate, route});
+  const {controller, logic, model, validate, route, request} = response;
+  Object.assign(codeData.value, {controller, logic, model, validate, route, request});
   baseKey.value = 'code';
 }
 </script>
