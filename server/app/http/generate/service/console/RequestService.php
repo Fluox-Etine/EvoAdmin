@@ -113,11 +113,11 @@ class RequestService
                 "}",
                 [
                     $classComment . ' ' . $value . '方法', // 替换 {CLASS_COMMENT}
-                    $path, // 替换 {PATH}
+                    $path . '/' . $key, // 替换 {PATH}
                     $endpoint,
                     $bodyRequest, // 替换 {BODY}
                     'any', // request<%s>
-                    $path, // 替换 {PATH} 再次出现
+                    $path . '/' . $key, // 替换 {PATH} 再次出现
                     $bodyData,
                     $successMessageKey, // 替换 SUCCESS_MSG 键
                 ]
@@ -141,7 +141,7 @@ class RequestService
      * @param array $gen
      * @return string
      */
-    private static function handleTypes(array $files, string $upperCameName, array $gen)
+    private static function handleTypes(array $files, string $upperCameName, array $gen): string
     {
         // 需要替换的变量
         $needReplace = [

@@ -105,7 +105,7 @@ class LogicService
         if ($gen['logic']['detail']) {
             $content .= self::handleDetail($notes, $date, $upperCameName, $PK, $action['detail']) . PHP_EOL;
         }
-        if ($gen['logic']['delete']) {
+        if ($gen['logic']['deleted']) {
             $content .= self::handleDelete($notes, $date, $upperCameName, $PK);
         }
         return $content;
@@ -311,7 +311,7 @@ class LogicService
 
 
     /**
-     *
+     * 处理格式化数据方法
      * @param array $tableColumn
      * @param string $flag
      * @return string

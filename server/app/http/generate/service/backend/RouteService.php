@@ -55,7 +55,7 @@ class RouteService
         $controller = $controller . '\\' . GenerateService::getLastCamelCaseWord($params['upperCameName'])[0] . 'Controller';
         $action = $params['controller'];
         $routesTemplate = "       Route::post('/%s',['%s','%s']);";
-        foreach (['list' => '列表', 'create' => '创建', 'update' => '更新', 'delete' => '删除', 'detail' => '详情'] as $key => $value) {
+        foreach (['list' => '列表', 'create' => '创建', 'update' => '更新', 'deleted' => '删除', 'detail' => '详情'] as $key => $value) {
             if (!empty($action[$key])) {
                 $endpoint = strtolower($key);
                 $frontRoutes .= "       // {$value}接口" . PHP_EOL;

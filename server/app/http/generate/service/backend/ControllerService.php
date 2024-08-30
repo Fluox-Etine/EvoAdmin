@@ -95,7 +95,7 @@ class ControllerService
             'list' => 'handleLists',
             'create' => 'handleCreate',
             'update' => 'handleUpdate',
-            'delete' => 'handleDelete',
+            'deleted' => 'handleDelete',
             'detail' => 'handleDetail', // 假设存在 handleDetail 方法
         ];
         foreach ($methods as $action => $methodName) {
