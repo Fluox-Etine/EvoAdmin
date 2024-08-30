@@ -10,7 +10,7 @@ class UploadService
      * @return array
      * @throws \Exception
      */
-    public static function handleUpload($file): array
+    public static function handleUploadService($file): array
     {
         $typeCode = self::getFileCode($file->getRealPath());
         $allowExt = config('env.upload.allow_ext');

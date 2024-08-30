@@ -22,7 +22,7 @@ class UploadLogic
     public static function handleUpload($file, int $uploadId, int $groupId = 0, int $channel = 0, int $fileType = 0): array
     {
         try {
-            $fileInfo = UploadService::handleUpload($file);
+            $fileInfo = UploadService::handleUploadService($file);
 
             UploadFileModel::insert([
                 'group_id' => $groupId,
@@ -39,7 +39,7 @@ class UploadLogic
 
             return $fileInfo;
         } catch (\Exception $e) {
-            // 这里统一接收上一层的一样错误信息。
+            // 这里统一接收上一层的错误信息。
             throw new RespBusinessException($e->getMessage());
         }
     }
