@@ -6,7 +6,7 @@
      * @throws RespBusinessException
      * @date {DATE}
      */
-    public function delete(Request $request): Response
+    public function deleted(Request $request): Response
     {
         $params = $request->post();
         $result = {UPPER_CAMEL_NAME}Logic::handleDelete($params);

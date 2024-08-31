@@ -29,7 +29,7 @@ class RequestService
         }
         if (empty($action['update'])) {
             $action['update'][] = [
-                'COLUMN_NAME' => $params['pk'],
+                'COLUMN_NAME' => $params['PK'],
                 'COLUMN_COMMENT' => '主键',
                 'DATA_TYPE' => 'int',
             ];
@@ -42,8 +42,20 @@ class RequestService
         }
         if (!$isPk) {
             $action['update'][] = [
-                'COLUMN_NAME' => $params['pk'],
+                'COLUMN_NAME' => $params['PK'],
                 'COLUMN_COMMENT' => '主键',
+                'DATA_TYPE' => 'int',
+            ];
+        }
+        if ($params['paginate']) {
+            $action['list'][] = [
+                'COLUMN_NAME' => 'page',
+                'COLUMN_COMMENT' => '页码',
+                'DATA_TYPE' => 'int',
+            ];
+            $action['list'][] = [
+                'COLUMN_NAME' => 'pageSize',
+                'COLUMN_COMMENT' => '每页条数',
                 'DATA_TYPE' => 'int',
             ];
         }

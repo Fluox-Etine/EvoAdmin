@@ -43,7 +43,7 @@ class SysAdminService
         $guid = guidV4();
         $timeStamp = microtime(true);
         $token = md5($guid . $timeStamp . $id);
-        Redis::setEx(RedisKeyEnum::ADMIN_TOKEN->value . $token, 3600, $id);
+        Redis::setEx(RedisKeyEnum::ADMIN_TOKEN->value . $token, 60 * 60 * 24 * 30, $id);
         return $token;
     }
 

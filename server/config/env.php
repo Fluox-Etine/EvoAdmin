@@ -33,6 +33,6 @@ return [
         // 文件上传目录
         'upload_dir' => '/uploads/' . date('Ymd') . '/',
         // 文件访问域名
-        'domain' => 'http://localhost:19878/',
+        'domain' => 'http://localhost:19878',
     ]
 ];

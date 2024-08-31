@@ -122,7 +122,8 @@ class GenerateService
                     'classComment' => $params['classComment'],
                     'fields' => $params['fields'],
                     'gen' => $params['gen']['request'],
-                    'pk' => $params['PK']
+                    'PK' => $params['PK'],
+                    'paginate' => $params['gen']['paginate']
                 ]);
             }
             return [
