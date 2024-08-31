@@ -1,15 +1,18 @@
 <template>
   <a-modal v-model:open="open" width="960px" title="文件资源库">
-    <div style="width: 600px;float: right">
+    <div style="width: 800px;float: right">
       <a-row>
-        <a-col :span="14">
+        <a-col :span="8">
           <a-input-search placeholder="请输入文件名" style="width: 100%;"/>
         </a-col>
-        <a-col :span="10">
-          <a-flex justify="flex-end">
-            <a-button type="primary" @click="handleUpload"> 本地上传</a-button>
-            <a-button type="dashed" style="margin: 0 10px 0 10px">添加分组</a-button>
-          </a-flex>
+        <a-col :span="7">
+        </a-col>
+        <a-col :span="9">
+          <a-space :size="8">
+            <a-button danger type="dashed" @click="handleChunkUpload"> 大文件上传</a-button>
+            <a-button type="primary" @click="handleUpload"> 普通上传</a-button>
+            <a-button type="dashed">添加分组</a-button>
+          </a-space>
         </a-col>
       </a-row>
     </div>
@@ -24,6 +27,7 @@
         </a-tab-pane>
       </a-tabs>
       <UploadModal ref="UploadModalRef" @upload-success="handleUploadSuccess"/>
+      <ChunkModal ref="ChunkModalRef" @upload-success="handleUploadSuccess"/>
     </div>
   </a-modal>
 </template>
@@ -34,9 +38,10 @@ import * as GroupApi from '@/api/backend/file_group.ts'
 import * as FileApi from '@/api/backend/file.ts'
 import {FileTypeEnum} from "@/enums/fileTypeEnum.ts";
 
-const domain = import.meta.env.VITE_DOMAIN_URL;
+// const domain = import.meta.env.VITE_DOMAIN_URL;
 const open = ref<boolean>(false);
 const UploadModalRef = ref();
+const ChunkModalRef = ref();
 const activeKey = ref(0);
 const fileType = ref<FileTypeEnum>(10);
 const pagination = ref({
@@ -60,6 +65,10 @@ const handleUpload = () => {
   UploadModalRef.value.openUploadModal(fileType, activeKey)
 }
 
+/** 打开大文件上传弹窗 */
+const handleChunkUpload = () => {
+  ChunkModalRef.value.openChunkUploadModal(fileType, activeKey)
+}
 /** 获取分组列表 */
 const fetchGroupList = async () => {
   const response = await GroupApi.list()
@@ -76,6 +85,7 @@ const fetchFileList = async () => {
   pagination.value = meta
   fileList.value = items
 }
+
 /** 上传成功回调 */
 const handleUploadSuccess = () => {
   pagination.value.currentPage = 1

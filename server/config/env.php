@@ -34,5 +34,7 @@ return [
         'upload_dir' => '/uploads/' . date('Ymd') . '/',
         // 文件访问域名
         'domain' => 'http://localhost:19878',
+        // 切片文件上传临时目录
+        'chunk_dir' => '/uploads/chunk/',
     ]
 ];

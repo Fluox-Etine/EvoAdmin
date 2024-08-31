@@ -51,6 +51,7 @@ declare module 'vue' {
     BasicHelp: typeof import('./../src/components/core/basic-help/index.vue')['default']
     Button: typeof import('./../src/components/core/button/button.vue')['default']
     CheckBox: typeof import('./../src/components/core/check-box/index.vue')['default']
+    ChunkModal: typeof import('./../src/components/business/file-modal/chunk-modal/index.vue')['default']
     ColumnSetting: typeof import('./../src/components/business/dynamic-table/src/components/table-settings/column-setting.vue')['default']
     DraggableModal: typeof import('./../src/components/business/draggable-modal/index.vue')['default']
     DynamicTable: typeof import('./../src/components/business/dynamic-table/src/dynamic-table.vue')['default']

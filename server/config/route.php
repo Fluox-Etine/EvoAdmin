@@ -67,6 +67,10 @@ Route::group('/v1', function () {
         Route::group('/common', function () {
             // 文件上传
             Route::post('/upload', [app\http\admin\controller\common\UploadController::class, 'upload']);
+            // 切片文件上传
+            Route::post('/uploadChunk', [app\http\admin\controller\common\UploadController::class, 'chunk']);
+            // 切片合并文件
+            Route::post('/chunkMerge', [app\http\admin\controller\common\UploadController::class, 'merge']);
         });
 
         /** 文件部分 */

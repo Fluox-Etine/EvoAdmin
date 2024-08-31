@@ -9,9 +9,9 @@
       @cancel="onCancel"
   >
     <a-flex justify="space-between" align="center">
-      <a-alert message="普通上传单个文件不超过5MB，最多只能上传10个文件" type="info" show-icon/>
+      <a-alert message="普通上传单个文件不超过5MB" type="info" show-icon/>
       <a-upload :multiple="true" :before-upload="beforeUpload" :show-upload-list="false">
-        <a-button type="primary"> 普通上传</a-button>
+        <a-button type="primary"> 立即上传</a-button>
       </a-upload>
     </a-flex>
     <DynamicTable :search="false" :data-source="fileList" :columns="columns"/>
@@ -75,6 +75,7 @@ const onOk = async () => {
     try {
       await Api.uploadUpload({
         file: item.file,
+        fileName:item.name,
         type: fileType.value._value,
         group: groupId.value._value
       }, undefined, {

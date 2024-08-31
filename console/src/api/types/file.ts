@@ -8,10 +8,31 @@ declare namespace API {
         group: number;
         /** 文件类型 */
         type: number;
-        /** 上传渠道 */
-        channel: number;
+        /** 文件名 */
+        fileName: string;
     };
 
+    type UploadChunk = {
+        /** 切片文件 */
+        chunk: Record<string, any>;
+        /** hash值 */
+        hash: number;
+        /** 文件索引 */
+        index: number;
+        /** 文件名 */
+        fileName: string;
+    }
+
+    type UploadChunkMerge = {
+        /** 文件hash */
+        hash: string;
+        /** 文件组 */
+        group: number;
+        /** 文件类型 */
+        type: number;
+        /** 文件大小 */
+        size: number;
+    }
     type UploadGroupItemInfo = {
         id: number;
         name: string;
