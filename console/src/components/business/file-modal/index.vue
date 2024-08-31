@@ -18,18 +18,9 @@
       <a-tabs
           v-model:activeKey="activeKey"
           tab-position="left"
-          :style="{ height: '650px'}"
+          :style="{ height: '650px', width: '100%'}"
       >
         <a-tab-pane v-for="(item,index) in groupList" :key="index" :tab="`${item.name}`">
-          <div v-show="fileType == FileTypeEnum.IMAGE">
-            我是图片
-          </div>
-          <div v-show="fileType == FileTypeEnum.VIDEO">
-            我是视频
-          </div>
-          <div v-show="fileType == FileTypeEnum.FILE">
-            我是文件
-          </div>
         </a-tab-pane>
       </a-tabs>
       <UploadModal ref="UploadModalRef" @upload-success="handleUploadSuccess"/>
@@ -40,23 +31,28 @@
 <script setup lang="ts">
 import {ref} from "vue";
 import * as GroupApi from '@/api/backend/file_group.ts'
+import * as FileApi from '@/api/backend/file.ts'
 import {FileTypeEnum} from "@/enums/fileTypeEnum.ts";
 
+const domain = import.meta.env.VITE_DOMAIN_URL;
 const open = ref<boolean>(false);
 const UploadModalRef = ref();
 const activeKey = ref(0);
 const fileType = ref<FileTypeEnum>(10);
-const groupList = ref([
-  {
-    id: 0,
-    name: '默认全部',
-  }
-])
+const pagination = ref({
+  currentPage: 1,
+  itemCount: 0
+})
+const fileList = ref([])
+
+const groupList = ref([{id: 0, name: '全部分组'}])
 
 const openFileModal = (type: FileTypeEnum) => {
+  fileType.value = type
+  fetchFileList()
   fetchGroupList()
   open.value = true
-  fileType.value = type
+
 }
 
 /** 打开上传文件弹窗 */
@@ -67,12 +63,23 @@ const handleUpload = () => {
 /** 获取分组列表 */
 const fetchGroupList = async () => {
   const response = await GroupApi.list()
-  groupList.value = [...groupList.value, ...response]
+  response.forEach(item => {
+    if (!groupList.value.some(existingItem => existingItem.id === item.id)) {
+      groupList.value.push(item);
+    }
+  });
 }
 
+/** 获取当前类型的文件列表 */
+const fetchFileList = async () => {
+  const {meta, items} = await FileApi.list({page: 1, file_type: fileType.value, group_id: activeKey.value})
+  pagination.value = meta
+  fileList.value = items
+}
 /** 上传成功回调 */
 const handleUploadSuccess = () => {
-  console.log('上传成功')
+  pagination.value.currentPage = 1
+  fetchFileList()
 }
 // 暴露方法
 defineExpose({

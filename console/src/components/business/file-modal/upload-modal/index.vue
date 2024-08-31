@@ -66,23 +66,32 @@ const onCancel = () => {
 
 const onOk = async () => {
   const uploadFileList = fileList.value.filter((n) => n.status !== UploadResultStatus.SUCCESS);
-  await Promise.all(
-      uploadFileList.map(async (item) => {
-        try {
-          console.log(fileType.value)
-          await Api.uploadUpload({file: item.file, type: fileType.value._value, group: groupId.value._value}, undefined, {
-            onUploadProgress(progressEvent) {
-              item.percent = ((progressEvent.loaded / progressEvent.total!) * 100) | 0;
-              item.status = UploadResultStatus.UPLOADING;
-            },
-          });
-          item.status = UploadResultStatus.SUCCESS;
-        } catch (error) {
-          console.log(error);
-          item.status = UploadResultStatus.ERROR;
-        }
-      }),
-  );
+
+  async function uploadNextFile(index = 0) {
+    if (index >= uploadFileList.length) {
+      return;
+    }
+    const item = uploadFileList[index];
+    try {
+      await Api.uploadUpload({
+        file: item.file,
+        type: fileType.value._value,
+        group: groupId.value._value
+      }, undefined, {
+        onUploadProgress(progressEvent) {
+          item.percent = ((progressEvent.loaded / progressEvent.total!) * 100) | 0;
+          item.status = UploadResultStatus.UPLOADING;
+        },
+      });
+      item.status = UploadResultStatus.SUCCESS;
+      await uploadNextFile(index + 1);
+    } catch (error) {
+      item.status = UploadResultStatus.ERROR;
+      await uploadNextFile(index + 1);
+    }
+  }
+
+  await uploadNextFile();
 };
 
 const beforeUpload: UploadProps['beforeUpload'] = async (file) => {

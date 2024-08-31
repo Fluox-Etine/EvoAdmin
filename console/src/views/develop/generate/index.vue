@@ -199,7 +199,7 @@
                 <a-checkbox v-model:checked="formState.gen.controller.list">列表</a-checkbox>
                 <a-checkbox v-model:checked="formState.gen.controller.create">创建</a-checkbox>
                 <a-checkbox v-model:checked="formState.gen.controller.update">更新</a-checkbox>
-                <a-checkbox v-model:checked="formState.gen.controller.delete">删除</a-checkbox>
+                <a-checkbox v-model:checked="formState.gen.controller.deleted">删除</a-checkbox>
                 <a-checkbox v-model:checked="formState.gen.controller.detail">详情</a-checkbox>
               </a-space>
             </a-col>
@@ -209,7 +209,7 @@
                 <a-checkbox v-model:checked="formState.gen.logic.list">列表</a-checkbox>
                 <a-checkbox v-model:checked="formState.gen.logic.create">创建</a-checkbox>
                 <a-checkbox v-model:checked="formState.gen.logic.update">更新</a-checkbox>
-                <a-checkbox v-model:checked="formState.gen.logic.delete">删除</a-checkbox>
+                <a-checkbox v-model:checked="formState.gen.logic.deleted">删除</a-checkbox>
                 <a-checkbox v-model:checked="formState.gen.logic.detail">详情</a-checkbox>
               </a-space>
             </a-col>
@@ -414,14 +414,14 @@ const formState: UnwrapRef<any> = reactive({
       list: true,
       create: true,
       update: true,
-      delete: true,
+      deleted: true,
       detail: false,
     },
     logic: {
       list: true,
       create: true,
       update: true,
-      delete: true,
+      deleted: true,
       detail: false,
     },
     request: {
