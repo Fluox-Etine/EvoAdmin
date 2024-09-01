@@ -39,7 +39,7 @@ Route::group('/v1', function () {
                 // 修改菜单或权限
                 Route::POST('/update', ['app\http\admin\controller\system\MenuController', 'update'])->middleware(ActionMiddleware::class);
                 // 删除菜单或权限
-                Route::POST('/delete', ['app\http\admin\controller\system\MenuController', 'delete'])->middleware(ActionMiddleware::class);
+                Route::get('/delete', ['app\http\admin\controller\system\MenuController', 'delete'])->middleware(ActionMiddleware::class);
                 //获取后端定义的所有权限集
                 Route::GET('/permissions', ['app\http\admin\controller\system\MenuController', 'permissions']);
             });
