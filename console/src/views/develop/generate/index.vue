@@ -1,7 +1,8 @@
 <template>
   <div>
     <a-card
-        style="width: 100%;margin-bottom: 20px"
+        class="w-full"
+        style="margin-bottom: 20px"
         title="代码生成器"
         :tab-list="tabBaseList"
         :active-tab-key="baseKey"
@@ -11,11 +12,11 @@
         <a-button type="primary" :icon="h(CodeOutlined)" @click="handleStart">开始生成</a-button>
       </template>
       <a-form :model="formState">
-        <div v-show="baseKey === 'table'" style="width: 100%;">
+        <div v-show="baseKey === 'table'" class="w-full">
           <TableSheet :code='codeData' :handleCheckTable="fetchTableDetailData"></TableSheet>
         </div>
 
-        <div v-show="baseKey === 'base'" style="width: 100%;">
+        <div v-show="baseKey === 'base'" class="w-full">
           <a-alert
               message="温馨提示（基础配置）"
               description="Github地址：https://github.com/Fluox-Etine/EvoAdmin"
@@ -74,7 +75,7 @@
           </a-row>
         </div>
 
-        <div v-show="baseKey === 'field'" style="width: 100%;">
+        <div v-show="baseKey === 'field'" class="w-full">
           <a-alert
               message="温馨提示（字段配置）"
               description="Gitee地址：https://gitee.com/old-friends-come-again/EvoAdmin"
@@ -87,6 +88,53 @@
                    :scroll="{ x: 1024 }"
                    :pagination="false"
           >
+            <template #headerCell="{ column }">
+              <template v-if="column.dataIndex === 'LIST'">
+                {{ column.title }}
+                <a-tooltip placement="bottom">
+                  <template #title>
+                    <span>全选 / 全不选</span>
+                  </template>
+                  <a-checkbox :checked="allChecked.list" @change="handleAllChange('list')"/>
+                </a-tooltip>
+              </template>
+              <template v-else-if="column.dataIndex === 'CREATE'">
+                {{ column.title }}
+                <a-tooltip placement="bottom">
+                  <template #title>
+                    <span>全选 / 全不选</span>
+                  </template>
+                  <a-checkbox :checked="allChecked.create" @change="handleAllChange('create')"/>
+                </a-tooltip>
+              </template>
+              <template v-else-if="column.dataIndex === 'UPDATE'">
+                {{ column.title }}
+                <a-tooltip placement="bottom">
+                  <template #title>
+                    <span>全选 / 全不选</span>
+                  </template>
+                  <a-checkbox :checked="allChecked.update" @change="handleAllChange('update')"/>
+                </a-tooltip>
+              </template>
+              <template v-else-if="column.dataIndex === 'DETAIL'">
+                {{ column.title }}
+                <a-tooltip placement="bottom">
+                  <template #title>
+                    <span>全选 / 全不选</span>
+                  </template>
+                  <a-checkbox :checked="allChecked.detail" @change="handleAllChange('detail')"/>
+                </a-tooltip>
+              </template>
+              <template v-else-if="column.dataIndex === 'FILTER'">
+                {{ column.title }}
+                <a-tooltip placement="bottom">
+                  <template #title>
+                    <span>全选 / 全不选</span>
+                  </template>
+                  <a-checkbox :checked="allChecked.filter" @change="handleAllChange('filter')"/>
+                </a-tooltip>
+              </template>
+            </template>
             <template v-slot:bodyCell="{ column, record,index}">
               <!--              序列-->
               <template v-if="column.dataIndex === 'dataIndex'">
@@ -98,7 +146,7 @@
               </template>
               <!--              必填-->
               <template v-else-if="column.dataIndex === 'IS_NULLABLE'">
-                <a-checkbox :checked="record.IS_NULLABLE === 1" @change="handleIsNullableChange(record)"/>
+                {{ record.IS_NULLABLE === 1 ? '是' : '否' }}
               </template>
 
               <!--              列表操作-->
@@ -176,7 +224,7 @@
           </a-table>
         </div>
 
-        <div v-show="baseKey === 'gen'" style="width: 100%;">
+        <div v-show="baseKey === 'gen'" class="w-full">
           <a-alert
               message="温馨提示（生成配置）"
               description="温馨提示，现在还没有什么提示"
@@ -275,7 +323,7 @@
           </a-row>
         </div>
 
-        <div v-show="baseKey === 'relation'" style="width: 100%;">
+        <div v-show="baseKey === 'relation'" class="w-full">
           <a-alert
               message="温馨提示（关联配置）"
               description="暂时不做，这个不重要"
@@ -285,7 +333,7 @@
           <br>
         </div>
 
-        <div v-show="baseKey === 'code'" style="width: 100%;">
+        <div v-show="baseKey === 'code'" class="w-full">
           <CodeView :code='codeData'></CodeView>
         </div>
       </a-form>
@@ -328,7 +376,6 @@ const tabBaseList = [
   }
 ];
 
-
 const columns = [
   {
     title: '字段名称',
@@ -342,7 +389,8 @@ const columns = [
   },
   {
     title: '物理类型',
-    dataIndex: 'DATA_TYPE'
+    dataIndex: 'DATA_TYPE',
+    width: 100,
   },
   {
     title: '必填',
@@ -371,7 +419,8 @@ const columns = [
   },
   {
     title: '列表筛选',
-    dataIndex: 'FILTER'
+    dataIndex: 'FILTER',
+    width: 70,
   },
   {
     title: '查询方式',
@@ -393,6 +442,24 @@ const columns = [
     width: 150,
   }
 ];
+
+const codeData = ref({
+  controller: '',
+  logic: '',
+  model: '',
+  validate: '',
+  route: '',
+  request: '',
+  types: ''
+});
+
+const allChecked = ref<any>({
+  list: false,
+  create: false,
+  update: false,
+  filter: false,
+  detail: false
+})
 
 const formState: UnwrapRef<any> = reactive({
   tableName: '',
@@ -447,20 +514,10 @@ const baseKey = ref('table');
 
 const dataFieldsSource = ref([]);
 
-const codeData = ref({
-  controller: '',
-  logic: '',
-  model: '',
-  validate: '',
-  route: '',
-  request: '',
-  types: ''
-});
 
 /** 切换tab */
 const onBaseTabChange = (value: string) => {
   if (value !== 'table' && formState.tableName == '') {
-    console.log(12132)
     $message.error('请先选择数据表');
     baseKey.value = 'table';
     return;
@@ -468,11 +525,64 @@ const onBaseTabChange = (value: string) => {
   baseKey.value = value;
 };
 
-
-/** 是否必填数据 */
-const handleIsNullableChange = (record: any) => {
-  record.IS_NULLABLE = record.IS_NULLABLE ? 0 : 1;
-};
+const handleAllChange = (key: string) => {
+      console.log(key)
+      let checked = false;
+      switch (key) {
+        case 'list':
+          checked = !allChecked.value.list;
+          dataFieldsSource.value.forEach((item: any) => {
+            if (item.COLUMN_NAME !== 'deleted_at') {
+              item.LIST = checked ? 1 : 0;
+            }
+          });
+          allChecked.value.list = checked;
+          break;
+        case 'create':
+          checked = !allChecked.value.create;
+          dataFieldsSource.value.forEach((item: any) => {
+            if (item.COLUMN_NAME !== 'deleted_at' && item.COLUMN_NAME !== 'created_at' && item.COLUMN_NAME !== 'updated_at' && item.COLUMN_KEY !== 'PRI') {
+              item.CREATE = checked ? 1 : 0;
+              if (!item.VALIDATE.includes(1)) {
+                item.VALIDATE.push(1)
+              }
+            }
+          });
+          allChecked.value.create = checked;
+          break;
+        case'update':
+          checked = !allChecked.value.update;
+          dataFieldsSource.value.forEach((item: any) => {
+            if (item.COLUMN_NAME !== 'deleted_at' && item.COLUMN_NAME !== 'created_at' && item.COLUMN_NAME !== 'updated_at') {
+              item.UPDATE = checked ? 1 : 0;
+              if (!item.VALIDATE.includes(1)) {
+                item.VALIDATE.push(1)
+              }
+            }
+          });
+          allChecked.value.update = checked;
+          break;
+        case'detail':
+          checked = !allChecked.value.detail;
+          dataFieldsSource.value.forEach((item: any) => {
+            if (item.COLUMN_NAME !== 'deleted_at') {
+              item.DETAIL = checked ? 1 : 0;
+            }
+          });
+          allChecked.value.detail = checked;
+          break;
+        case'filter':
+          checked = !allChecked.value.filter;
+          dataFieldsSource.value.forEach((item: any) => {
+            if (item.COLUMN_NAME !== 'deleted_at') {
+              item.FILTER = checked ? 1 : 0;
+            }
+          });
+          allChecked.value.filter = checked;
+          break;
+      }
+    }
+;
 
 /** 列表操作 */
 const handleListChange = (record: any) => {
@@ -512,6 +622,7 @@ const fetchTableDetailData = async (tableName: string) => {
   formState.upperCameName = table.upperCameName;
   formState.classDir = table.classDir;
   dataFieldsSource.value = fields;
+  console.log(fields)
   baseKey.value = 'base';
 }
 

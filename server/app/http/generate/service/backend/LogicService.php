@@ -323,6 +323,7 @@ class LogicService
         }
         $content = '';
         foreach ($tableColumn as $column) {
+            if ($column['COLUMN_KEY'] === 'PRI') continue; // 跳过 主键
             $content .= self::formatColumn($column);
         }
         if (empty($content)) {
@@ -412,6 +413,6 @@ class LogicService
         $str .= PHP_EOL . PHP_EOL;
         $str .= $filterStr;
         $str .= PHP_EOL . $filterWhere;
-        return PHP_EOL.substr($str, 0, -8);
+        return PHP_EOL . substr($str, 0, -8);
     }
 }

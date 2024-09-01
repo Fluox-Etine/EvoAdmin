@@ -72,7 +72,7 @@ class ValidateService
             '{DATE}',
             '{CREATE_VALIDATE}',
         ];
-        $validate = self::getFormatValidate($fields);
+        $validate = self::getFormatValidate($fields, 'CREATE');
         $waitReplace = [
             $date,
             $validate
@@ -94,7 +94,7 @@ class ValidateService
             '{DATE}',
             '{UPDATE_VALIDATE}',
         ];
-        $validate = self::getFormatValidate($fields);
+        $validate = self::getFormatValidate($fields, 'UPDATE');
         $waitReplace = [
             $date,
             $validate
@@ -106,9 +106,10 @@ class ValidateService
     /**
      * 格式化验证规则
      * @param array $fields
+     * @param string $action
      * @return string
      */
-    private static function getFormatValidate(array $fields): string
+    private static function getFormatValidate(array $fields, string $action): string
     {
         if (empty($fields)) {
             return '';
@@ -116,7 +117,7 @@ class ValidateService
         $str = '';
         foreach ($fields as $key => $field) {
             // 判断当前字段是否需要 验证
-            if (!empty($field['VALIDATE'])) {
+            if (!empty($field['VALIDATE']) && $field[$action]) {
                 // 内层循环数组\
                 $setName = $field['COLUMN_COMMENT'] ?? $field['COLUMN_NAME'];
                 $validateRuleBase = "'" . $field['COLUMN_NAME'] . "'" . ' => v::';

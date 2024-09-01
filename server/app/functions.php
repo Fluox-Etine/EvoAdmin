@@ -147,7 +147,7 @@ function str_substr($str, int $length = 30): bool|string
  */
 function check_dir(string $path): void
 {
-    !is_dir($path) && mkdir($path, 0755, true);
+    !is_dir(public_path().$path) && mkdir(public_path().$path, 0755, true);
 }
 
 /**
