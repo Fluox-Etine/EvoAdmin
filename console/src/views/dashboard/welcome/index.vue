@@ -2,8 +2,15 @@
   <div>
     <a-alert
         message="下一步计划安排"
-        description="计划准备生成前端的接口文件，table表格文件"
+        description="打造的专属前端组建库"
         type="success"
+        show-icon
+    />
+    <br>
+    <a-alert
+        message="2024-9-1"
+        description="解决生成基础的前端的table和表单文件"
+        type="info"
         show-icon
     />
     <br>
