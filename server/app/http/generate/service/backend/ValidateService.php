@@ -119,7 +119,10 @@ class ValidateService
             // 判断当前字段是否需要 验证
             if (!empty($field['VALIDATE']) && $field[$action]) {
                 // 内层循环数组\
-                $setName = $field['COLUMN_COMMENT'] ?? $field['COLUMN_NAME'];
+                $setName = $field['COLUMN_COMMENT'];
+                if (empty($setName)) {
+                    $setName = '数据字段 '.$field['COLUMN_NAME'];
+                }
                 $validateRuleBase = "'" . $field['COLUMN_NAME'] . "'" . ' => v::';
                 $validateRule = '';
                 foreach ($field['VALIDATE'] as $validate) {

@@ -62,7 +62,7 @@ class MenuController
      */
     public function delete(Request $request): Response
     {
-        if (SysMenuLogic::delete($request->post('id'))) {
+        if (SysMenuLogic::delete((int)$request->get('id'))) {
             return renderSuccess("删除菜单成功");
         }
         return renderError("删除菜单失败");
