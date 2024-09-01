@@ -450,7 +450,9 @@ const codeData = ref({
   validate: '',
   route: '',
   request: '',
-  types: ''
+  types: '',
+  table: '',
+  columns: ''
 });
 
 const allChecked = ref<any>({
@@ -458,7 +460,7 @@ const allChecked = ref<any>({
   create: false,
   update: false,
   filter: false,
-  detail: false
+  detail: false,
 })
 
 const formState: UnwrapRef<any> = reactive({
@@ -525,64 +527,64 @@ const onBaseTabChange = (value: string) => {
   baseKey.value = value;
 };
 
+/* 控制全选和全不选 */
 const handleAllChange = (key: string) => {
-      console.log(key)
-      let checked = false;
-      switch (key) {
-        case 'list':
-          checked = !allChecked.value.list;
-          dataFieldsSource.value.forEach((item: any) => {
-            if (item.COLUMN_NAME !== 'deleted_at') {
-              item.LIST = checked ? 1 : 0;
-            }
-          });
-          allChecked.value.list = checked;
-          break;
-        case 'create':
-          checked = !allChecked.value.create;
-          dataFieldsSource.value.forEach((item: any) => {
-            if (item.COLUMN_NAME !== 'deleted_at' && item.COLUMN_NAME !== 'created_at' && item.COLUMN_NAME !== 'updated_at' && item.COLUMN_KEY !== 'PRI') {
-              item.CREATE = checked ? 1 : 0;
-              if (!item.VALIDATE.includes(1)) {
-                item.VALIDATE.push(1)
-              }
-            }
-          });
-          allChecked.value.create = checked;
-          break;
-        case'update':
-          checked = !allChecked.value.update;
-          dataFieldsSource.value.forEach((item: any) => {
-            if (item.COLUMN_NAME !== 'deleted_at' && item.COLUMN_NAME !== 'created_at' && item.COLUMN_NAME !== 'updated_at') {
-              item.UPDATE = checked ? 1 : 0;
-              if (!item.VALIDATE.includes(1)) {
-                item.VALIDATE.push(1)
-              }
-            }
-          });
-          allChecked.value.update = checked;
-          break;
-        case'detail':
-          checked = !allChecked.value.detail;
-          dataFieldsSource.value.forEach((item: any) => {
-            if (item.COLUMN_NAME !== 'deleted_at') {
-              item.DETAIL = checked ? 1 : 0;
-            }
-          });
-          allChecked.value.detail = checked;
-          break;
-        case'filter':
-          checked = !allChecked.value.filter;
-          dataFieldsSource.value.forEach((item: any) => {
-            if (item.COLUMN_NAME !== 'deleted_at') {
-              item.FILTER = checked ? 1 : 0;
-            }
-          });
-          allChecked.value.filter = checked;
-          break;
-      }
-    }
-;
+  console.log(key)
+  let checked = false;
+  switch (key) {
+    case 'list':
+      checked = !allChecked.value.list;
+      dataFieldsSource.value.forEach((item: any) => {
+        if (item.COLUMN_NAME !== 'deleted_at') {
+          item.LIST = checked ? 1 : 0;
+        }
+      });
+      allChecked.value.list = checked;
+      break;
+    case 'create':
+      checked = !allChecked.value.create;
+      dataFieldsSource.value.forEach((item: any) => {
+        if (item.COLUMN_NAME !== 'deleted_at' && item.COLUMN_NAME !== 'created_at' && item.COLUMN_NAME !== 'updated_at' && item.COLUMN_KEY !== 'PRI') {
+          item.CREATE = checked ? 1 : 0;
+          if (!item.VALIDATE.includes(1)) {
+            item.VALIDATE.push(1)
+          }
+        }
+      });
+      allChecked.value.create = checked;
+      break;
+    case'update':
+      checked = !allChecked.value.update;
+      dataFieldsSource.value.forEach((item: any) => {
+        if (item.COLUMN_NAME !== 'deleted_at' && item.COLUMN_NAME !== 'created_at' && item.COLUMN_NAME !== 'updated_at') {
+          item.UPDATE = checked ? 1 : 0;
+          if (!item.VALIDATE.includes(1)) {
+            item.VALIDATE.push(1)
+          }
+        }
+      });
+      allChecked.value.update = checked;
+      break;
+    case'detail':
+      checked = !allChecked.value.detail;
+      dataFieldsSource.value.forEach((item: any) => {
+        if (item.COLUMN_NAME !== 'deleted_at') {
+          item.DETAIL = checked ? 1 : 0;
+        }
+      });
+      allChecked.value.detail = checked;
+      break;
+    case'filter':
+      checked = !allChecked.value.filter;
+      dataFieldsSource.value.forEach((item: any) => {
+        if (item.COLUMN_NAME !== 'deleted_at') {
+          item.FILTER = checked ? 1 : 0;
+        }
+      });
+      allChecked.value.filter = checked;
+      break;
+  }
+};
 
 /** 列表操作 */
 const handleListChange = (record: any) => {
@@ -642,8 +644,8 @@ const handleStart = async () => {
     fields: dataFieldsSource.value
   }
   const response = await Api.gen(data);
-  const {controller, logic, model, validate, route, request, types} = response;
-  Object.assign(codeData.value, {controller, logic, model, validate, route, request, types});
+  const {controller, logic, model, validate, route, request, types, table, columns} = response;
+  Object.assign(codeData.value, {controller, logic, model, validate, route, request, types, table, columns});
   baseKey.value = 'code';
 }
 </script>

@@ -7,7 +7,7 @@
         show-icon
     />
     <br>
-    <div style="width: 100%;">
+    <div class="w-full">
       <div style="width: 280px;margin: 20px;height: 200px;display: inline-block;" v-for="(item,index) in tableList"
            :key="index">
         <a-card :title="`${item.name}`">

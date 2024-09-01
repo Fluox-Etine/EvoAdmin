@@ -7,7 +7,9 @@ use app\http\generate\service\backend\LogicService;
 use app\http\generate\service\backend\ModelService;
 use app\http\generate\service\backend\RouteService;
 use app\http\generate\service\backend\ValidateService;
+use app\http\generate\service\console\ColumnsService;
 use app\http\generate\service\console\RequestService;
+use app\http\generate\service\console\TableService;
 use support\exception\RespBusinessException;
 
 /**
@@ -126,6 +128,23 @@ class GenerateService
                     'paginate' => $params['gen']['paginate']
                 ]);
             }
+
+            // 表格方法
+            $tmpTable = '';
+            $tmpColumns = '';
+            if ($params['gen']['page']['table']) {
+                $tmpTable = TableService::handleTable([
+                    'upperCameName' => $params['upperCameName'],
+                    'classComment' => $params['classComment'],
+                    'gen' => $params['gen']['request'],
+                    'PK' => $params['PK'],
+                    'paginate' => $params['gen']['paginate']
+                ]);
+
+                $tmpColumns = ColumnsService::handleColumns([
+                    'fields' => $params['fields'],
+                ]);
+            }
             return [
                 'controller' => $tmpController,
                 'logic' => $tmpLogic,
@@ -133,7 +152,9 @@ class GenerateService
                 'validate' => $tmpValidate,
                 'route' => $tmpRoute,
                 'request' => $tmpRequest['request'],
-                'types' => $tmpRequest['types']
+                'types' => $tmpRequest['types'],
+                'table' => $tmpTable,
+                'columns' => $tmpColumns
             ];
         } catch (\Throwable $e) {
             exceptionLog($e);

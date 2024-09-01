@@ -1,0 +1,51 @@
+<template>
+  <DynamicTable
+      row-key="{PK}"
+      header-title="{HEADER_TITLE}"
+      title-tooltip=""
+      :data-request="Api.list"
+      :columns="columns"
+      bordered
+      size="small"
+  >
+    <template #toolbar>
+      {TOOLBAR}
+    </template>
+  </DynamicTable>
+</template>
+
+<script lang="ts" setup>
+import {baseColumns, type TableListItem, type TableColumnItem} from './columns';
+import {tableSchemas} from './formSchemas';
+import {useTable} from '@/components/business/dynamic-table';
+import {useFormModal} from '@/hooks/useModal/';
+import * as Api from '@/api/backend/{API}';
+defineOptions({
+  name: {NAME},
+});
+
+const [DynamicTable, dynamicTableInstance] = useTable({
+  pagination: {PAGINATION},
+  size: 'small',
+  rowKey: '{PK}',
+  bordered: true,
+  autoHeight: true,
+});
+const [showModal] = useFormModal();
+const currentInstance = getCurrentInstance();
+
+useResizeObserver(document.documentElement, () => {
+  const el = currentInstance?.proxy?.$el as HTMLDivElement;
+  if (el) {
+    dynamicTableInstance.setProps({
+      scroll: {x: window.innerWidth > 2000 ? el.offsetWidth - 20 : 2000},
+    });
+  }
+});
+{FUNCTION}
+{DELETE}
+const columns: TableColumnItem[] = [
+  ...baseColumns,
+{ACTIONS}
+];
+</script>

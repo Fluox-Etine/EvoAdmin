@@ -34,11 +34,10 @@
 
 <script setup lang="ts">
 import {ref} from "vue";
-import * as GroupApi from '@/api/backend/file_group.ts'
+import * as GroupApi from '@/api/backend/fileGroup.ts'
 import * as FileApi from '@/api/backend/file.ts'
 import {FileTypeEnum} from "@/enums/fileTypeEnum.ts";
 
-// const domain = import.meta.env.VITE_DOMAIN_URL;
 const open = ref<boolean>(false);
 const UploadModalRef = ref();
 const ChunkModalRef = ref();

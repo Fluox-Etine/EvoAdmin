@@ -13,33 +13,41 @@
         :active-tab-key="codeKey"
         @tabChange="key => onCodeTabChange(key)"
     >
-      <div v-show="codeKey === 'controller'" style="width: 100%;">
+      <div v-show="codeKey === 'controller'" class="w-full">
         <highlightjs v-if="code.controller" language="php" :code="code.controller"/>
         <CopyOutlined v-if="code.controller" style="position: fixed; top: 120px; right: 20px;">我是按钮阿</CopyOutlined>
         <a-empty v-else/>
       </div>
-      <div v-show="codeKey === 'logic'" style="width: 100%;">
+      <div v-show="codeKey === 'logic'" class="w-full">
         <highlightjs v-if="code.logic" language="php" :code="code.logic"/>
         <a-empty v-else/>
       </div>
-      <div v-show="codeKey === 'model'" style="width: 100%;">
+      <div v-show="codeKey === 'model'" class="w-full">
         <highlightjs v-if="code.model" language="php" :code="code.model"/>
         <a-empty v-else/>
       </div>
-      <div v-show="codeKey === 'validate'" style="width: 100%;">
+      <div v-show="codeKey === 'validate'" class="w-full">
         <highlightjs v-if="code.validate" language="php" :code="code.validate"/>
         <a-empty v-else/>
       </div>
-      <div v-show="codeKey === 'route'" style="width: 100%;">
+      <div v-show="codeKey === 'route'" class="w-full">
         <highlightjs v-if="code.route" language="php" :code="code.route"/>
         <a-empty v-else/>
       </div>
-      <div v-show="codeKey === 'request'" style="width: 100%;">
+      <div v-show="codeKey === 'request'" class="w-full">
         <highlightjs v-if="code.request" language="ts" :code="code.request"/>
         <a-empty v-else/>
       </div>
       <div v-show="codeKey === 'types'" style="width: 100%;">
         <highlightjs v-if="code.types" language="ts" :code="code.types"/>
+        <a-empty v-else/>
+      </div>
+      <div v-show="codeKey === 'table'" style="width: 100%;">
+        <highlightjs v-if="code.table" language="jsx" :code="code.table"/>
+        <a-empty v-else/>
+      </div>
+      <div v-show="codeKey === 'columns'" style="width: 100%;">
+        <highlightjs v-if="code.columns" language="jsx" :code="code.columns"/>
         <a-empty v-else/>
       </div>
     </a-card>
@@ -57,6 +65,8 @@ interface CodeType {
   route?: string;
   request?: string;
   types?: string;
+  table?: string;
+  columns?: string;
 }
 
 defineProps<{ code: CodeType }>();
@@ -89,6 +99,14 @@ const tabCodeList = [
   {
     key: 'types',
     tab: '类型声明'
+  },
+  {
+    key: 'table',
+    tab: '数据表格'
+  },
+  {
+    key: 'columns',
+    tab: '表格字段'
   }
 ];
 

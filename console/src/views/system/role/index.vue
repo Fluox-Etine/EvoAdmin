@@ -28,7 +28,13 @@ defineOptions({
   name: 'SystemPermissionRole',
 });
 
-const [DynamicTable, dynamicTableInstance] = useTable();
+const [DynamicTable, dynamicTableInstance] = useTable({
+  pagination: false,
+  size: 'small',
+  rowKey: 'id',
+  bordered: true,
+  autoHeight: true,
+});
 
 const [showModal] = useFormModal();
 
