@@ -1,0 +1,5 @@
+import type { FormSchema } from '@/components/business/schema-form/';
+
+export const formSchemas: FormSchema<any>[] = [
+{COLUMNS}
+];

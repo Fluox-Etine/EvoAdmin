@@ -50,6 +50,10 @@
         <highlightjs v-if="code.columns" language="jsx" :code="code.columns"/>
         <a-empty v-else/>
       </div>
+      <div v-show="codeKey === 'form'" style="width: 100%;">
+        <highlightjs v-if="code.form" language="jsx" :code="code.form"/>
+        <a-empty v-else/>
+      </div>
     </a-card>
   </div>
 </template>
@@ -67,6 +71,7 @@ interface CodeType {
   types?: string;
   table?: string;
   columns?: string;
+  form?: string
 }
 
 defineProps<{ code: CodeType }>();
@@ -107,6 +112,10 @@ const tabCodeList = [
   {
     key: 'columns',
     tab: '表格字段'
+  },
+  {
+    key: 'form',
+    tab: '表单字段'
   }
 ];
 

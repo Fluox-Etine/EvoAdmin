@@ -36,7 +36,6 @@ class ColumnsService
     {
         $str = '';
         foreach ($fields as $field) {
-            var_dump($field['QUERY_TYPE']);
             if ($field['LIST']) {
                 // 判断是否为创建和修改时间
                 if ($field['COLUMN_NAME'] == 'created_at' || $field['COLUMN_NAME'] == 'updated_at') {

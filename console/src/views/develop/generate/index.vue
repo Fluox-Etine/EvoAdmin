@@ -452,7 +452,8 @@ const codeData = ref({
   request: '',
   types: '',
   table: '',
-  columns: ''
+  columns: '',
+  form: ''
 });
 
 const allChecked = ref<any>({
@@ -644,8 +645,8 @@ const handleStart = async () => {
     fields: dataFieldsSource.value
   }
   const response = await Api.gen(data);
-  const {controller, logic, model, validate, route, request, types, table, columns} = response;
-  Object.assign(codeData.value, {controller, logic, model, validate, route, request, types, table, columns});
+  const {controller, logic, model, validate, route, request, types, table, columns, form} = response;
+  Object.assign(codeData.value, {controller, logic, model, validate, route, request, types, table, columns, form});
   baseKey.value = 'code';
 }
 </script>

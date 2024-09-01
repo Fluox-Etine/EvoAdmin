@@ -5,7 +5,7 @@
       title-tooltip=""
       :data-request="Api.list"
       :columns="columns"
-      bordered
+      bordered{SEARCH}
       size="small"
   >
     <template #toolbar>
@@ -15,8 +15,7 @@
 </template>
 
 <script lang="ts" setup>
-import {baseColumns, type TableListItem, type TableColumnItem} from './columns';
-import {tableSchemas} from './formSchemas';
+import {baseColumns, type TableListItem, type TableColumnItem} from './columns';{FORM_SCHEMAS}
 import {useTable} from '@/components/business/dynamic-table';
 import {useFormModal} from '@/hooks/useModal/';
 import * as Api from '@/api/backend/{API}';

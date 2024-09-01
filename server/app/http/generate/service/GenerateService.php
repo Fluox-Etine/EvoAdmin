@@ -8,6 +8,7 @@ use app\http\generate\service\backend\ModelService;
 use app\http\generate\service\backend\RouteService;
 use app\http\generate\service\backend\ValidateService;
 use app\http\generate\service\console\ColumnsService;
+use app\http\generate\service\console\FormSchemasService;
 use app\http\generate\service\console\RequestService;
 use app\http\generate\service\console\TableService;
 use support\exception\RespBusinessException;
@@ -138,11 +139,21 @@ class GenerateService
                     'classComment' => $params['classComment'],
                     'gen' => $params['gen']['request'],
                     'PK' => $params['PK'],
+                    'fields' => $params['fields'],
                     'paginate' => $params['gen']['paginate']
                 ]);
 
                 $tmpColumns = ColumnsService::handleColumns([
                     'fields' => $params['fields'],
+                ]);
+            }
+
+            // 生成表单
+            $tmpForm = '';
+            if ($params['gen']['request']['create'] || $params['gen']['request']['update']) {
+                $tmpForm = FormSchemasService::handleFormSchemas([
+                    'fields' => $params['fields'],
+                    'pk' => $params['PK']
                 ]);
             }
             return [
@@ -154,7 +165,8 @@ class GenerateService
                 'request' => $tmpRequest['request'],
                 'types' => $tmpRequest['types'],
                 'table' => $tmpTable,
-                'columns' => $tmpColumns
+                'columns' => $tmpColumns,
+                'form' => $tmpForm
             ];
         } catch (\Throwable $e) {
             exceptionLog($e);

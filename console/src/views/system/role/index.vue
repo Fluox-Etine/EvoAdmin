@@ -20,7 +20,7 @@
 import {baseColumns, type TableListItem, type TableColumnItem} from './columns';
 import {roleSchemas} from './formSchemas';
 import {useTable} from '@/components/business/dynamic-table';
-import {useFormModal} from '@/hooks/useModal/';
+import {useFormModal} from '@/hooks/useModal';
 import * as Api from '@/api/backend/role';
 import {menuList} from '@/api/backend/menu'
 

@@ -16,7 +16,9 @@ class TableService
         // 需要替换的变量
         $needReplace = [
             '{HEADER_TITLE}', // 名称
+            '{SEARCH}', // 搜索
             '{TOOLBAR}', // 工具栏
+            '{FORM_SCHEMAS}', // 表单
             '{API}', // api地址
             '{NAME}', // vue组建名称
             '{PK}', // 数据库主键
@@ -29,12 +31,27 @@ class TableService
         $upperCameNameArray = explode('_', uncamelize($params['upperCameName']));
         $function = '';
         if ($params['gen']['create'] || $params['gen']['update']) {
-            $function = PHP_EOL.self::handleFunction($params['PK']).PHP_EOL;
+            $function = PHP_EOL . self::handleFunction($params['PK']) . PHP_EOL;
+        }
+
+        $isSearch = false;
+        foreach ($params['fields'] as $field) {
+            if (isset($field['LIST']) && $field['LIST']) {
+                $isSearch = true;
+                break;
+            }
+        }
+        $search = !$isSearch ? PHP_EOL . '      :search="false"' : '';
+        $formSchemas = '';
+        if ($params['gen']['create'] || $params['gen']['update']) {
+            $formSchemas = PHP_EOL . "import {formSchemas} from './formSchemas';";
         }
         // 等待替换的内容
         $waitReplace = [
             $params['classComment'],
+            $search,
             $params['gen']['create'] ? self::handleToolbar($upperCameNameArray) : '',
+            $formSchemas,
             lcfirst($params['upperCameName']),
             $params['upperCameName'],
             $params['PK'],
@@ -75,7 +92,7 @@ class TableService
     private static function handleDelete(string $pk): string
     {
         return vsprintf(
-            "// 删除方法\n".
+            "// 删除方法\n" .
             "const delRowConfirm = async (record: TableListItem) => {\n" .
             "  await Api.deleted({%s: record.%s});\n" .
             "  dynamicTableInstance.reload();\n" .

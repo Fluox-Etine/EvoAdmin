@@ -36,7 +36,7 @@ class RequestService
         }
         $isPk = false;
         foreach ($action['update'] as $item) {
-            if ($item['COLUMN_KEY'] == "PRI") {
+            if (isset($item['COLUMN_KEY']) && $item['COLUMN_KEY'] == "PRI") {
                 $isPk = true;
             }
         }
