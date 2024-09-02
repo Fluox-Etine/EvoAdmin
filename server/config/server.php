@@ -13,7 +13,7 @@ return [
     'stop_timeout' => 2,
     'pid_file' => runtime_path() . '/webman.pid',
     'status_file' => runtime_path() . '/webman.status',
-    'stdout_file' => runtime_path() . '/logs/stdout.log',
+    'stdout_file' => runtime_path() . '/logs/' . date('Y-m-d') . 'stdout.log',
     'log_file' => runtime_path() . '/logs/workerman.log',
     'max_package_size' => 10 * 1024 * 1024
 ];

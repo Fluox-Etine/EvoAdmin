@@ -12,7 +12,7 @@ return [
                 ],
                 'formatter' => [
                     'class' => Monolog\Formatter\LineFormatter::class,
-                    'constructor' => [null, 'Y-m-d H:i:s', true],
+                    'constructor' => [null, 'Y-m-d H:i:s', true,true],
                 ],
             ]
         ],
