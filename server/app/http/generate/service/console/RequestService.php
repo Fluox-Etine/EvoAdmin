@@ -25,7 +25,9 @@ class RequestService
             if ($field['CREATE']) $action['create'][] = $field;
             if ($field['UPDATE']) $action['update'][] = $field;
             if ($field['DETAIL']) $action['detail'][] = $field;
-            if ($field['QUERY_TYPE']) $action['list'][] = $field;
+            if (isset($field['QUERY_TYPE']) && $field['QUERY_TYPE']) {
+                $action['query'][] = $field;
+            }
         }
         if (empty($action['update'])) {
             $action['update'][] = [

@@ -90,7 +90,9 @@ class LogicService
             if ($field['CREATE']) $action['create'][] = $field;
             if ($field['UPDATE']) $action['update'][] = $field;
             if ($field['DETAIL']) $action['detail'][] = $field;
-            if ($field['QUERY_TYPE']) $action['query'][] = $field;
+            if(isset($field['QUERY_TYPE']) && $field['QUERY_TYPE']){
+                $action['query'][] = $field;
+            }
         }
         $content = '';
         if ($gen['logic']['list']) {

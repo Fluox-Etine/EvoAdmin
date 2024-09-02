@@ -15,12 +15,14 @@
 </template>
 
 <script lang="ts" setup>
-import {baseColumns, type TableListItem, type TableColumnItem} from './columns';{FORM_SCHEMAS}
+import {getCurrentInstance} from 'vue';
+import {useResizeObserver} from '@vueuse/core';
+import {baseColumns, type TableColumnItem} from './columns';{FORM_SCHEMAS}
 import {useTable} from '@/components/business/dynamic-table';
 import {useFormModal} from '@/hooks/useModal/';
 import * as Api from '@/api/backend/{API}';
 defineOptions({
-  name: {NAME},
+  name: '{NAME}',
 });
 
 const [DynamicTable, dynamicTableInstance] = useTable({

@@ -37,6 +37,10 @@ class ColumnsService
         $str = '';
         foreach ($fields as $field) {
             if ($field['LIST']) {
+                $title = $field['COLUMN_COMMENT'];
+                if(empty($title)){
+                    $title = $field['COLUMN_NAME'];
+                }
                 // 判断是否为创建和修改时间
                 if ($field['COLUMN_NAME'] == 'created_at' || $field['COLUMN_NAME'] == 'updated_at') {
                     $str .= vsprintf(
@@ -49,9 +53,9 @@ class ColumnsService
                         "    },\n" .
                         "  },\n",
                         [
-                            $field['COLUMN_COMMENT'], // 替换 {COMMENT}
-                            $field['COLUMN_NAME'], // 替换 {FILE}
-                            $field['FILTER'] ? 'true' : 'false',
+                            $title,
+                            $field['COLUMN_NAME'],
+                            $field['FILTER'] ? 'false' : 'true',
                             $field['COLUMN_NAME']
                         ]
                     );
@@ -63,9 +67,9 @@ class ColumnsService
                         "    hideInSearch: %s,\n" .
                         "  },\n",
                         [
-                            $field['COLUMN_COMMENT'], // 替换 {COMMENT}
-                            $field['COLUMN_NAME'], // 替换 {FILE}
-                            $field['FILTER'] ? 'true' : 'false'
+                            $title,
+                            $field['COLUMN_NAME'],
+                            $field['FILTER'] ? 'false' : 'true',
                         ]
                     );
                 }

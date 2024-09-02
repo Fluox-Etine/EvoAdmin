@@ -121,28 +121,41 @@ class TableService
         $str = '';
         if ($update) {
             $str .= vsprintf(
-                "   {
-    label: '编辑',
-    auth: {
-      perm: '%s',
-      effect: 'disable',
-    },
-    onClick: () => openMenuModal(record),
-  },", [$auth . ":update"]);
+                "     {
+        label: '编辑',
+        auth: {
+          perm: '%s',
+          effect: 'disable',
+        },
+        onClick: () => openMenuModal(record),
+    },", [$auth . ":update"]);
         }
         if ($deleted) {
             if (!empty($str)) $str .= PHP_EOL;
             $str .= vsprintf(
-                "  {
-    label: '删除',
-    auth: {
-      perm: '%s',
-      effect: 'disable',
-    },
-    onClick: () => delRowConfirm(record),
-  },", [$auth . ":delete"]);
+                "     {
+        label: '删除',
+        auth: {
+          perm: '%s',
+          effect: 'disable',
+        },
+        onClick: () => delRowConfirm(record),
+    },", [$auth . ":delete"]);
         }
-        return $str;
+        if (!empty($str)) {
+            $action = "  {
+    title: '操作',
+    width: 130,
+    dataIndex: 'ACTION',
+    hideInSearch: true,
+    fixed: 'right',
+    actions: ({record}) => [" . PHP_EOL;
+            $action .= $str.PHP_EOL;
+            $action .= "    ]
+  },";
+            return $action;
+        }
+        return '';
     }
 
 

@@ -35,8 +35,12 @@ class FormSchemasService
     private static function handleColumn(array $files,string $pk): string
     {
         $str = '';
-        foreach ($files as $file) {
-            if ($file['CREATE'] && $file['COLUMN_KEY'] != 'PRI' && $file['UPDATE']) {
+        foreach ($files as $field) {
+            $title = $field['COLUMN_COMMENT'];
+            if(empty($title)){
+                $title = $field['COLUMN_NAME'];
+            }
+            if ($field['CREATE'] && $field['COLUMN_KEY'] != 'PRI' && $field['UPDATE']) {
                 $str .= vsprintf(
                     "  {\n" .
                     "    field: '%s',\n" .
@@ -48,11 +52,11 @@ class FormSchemasService
                     "    },\n" .
                     "  },\n",
                     [
-                        $file['COLUMN_NAME'], // 替换 {FILE}
-                        $file['COLUMN_COMMENT'], // 替换 {TYPE}
+                        $field['COLUMN_NAME'],
+                        $title
                     ]
                 );
-            } elseif ($file['CREATE'] && $file['COLUMN_KEY'] != 'PRI' && !$file['UPDATE']) {
+            } elseif ($field['CREATE'] && $field['COLUMN_KEY'] !== 'PRI' && !$field['UPDATE']) {
                 $str .= vsprintf(
                     "  {\n" .
                     "    field: '%s',\n" .
@@ -65,12 +69,12 @@ class FormSchemasService
                     "    },\n" .
                     "  },\n",
                     [
-                        $file['COLUMN_NAME'], // 替换 {FILE}
-                        $file['COLUMN_COMMENT'], // 替换 {TYPE}
+                        $field['COLUMN_NAME'],
+                        $title,
                         $pk
                     ]
                 );
-            } elseif (!$file['CREATE'] && $file['COLUMN_KEY'] == 'PRI' && $file['UPDATE']) {
+            } elseif (!$field['CREATE'] && $field['COLUMN_KEY'] !== 'PRI' && $field['UPDATE']) {
                 $str .= vsprintf(
                     "  {\n" .
                     "    field: '%s',\n" .
@@ -83,8 +87,8 @@ class FormSchemasService
                     "    },\n" .
                     "  },\n",
                     [
-                        $file['COLUMN_NAME'], // 替换 {FILE}
-                        $file['COLUMN_COMMENT'], // 替换 {TYPE}
+                        $field['COLUMN_NAME'],
+                        $title,
                         $pk
                     ]
                 );
