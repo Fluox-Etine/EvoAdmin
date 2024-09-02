@@ -34,7 +34,7 @@
 
 <script setup lang="ts">
 import {ref} from "vue";
-import * as GroupApi from '@/api/backend/fileGroup.ts'
+import * as GroupApi from '@/api/backend/uploadGroup.ts'
 import * as FileApi from '@/api/backend/file.ts'
 import {FileTypeEnum} from "@/enums/fileTypeEnum.ts";
 
