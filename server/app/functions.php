@@ -147,7 +147,7 @@ function str_substr($str, int $length = 30): bool|string
  */
 function check_dir(string $path): void
 {
-    !is_dir(public_path().$path) && mkdir(public_path().$path, 0755, true);
+    !is_dir(public_path() . $path) && mkdir(public_path() . $path, 0755, true);
 }
 
 /**
@@ -172,4 +172,14 @@ function array_key_to_underline($array): array
         $newArray[uncamelize($key)] = $value;
     }
     return $newArray;
+}
+
+/**
+ * 格式化日志
+ * @param mixed $value
+ * @return bool|string
+ */
+function format_log(mixed $value): bool|string
+{
+    return is_string($value) ? $value : print_r($value, true);
 }

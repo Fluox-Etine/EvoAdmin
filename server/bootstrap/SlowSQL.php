@@ -19,7 +19,7 @@ class SlowSQL implements Bootstrap
                 if (strlen($query->sql) > 10) {
                     // 执行时间
                     if ($query->time > config('env.show_sql.limit')) {
-                        var_dump(date('Y-m-d H:i:s') . ' === ' . getmypid().' === ' . $query->sql);
+                        var_dump(date('Y-m-d H:i:s') . ' === ' . getmypid() . ' === ' . $query->sql);
                         $md5 = md5($query->sql);
                         if (!in_array($md5, $slowSqlData)) {
                             $slowSqlData[] = $md5;
@@ -31,7 +31,7 @@ class SlowSQL implements Bootstrap
                         }
                     }
                 }
-                Log::info('MySQL: ', ['PID' => getmypid(), 'SQL' => $query->sql, 'Bindings' => $query->bindings, 'Time' => $query->time . 'ms']);
+                Log::info('MySQL:'.format_log(['PID' => getmypid(), 'SQL' => $query->sql, 'Bindings' => $query->bindings, 'Time' => $query->time . 'ms']));
             });
         }
     }
