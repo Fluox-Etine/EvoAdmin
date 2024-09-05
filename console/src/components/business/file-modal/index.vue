@@ -1,20 +1,14 @@
 <template>
-  <a-modal v-model:open="open" width="960px" title="文件资源库">
-    <div style="width: 800px;float: right">
-      <a-row>
-        <a-col :span="8">
-          <a-input-search placeholder="请输入文件名" style="width: 100%;"/>
-        </a-col>
-        <a-col :span="7">
-        </a-col>
-        <a-col :span="9">
-          <a-space :size="8">
-            <a-button danger type="dashed" @click="handleChunkUpload"> 大文件上传</a-button>
-            <a-button type="primary" @click="handleUpload"> 普通上传</a-button>
-            <a-button type="dashed">添加分组</a-button>
-          </a-space>
-        </a-col>
-      </a-row>
+  <a-modal v-model:open="open" :width="960" title="文件资源库">
+    <div style="width: 85%;float: right">
+      <a-flex justify="space-between" align="center">
+        <a-input-search placeholder="请输入文件名" style="width: 40%;"/>
+        <a-space :size="15">
+          <a-button danger type="dashed" @click="handleChunkUpload"> 大文件上传</a-button>
+          <a-button type="primary" @click="handleUpload"> 普通上传</a-button>
+          <a-button type="dashed">添加分组</a-button>
+        </a-space>
+      </a-flex>
     </div>
     <div style="height: 650px;">
       <br>
