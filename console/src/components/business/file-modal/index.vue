@@ -16,6 +16,7 @@
           v-model:activeKey="activeKey"
           tab-position="left"
           :style="{ height: '650px', width: '100%'}"
+          @change="fetchFileList"
       >
         <a-tab-pane v-for="(item,index) in groupList" :key="index" :tab="`${item.name}`">
           <a-card class="w-full mt-4 h-600px">
@@ -72,14 +73,15 @@ const multiple = ref(false)
 const maxNum = ref(1)
 const selectedNum = ref(0)
 const isLoading = ref(false)
+const selectedIndexs = ref<any>([])
 const pagination = ref({
   currentPage: 1,
   itemCount: 0
 })
 const fileList = ref([])
-
 const groupList = ref([{id: 0, name: '全部分组'}])
 
+/** 打开文件资源库弹窗 */
 const openFileModal = (type: FileTypeEnum, isMultiple, max, selected) => {
   fileType.value = type
   multiple.value = isMultiple
@@ -125,9 +127,8 @@ const handleUploadSuccess = () => {
   fetchFileList()
 }
 
-/** 选中状态 */
-const selectedIndexs = ref<any>([])
 
+/** 点击文件列表项 */
 const onSelectItem = function (index) {
   // 记录选中状态
   if (!multiple.value) {
@@ -143,6 +144,8 @@ const onSelectItem = function (index) {
   }
   !selected ? selectedIndexs.value.push(index) : selectedIndexs.value.splice(key, 1)
 }
+
+
 // 暴露方法
 defineExpose({
   openFileModal
