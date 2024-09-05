@@ -1,3 +1,4 @@
 import dashboard from './dashboard';
+import demos from './demos';
 
-export default [...dashboard];
+export default [...dashboard, ...demos];

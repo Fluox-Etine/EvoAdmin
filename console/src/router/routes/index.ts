@@ -5,7 +5,7 @@ import type { RouteRecordRaw } from 'vue-router';
 export const rootRoute: RouteRecordRaw = {
   path: '/',
   name: 'Layout',
-  redirect: '/dashboard/welcome',
+  redirect: '/dashboard',
   component: () => import('@/layout/index.vue'),
   meta: {
     title: '根路由',

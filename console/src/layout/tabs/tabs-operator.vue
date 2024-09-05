@@ -17,16 +17,13 @@ import {computed, unref} from 'vue';
   defineOptions({
     name: 'TabOperator',
   });
-type TabItemType = RouteLocationNormalizedLoaded;
 
 const props = defineProps({
   tabItem: {
-    type: Object as () => TabItemType,
+    type: Object as PropType<RouteLocationNormalizedLoaded>,
     required: true,
   },
-  isExtra: {
-    type: Boolean,
-  },
+  isExtra: Boolean,
 });
 
   const route = useRoute();
