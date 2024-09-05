@@ -9,6 +9,8 @@ interface ImportMetaEnv {
     readonly VITE_BASE_API_URL: string;
     /** 切片上传分片大小 */
     readonly VITE_CHUNK_SIZE: number;
+    /** 静态资源路径 */
+    readonly VITE_DOMAIN_URL: string;
 }
 
 interface ImportMeta {

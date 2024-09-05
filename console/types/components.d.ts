@@ -53,6 +53,7 @@ declare module 'vue' {
     DraggableModal: typeof import('./../src/components/business/draggable-modal/index.vue')['default']
     DynamicTable: typeof import('./../src/components/business/dynamic-table/src/dynamic-table.vue')['default']
     EditableCell: typeof import('./../src/components/business/dynamic-table/src/components/editable-cell/index.vue')['default']
+    FileListBody: typeof import('./../src/components/business/file-modal/file-list-body.vue')['default']
     FileModal: typeof import('./../src/components/business/file-modal/index.vue')['default']
     FormAction: typeof import('./../src/components/business/schema-form/src/components/form-action.vue')['default']
     Fullscreen: typeof import('./../src/components/business/dynamic-table/src/components/table-settings/fullscreen.vue')['default']

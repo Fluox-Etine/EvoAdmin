@@ -54,7 +54,7 @@ const FilesModal = ref<any>();
 
 /** 打开文件选择器 */
 const handleSelectImage = () => {
-  FilesModal.value.openFileModal(FileTypeEnum.IMAGE);
+  FilesModal.value.openFileModal(FileTypeEnum.IMAGE, false, 1, 0);
 }
 
 const handleSelectImageSubmit = (result) => {
