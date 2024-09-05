@@ -1,5 +1,5 @@
 <template>
-  <a-modal v-model:open="open" :width="985" title="文件资源库">
+  <a-modal v-model:open="open" :width="985" title="文件资源库" @ok="onOk">
     <div style="width: 85%;float: right">
       <a-flex justify="space-between" align="center">
         <a-input-search placeholder="请输入文件名" style="width: 40%;"/>
@@ -25,10 +25,10 @@
               <ul v-if="fileList && fileList.length" class="file-list-ul clearfix">
                 <li
                     class="file-item"
-                    :class="{ active: selectedIndexs.indexOf(index) > -1 }"
+                    :class="{ active: selectedItems.indexOf(item) > -1 }"
                     v-for="(item, index) in fileList"
                     :key="index"
-                    @click="onSelectItem(index)"
+                    @click="onSelectItem(item)"
                 >
                   <div
                       class="img-cover"
@@ -63,17 +63,18 @@ import {FileTypeEnum} from "@/enums/fileTypeEnum.ts";
 import {CheckOutlined} from "@ant-design/icons-vue";
 import {message as $message} from "ant-design-vue/es/components";
 
+const emit = defineEmits(['handleSubmit']);
 const domain = import.meta.env.VITE_DOMAIN_URL;
 const open = ref<boolean>(false);
 const UploadModalRef = ref();
 const ChunkModalRef = ref();
 const activeKey = ref(0);
 const fileType = ref<FileTypeEnum>(10);
-const multiple = ref(false)
-const maxNum = ref(1)
-const selectedNum = ref(0)
+const multiple = ref<number>(false)
+const maxNum = ref<number>(1)
+const selectedNum = ref<number>(0)
 const isLoading = ref(false)
-const selectedIndexs = ref<any>([])
+const selectedItems = ref<any>([])
 const pagination = ref({
   currentPage: 1,
   itemCount: 0
@@ -82,7 +83,8 @@ const fileList = ref([])
 const groupList = ref([{id: 0, name: '全部分组'}])
 
 /** 打开文件资源库弹窗 */
-const openFileModal = (type: FileTypeEnum, isMultiple, max, selected) => {
+const openFileModal = (type: FileTypeEnum, isMultiple: boolean, max: number, selected: number) => {
+  selectedItems.value = []
   fileType.value = type
   multiple.value = isMultiple
   maxNum.value = max
@@ -129,22 +131,30 @@ const handleUploadSuccess = () => {
 
 
 /** 点击文件列表项 */
-const onSelectItem = function (index) {
+const onSelectItem = function (item) {
   // 记录选中状态
   if (!multiple.value) {
-    selectedIndexs.value = [index]
+    selectedItems.value = [item]
     return
   }
-  const key = selectedIndexs.value.indexOf(index)
+  const key = selectedItems.value.indexOf(item)
   const selected = key > -1
   // 验证数量限制
-  if (!selected && (selectedIndexs.value.length + selectedNum.value) >= maxNum.value) {
+  if (!selected && (selectedItems.value.length + selectedNum.value) >= maxNum.value) {
     $message.warning(`最多可选${maxNum.value}个文件`, 1)
     return
   }
-  !selected ? selectedIndexs.value.push(index) : selectedIndexs.value.splice(key, 1)
+  if (!selected) {
+    selectedItems.value.push(item)
+  } else {
+    selectedItems.value.splice(key, 1)
+  }
 }
 
+const onOk = () => {
+  emit('handleSubmit', selectedItems.value)
+  open.value = false
+}
 
 // 暴露方法
 defineExpose({

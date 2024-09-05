@@ -38,7 +38,7 @@ class FileLogic
             !empty($param['file_type']) && $filter[] = ['file_type', '=', $param['file_type']];
             !empty($param['file_name']) && $filter[] = ['file_name', 'like', '%' . $param['file_name'] . '%'];
 
-            $list = UploadFileModel::query()->where($filter)->select('file_name', 'file_path', 'file_size', 'file_ext', 'uploader_id', 'created_at', 'file_type', 'channel', 'id')->paginate($params["pageSize"] ?? 10);
+            $list = UploadFileModel::query()->where($filter)->select('file_name', 'file_path', 'file_size', 'file_ext', 'uploader_id', 'created_at', 'file_type', 'channel', 'id')->paginate(24);
             return formattedPaginate($list);
         } catch (\Exception $e) {
             throw new RespBusinessException('查询数据异常');

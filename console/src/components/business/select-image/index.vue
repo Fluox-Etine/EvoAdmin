@@ -1,21 +1,27 @@
 <template>
-  <div class="image-custom">
-    <a-tooltip>
-      <template v-if="tips" v-slot:title>{{ tips }}</template>
-      <div v-if="imgUrl" class="image-box" :style="{ width: `${width}px`, height: `${height}px` }">
-        <img :src="imgUrl" alt/>
-        <div class="update-box-black"></div>
-        <div class="uodate-repalce" @click="handleSelectImage">替换</div>
-      </div>
+  <div class="image-list clearfix" :class="{ multiple }">
+    <div class="draggable-item" type="transition" :name="'flip-list'">
       <div
-          v-else
-          class="selector"
+          v-for="(item, index) in selectedItems"
+          :key="item.id"
+          class="file-item"
           :style="{ width: `${width}px`, height: `${width}px` }"
-          @click="handleSelectImage"
       >
-        <PlusOutlined class="icon-plus" :style="{ fontSize: `${width * 0.4}px` }"/>
+        <!-- 预览图 -->
+        <a :href="domain+item.file_path" target="_blank">
+        <div class="img-cover" :style="{ backgroundImage: `url('${domain+item.file_path}')`}"></div>
+        </a>
+        <CloseCircleTwoTone   class="icon-close" @click="handleDeleteFileItem(index)"/>
       </div>
-    </a-tooltip>
+    </div>
+    <div
+        v-show="(!multiple && selectedItems.length <= 0) || (multiple && selectedItems.length < maxNum)"
+        class="selector"
+        :style="{ width: `${width}px`, height: `${width}px` }"
+        title="点击选择图片"
+        @click="handleSelectImage">
+      <PlusOutlined class="icon-plus" :style="{ fontSize: `${width * 0.4}px` }"/>
+    </div>
   </div>
   <FileModal ref="FilesModal" :multiple="false" @handleSubmit="handleSelectImageSubmit"/>
 </template>
@@ -24,13 +30,13 @@
 import {ref} from "vue";
 import {PlusOutlined} from '@ant-design/icons-vue';
 import {FileTypeEnum} from "@/enums/fileTypeEnum.ts";
+import {CloseCircleTwoTone} from "@ant-design/icons-vue";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const props = defineProps({
   // 默认显示的图片
-  value: {
-    type: String,
-    default: ''
+  defaultList: {
+    type: Array
   },
   // 气泡提示内容
   tips: {
@@ -46,85 +52,112 @@ const props = defineProps({
   height: {
     type: Number,
     default: 70
+  },
+  // 是否多选
+  multiple: {
+    type: Boolean,
+    default: true
+  },
+  // 最大选择的数量限制, multiple模式下有效
+  maxNum: {
+    type: Number,
+    default: 10
   }
 });
-
-const imgUrl = ref('');
+const domain = import.meta.env.VITE_DOMAIN_URL;
+const selectedItems = ref([]);
 const FilesModal = ref<any>();
 
 /** 打开文件选择器 */
 const handleSelectImage = () => {
-  FilesModal.value.openFileModal(FileTypeEnum.IMAGE, false, 1, 0);
+  FilesModal.value.openFileModal(FileTypeEnum.IMAGE, props.multiple, props.maxNum, props.defaultList?.length);
 }
 
+/** 文件选择器提交回调 */
 const handleSelectImageSubmit = (result) => {
-  console.log(result)
+  if (result.length > 0) {
+    const fileList = result.map(item => {
+      return {id: item.id, file_path: item.file_path};
+    })
+    console.log(props.multiple)
+    selectedItems.value = props.multiple
+        ? [...selectedItems.value, ...fileList]
+        : fileList;
+  }
+}
+
+/** 删除文件 */
+const handleDeleteFileItem = (index) => {
+  selectedItems.value.splice(index, 1)
+}
+
+const onUpdate = (e) => {
+
 }
 
 </script>
 
 
 <style lang="less" scoped>
-.image-custom {
-  display: flex;
-  align-items: center;
+/deep/ .flip-list-move {
+  transition: transform 0.3s !important;
+}
 
-  .image-box {
-    position: relative;
-    width: 70px;
-    height: 70px;
+/deep/ .no-move {
+  transition: transform 0s;
+}
+
+.image-list {
+  // 多选模式下margin
+  &.multiple {
+    .file-item,
+    .selector {
+      margin-right: 10px;
+      margin-bottom: 10px;
+    }
+  }
+}
+
+// 文件元素
+.file-item {
+  position: relative;
+  float: left;
+  width: 80px;
+  height: 80px;
+  position: relative;
+  padding: 2px;
+  border: 1px solid #ddd;
+  background: #fff;
+
+  .img-cover {
+    display: block;
+    width: 100%;
+    height: 100%;
+    background: no-repeat center center / 100%;
+  }
+
+  &:hover {
+    .icon-close {
+      display: block;
+    }
+  }
+
+  .icon-close {
+    display: none;
+    position: absolute;
+    top: -8px;
+    right: -8px;
     cursor: pointer;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 4px;
-
-    .update-box-black {
-      background: #000;
-      opacity: 0.5;
-      display: none;
-      position: absolute;
-      z-index: 2;
-      top: 0;
-      right: 0;
-      left: 0;
-      bottom: 0;
-      border-radius: 4px;
-    }
-
-    .uodate-repalce {
-      width: 60px;
-      height: 30px;
-      font-size: 12px;
-      text-align: center;
-      position: absolute;
-      top: 0;
-      right: 0;
-      left: 0;
-      bottom: 0;
-      margin: auto;
-      display: none;
-      z-index: 2;
-      background: #fff;
-      border-radius: 4px;
-      font-weight: 600;
-      color: #595961;
-      line-height: 30px;
-    }
+    font-size: 16px;
+    color: #c5c5c5;
 
     &:hover {
-      .update-box-black,
-      .uodate-repalce {
-        display: block;
-      }
+      color: #7d7d7d;
     }
+  }
 
-    img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      border-radius: 4px;
-    }
+  &:hover {
+    border: 1px solid #a7c3de;
   }
 }
 
