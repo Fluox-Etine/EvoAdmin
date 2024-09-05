@@ -10,7 +10,7 @@ use support\exception\RespBusinessException;
 /**
  * {CLASS_COMMENT}
  * Class {UPPER_CAMEL_NAME}Validate
- * @package app\{MODULE_NAME}\validate{PACKAGE_NAME}
+ * @package app\http\{MODULE_NAME}\validate{PACKAGE_NAME}
  * @date {DATE}
  */
 class {UPPER_CAMEL_NAME}Validate
