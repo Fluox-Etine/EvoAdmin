@@ -1,19 +1,24 @@
 <template>
   <div class="image-list clearfix" :class="{ multiple }">
-    <div class="draggable-item" type="transition" :name="'flip-list'">
+    <VueDraggable
+        ref="el"
+        v-model="selectedItems"
+        :animation="150"
+        @end="onEnd"
+    >
       <div
           v-for="(item, index) in selectedItems"
-          :key="item.id"
+          :key="index"
           class="file-item"
           :style="{ width: `${width}px`, height: `${width}px` }"
       >
         <!-- 预览图 -->
-        <a :href="domain+item.file_path" target="_blank">
-        <div class="img-cover" :style="{ backgroundImage: `url('${domain+item.file_path}')`}"></div>
+        <a :href="domain+item" target="_blank">
+          <div class="img-cover" :style="{ backgroundImage: `url('${domain+item}')`}"></div>
         </a>
-        <CloseCircleTwoTone   class="icon-close" @click="handleDeleteFileItem(index)"/>
+        <CloseCircleTwoTone class="icon-close" @click="handleDeleteFileItem(index)"/>
       </div>
-    </div>
+    </VueDraggable>
     <div
         v-show="(!multiple && selectedItems.length <= 0) || (multiple && selectedItems.length < maxNum)"
         class="selector"
@@ -25,23 +30,22 @@
   </div>
   <FileModal ref="FilesModal" :multiple="false" @handleSubmit="handleSelectImageSubmit"/>
 </template>
-<script setup lang="ts">
 
-import {ref} from "vue";
+<script setup lang="ts">
+import {
+  type UseDraggableReturn,
+  VueDraggable
+} from 'vue-draggable-plus'
+import {ref, defineProps, defineEmits} from "vue";
 import {PlusOutlined} from '@ant-design/icons-vue';
 import {FileTypeEnum} from "@/enums/fileTypeEnum.ts";
 import {CloseCircleTwoTone} from "@ant-design/icons-vue";
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const props = defineProps({
   // 默认显示的图片
   defaultList: {
-    type: Array
-  },
-  // 气泡提示内容
-  tips: {
-    type: String,
-    default: ''
+    type: Array,
+    default: () => []
   },
   // 元素的尺寸(宽)
   width: {
@@ -56,30 +60,35 @@ const props = defineProps({
   // 是否多选
   multiple: {
     type: Boolean,
-    default: true
+    default: false
   },
   // 最大选择的数量限制, multiple模式下有效
   maxNum: {
     type: Number,
     default: 10
+  },
+  modelValue: {
+    type: Array
   }
 });
+
+const emit = defineEmits(["update:modelValue"]);
 const domain = import.meta.env.VITE_DOMAIN_URL;
 const selectedItems = ref([]);
 const FilesModal = ref<any>();
-
+const el = ref<UseDraggableReturn>()
 /** 打开文件选择器 */
 const handleSelectImage = () => {
-  FilesModal.value.openFileModal(FileTypeEnum.IMAGE, props.multiple, props.maxNum, props.defaultList?.length);
+  const length = props.defaultList?.length || 0;
+  FilesModal.value.openFileModal(FileTypeEnum.IMAGE, props.multiple, props.maxNum, length);
 }
 
 /** 文件选择器提交回调 */
 const handleSelectImageSubmit = (result) => {
   if (result.length > 0) {
     const fileList = result.map(item => {
-      return {id: item.id, file_path: item.file_path};
+      return item.file_path;
     })
-    console.log(props.multiple)
     selectedItems.value = props.multiple
         ? [...selectedItems.value, ...fileList]
         : fileList;
@@ -91,22 +100,13 @@ const handleDeleteFileItem = (index) => {
   selectedItems.value.splice(index, 1)
 }
 
-const onUpdate = (e) => {
-
+/** 拖动结束回调 */
+const onEnd = () => {
+  emit('update:modelValue', selectedItems.value)
 }
 
 </script>
-
-
 <style lang="less" scoped>
-/deep/ .flip-list-move {
-  transition: transform 0.3s !important;
-}
-
-/deep/ .no-move {
-  transition: transform 0s;
-}
-
 .image-list {
   // 多选模式下margin
   &.multiple {
@@ -124,7 +124,6 @@ const onUpdate = (e) => {
   float: left;
   width: 80px;
   height: 80px;
-  position: relative;
   padding: 2px;
   border: 1px solid #ddd;
   background: #fff;
