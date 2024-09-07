@@ -54,3 +54,11 @@ export async function deleted(
         ...(options || {successMsg: '删除成功'}),
     });
 }
+
+/** 获取所有分组列表 POST /upload/group/selectGroupList */
+export async function selectGroupList(options?: RequestOptions) {
+    return request<[]>('/upload/group/select', {
+        method: 'POST',
+        ...(options || {}),
+    });
+}
