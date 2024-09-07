@@ -13,9 +13,12 @@
           :style="{ width: `${width}px`, height: `${width}px` }"
       >
         <!-- 预览图 -->
-        <a :href="domain+item" target="_blank">
-          <div class="img-cover" :style="{ backgroundImage: `url('${domain+item}')`}"></div>
-        </a>
+        <a-tooltip>
+          <template #title>{{ handleGetFileName(item) }}</template>
+          <a :href="domain+item" target="_blank">
+            <div class="img-cover" :style="handleBackgroundStyle(item)"></div>
+          </a>
+        </a-tooltip>
         <CloseCircleTwoTone class="icon-close" @click="handleDeleteFileItem(index)"/>
       </div>
     </VueDraggable>
@@ -91,7 +94,7 @@ watch(() => props.defaultList, (newVal) => {
 
 /** 打开文件选择器 */
 const handleSelectImage = () => {
-  FilesModal.value.openFileModal(FileTypeEnum.IMAGE, props.multiple, props.maxNum, selectedItems.value.length);
+  FilesModal.value.openFileModal(FileTypeEnum.FILE, props.multiple, props.maxNum, selectedItems.value.length);
 }
 
 /** 文件选择器提交回调 */
@@ -119,6 +122,25 @@ const handleDeleteFileItem = (index) => {
 /** 拖动结束回调 */
 const onChange = () => {
   emit('update:modelValue', selectedItems.value)
+}
+
+/** 获取背景样式 */
+const handleBackgroundStyle = (filePath) => {
+  const lastIndex = filePath.lastIndexOf('.');
+  let ext = 'doc'
+  if (lastIndex > 0) {
+    ext = filePath.substring(lastIndex + 1);
+  }
+  let path = domain + '/file_icons/file/' + ext + '.png'
+  return {
+    backgroundImage: `url('${path}')`,
+  };
+}
+
+/** 获取文件名 */
+const handleGetFileName = (filePath) => {
+  const lastIndex = filePath.lastIndexOf('/');
+  return filePath.substring(lastIndex + 1);
 }
 
 </script>

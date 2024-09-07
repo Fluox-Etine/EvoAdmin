@@ -11,6 +11,12 @@ interface ImportMetaEnv {
     readonly VITE_CHUNK_SIZE: number;
     /** 静态资源路径 */
     readonly VITE_DOMAIN_URL: string;
+    /** 上传的图片类型 */
+    readonly VITE_IMAGE_TYPE: string;
+    /** 上传的视频类型 */
+    readonly VITE_VIDEO_TYPE: string;
+    /** 上传的文件类型 */
+    readonly VITE_FILE_TYPE: string;
 }
 
 interface ImportMeta {

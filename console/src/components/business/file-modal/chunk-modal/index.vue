@@ -10,7 +10,7 @@
   >
     <a-flex justify="space-between" align="center">
       <a-alert message="切片上传单个文件必须大于5MB" type="info" show-icon/>
-      <a-upload :multiple="true" :before-upload="beforeUpload" :show-upload-list="false">
+      <a-upload :multiple="true" :accept="accept" :before-upload="beforeUpload" :show-upload-list="false">
         <a-button type="primary"> 切片上传</a-button>
       </a-upload>
     </a-flex>
@@ -25,7 +25,7 @@ import {message, type UploadProps} from 'ant-design-vue';
 import {type FileItem, fileListColumns, UploadResultStatus} from './columns.tsx';
 import {DraggableModal} from '@/components/business/draggable-modal/index.ts';
 import {type TableColumn, useTable} from '@/components/business/dynamic-table';
-import type {FileTypeEnum} from "@/enums/fileTypeEnum.ts";
+import {FileTypeEnum} from "@/enums/fileTypeEnum.ts";
 import * as Api from '@/api/backend/upload.ts';
 
 const emit = defineEmits(['uploadSuccess']);
@@ -36,6 +36,7 @@ const visible = ref(false);
 const fileList = ref<FileItem[]>([]);
 const fileType = ref<FileTypeEnum>(10);
 const groupId = ref<number>(0)
+const accept = ref<string>('')
 
 const disabledUpload = computed(() => {
   return !fileList.value.some((n) => n.status !== UploadResultStatus.SUCCESS);
@@ -213,9 +214,16 @@ const columns: TableColumn<FileItem>[] = [
 ];
 
 const openChunkUploadModal = (type: FileTypeEnum, group: number) => {
-  visible.value = true
+  if (type._value === FileTypeEnum.IMAGE) {
+    accept.value = import.meta.env.VITE_IMAGE_TYPE;
+  } else if (type._value === FileTypeEnum.VIDEO) {
+    accept.value = import.meta.env.VITE_VIDEO_TYPE;
+  } else {
+    accept.value = import.meta.env.VITE_FILE_TYPE;
+  }
   fileType.value = type
   groupId.value = group
+  visible.value = true
 }
 
 // 暴露方法

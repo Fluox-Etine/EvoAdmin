@@ -31,10 +31,16 @@
                     @click="onSelectItem(item)"
                 >
                   <div
+                      v-if="item.file_type === FileTypeEnum.IMAGE"
                       class="img-cover"
                       :style="{ backgroundImage: `url('${domain+item.file_path}')`, width: '95px' }"
                   ></div>
-                  <p class="file-name oneline-hide" style="color: #3b4acc;">{{ item.file_name }}</p>
+                  <div
+                      v-if="item.file_type !== FileTypeEnum.IMAGE"
+                      class="img-cover"
+                      :style="handleBackgroundStyle(item)"
+                  ></div>
+                  <div class="file-name oneline-hide">{{ item.file_name }}</div>
                   <div class="select-mask">
                     <CheckOutlined class="selected-icon" type="check"/>
                   </div>
@@ -129,7 +135,6 @@ const handleUploadSuccess = () => {
   fetchFileList()
 }
 
-
 /** 点击文件列表项 */
 const onSelectItem = function (item) {
   // 记录选中状态
@@ -151,6 +156,19 @@ const onSelectItem = function (item) {
   }
 }
 
+/** 获取背景样式 */
+const handleBackgroundStyle = (item) => {
+  let path = ''
+  if (item.file_type === FileTypeEnum.VIDEO) {
+    path = domain + '/file_icons/video/' + item.file_ext + '.png'
+  } else if (item.file_type === FileTypeEnum.FILE) {
+    path = domain + '/file_icons/file/' + item.file_ext + '.png'
+  }
+  return {
+    backgroundImage: `url('${path}')`,
+    width: '95px',
+  };
+}
 const onOk = () => {
   emit('handleSubmit', selectedItems.value)
   open.value = false
@@ -200,6 +218,8 @@ defineExpose({
     .file-name {
       font-size: 12px;
       text-align: center;
+      color: #3b4acc;
+      margin-top: 5px;
     }
 
     // 预览图

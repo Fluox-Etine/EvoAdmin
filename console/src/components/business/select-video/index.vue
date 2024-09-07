@@ -13,9 +13,12 @@
           :style="{ width: `${width}px`, height: `${width}px` }"
       >
         <!-- 预览图 -->
-        <a :href="domain+item" target="_blank">
-          <div class="img-cover" :style="{ backgroundImage: `url('${domain+item}')`}"></div>
-        </a>
+        <a-tooltip>
+          <template #title>{{ handleGetFileName(item) }}</template>
+          <a @click="handleOpenPlayer(item,index)">
+            <div class="img-cover" :style="handleBackgroundStyle(item)"></div>
+          </a>
+        </a-tooltip>
         <CloseCircleTwoTone class="icon-close" @click="handleDeleteFileItem(index)"/>
       </div>
     </VueDraggable>
@@ -23,10 +26,22 @@
         v-show="(!multiple && selectedItems.length <= 0) || (multiple && selectedItems.length < maxNum)"
         class="selector"
         :style="{ width: `${width}px`, height: `${width}px` }"
-        title="点击选择图片"
+        title="点击选择视频"
         @click="handleSelectImage">
       <PlusOutlined class="icon-plus" :style="{ fontSize: `${width * 0.4}px` }"/>
     </div>
+  </div>
+  <div>
+    <a-modal v-model:open="open" title="播放视频" :width="900" :footer="null" destroyOnClose>
+      <XgPlayer
+          width="860px"
+          height="480px"
+          :videoUrl="videoUrl"
+          :poster="domain+'/file_icons/video/cover.png'"
+          :id="'videoPlayer' + videoId"
+      />
+      <br>
+    </a-modal>
   </div>
   <FileModal ref="FilesModal" :multiple="false" @handleSubmit="handleSelectImageSubmit"/>
 </template>
@@ -36,7 +51,7 @@ import {type UseDraggableReturn, VueDraggable} from 'vue-draggable-plus'
 import {defineEmits, defineProps, ref, watch} from "vue";
 import {CloseCircleTwoTone, PlusOutlined} from '@ant-design/icons-vue';
 import {FileTypeEnum} from "@/enums/fileTypeEnum.ts";
-import _ from "lodash-es";
+import _ from 'lodash-es'
 
 const props = defineProps({
   // 默认选中的值
@@ -76,7 +91,9 @@ const selectedItems = ref([]);
 const FilesModal = ref<any>();
 const el = ref<UseDraggableReturn>()
 const allowProps = ref<boolean>(true);
-
+const open = ref<boolean>(false);
+const videoUrl = ref<string>('')
+const videoId = ref<number>(1)
 // 使用 watch 来监视 defaultList 的变化. 默认值变化时，更新 selectedItems
 watch(() => props.defaultList, (newVal) => {
   if (newVal.length && !selectedItems.value.length && allowProps) {
@@ -91,7 +108,7 @@ watch(() => props.defaultList, (newVal) => {
 
 /** 打开文件选择器 */
 const handleSelectImage = () => {
-  FilesModal.value.openFileModal(FileTypeEnum.IMAGE, props.multiple, props.maxNum, selectedItems.value.length);
+  FilesModal.value.openFileModal(FileTypeEnum.VIDEO, props.multiple, props.maxNum, selectedItems.value.length);
 }
 
 /** 文件选择器提交回调 */
@@ -120,6 +137,33 @@ const handleDeleteFileItem = (index) => {
 const onChange = () => {
   emit('update:modelValue', selectedItems.value)
 }
+
+/** 获取背景样式 */
+const handleBackgroundStyle = (filePath) => {
+  const lastIndex = filePath.lastIndexOf('.');
+  let ext = 'mp4'
+  if (lastIndex > 0) {
+    ext = filePath.substring(lastIndex + 1);
+  }
+  let path = domain + '/file_icons/video/' + ext + '.png'
+  return {
+    backgroundImage: `url('${path}')`,
+  };
+}
+
+/** 获取文件名 */
+const handleGetFileName = (filePath) => {
+  const lastIndex = filePath.lastIndexOf('/');
+  return filePath.substring(lastIndex + 1);
+}
+
+/** 打开视频播放器 */
+const handleOpenPlayer = (filePath, index) => {
+  videoUrl.value = domain + filePath
+  videoId.value = index
+  open.value = true
+}
+
 
 </script>
 <style lang="less" scoped>

@@ -31,6 +31,7 @@ declare module 'vue' {
     APopover: typeof import('ant-design-vue/es')['Popover']
     ARadio: typeof import('ant-design-vue/es')['Radio']
     ARadioGroup: typeof import('ant-design-vue/es')['RadioGroup']
+    AResult: typeof import('ant-design-vue/es')['Result']
     ARow: typeof import('ant-design-vue/es')['Row']
     ASelect: typeof import('ant-design-vue/es')['Select']
     ASelectOption: typeof import('ant-design-vue/es')['SelectOption']
@@ -65,12 +66,15 @@ declare module 'vue' {
     SchemaForm: typeof import('./../src/components/business/schema-form/src/schema-form.vue')['default']
     SchemaFormItem: typeof import('./../src/components/business/schema-form/src/schema-form-item.vue')['default']
     SearchSetting: typeof import('./../src/components/business/dynamic-table/src/components/table-settings/search-setting.vue')['default']
+    SelectFile: typeof import('./../src/components/business/select-file/index.vue')['default']
     SelectImage: typeof import('./../src/components/business/select-image/index.vue')['default']
+    SelectVideo: typeof import('./../src/components/business/select-video/index.vue')['default']
     SizeSetting: typeof import('./../src/components/business/dynamic-table/src/components/table-settings/size-setting.vue')['default']
     SvgIcon: typeof import('./../src/components/core/icon/src/SvgIcon.vue')['default']
     TableAction: typeof import('./../src/components/business/dynamic-table/src/components/table-action.vue')['default']
     TableSettings: typeof import('./../src/components/business/dynamic-table/src/components/table-settings/index.vue')['default']
     ToolBar: typeof import('./../src/components/business/dynamic-table/src/components/tool-bar/index.vue')['default']
     UploadModal: typeof import('./../src/components/business/file-modal/upload-modal/index.vue')['default']
+    XgPlayer: typeof import('./../src/components/business/xg-player/index.vue')['default']
   }
 }
