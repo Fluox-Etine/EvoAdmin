@@ -43,7 +43,7 @@ class FileLogic
             !empty($param['file_type']) && $filter[] = ['file_type','=', $param['file_type']];
             !empty($param['group_id']) && $filter[] = ['group_id','=', $param['group_id']];
 
-            $list = UploadFileModel::query()->where($filter)->select('channel','created_at','file_name','file_path','file_size','file_type','group_id','id','uploader_id')->paginate($params["pageSize"] ?? 10);
+            $list = UploadFileModel::query()->where($filter)->orderByDesc('id')->select('channel','created_at','file_name','file_path','file_size','file_type','group_id','id','uploader_id')->paginate($params["pageSize"] ?? 10);
             return formattedPaginate($list);
         } catch (\Exception $e) {
             throw new RespBusinessException('查询数据异常');

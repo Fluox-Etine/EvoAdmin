@@ -1,10 +1,42 @@
 import type {TableColumn} from '@/components/business/dynamic-table';
 import {formatToDateTime} from '@/utils/dateUtil';
-import {Image, Tag, Badge} from 'ant-design-vue';
+import {Image, Tag} from 'ant-design-vue';
 import {FileTypeEnum} from "@/enums/fileTypeEnum.ts";
+import * as GroupApi from '@/api/backend/uploadGroup.ts'
+import {ref} from "vue";
 
-const domain = import.meta.env.VITE_DOMAIN_URL;
+export const domain = import.meta.env.VITE_DOMAIN_URL;
 
+export const getFileTypeColor = (status) => {
+    switch (status) {
+        case 10:
+            return '#b63535';
+        case 20:
+            return '#52c41a';
+        case 30:
+            return '#faad14';
+    }
+};
+export const getFileTypeInfo = (status) => {
+    switch (status) {
+        case 10:
+            return '图片';
+        case 20:
+            return '视频';
+        case 30:
+            return '文件';
+    }
+};
+const group = ref([]);
+GroupApi.selectGroupList().then(res => {
+    group.value = res
+})
+const getGroupName = (id) => {
+    // 使用 findIndex 而不是 find，因为 find 返回的是第一个匹配项，而 findIndex 返回的是索引
+    const index = group.value.findIndex(item => item.value === id);
+    // 如果找到了对应的项，则返回标签名，否则返回 undefined
+    return index !== -1 ? group.value[index].label : undefined;
+}
 export type TableColumnItem = TableColumn<any>;
 export const baseColumns: TableColumnItem[] = [
     {
@@ -62,6 +94,9 @@ export const baseColumns: TableColumnItem[] = [
         dataIndex: 'group_id',
         hideInSearch: true,
         width: 150,
+        customRender: ({record}) => {
+            return <Tag color="cyan">{getGroupName(record.group_id)}</Tag>
+        },
     },
     {
         title: '文件大小',
@@ -97,26 +132,6 @@ export const baseColumns: TableColumnItem[] = [
             },
         },
         customRender: ({record}) => {
-            const getFileTypeColor = (status) => {
-                switch (status) {
-                    case 10:
-                        return '#b63535';
-                    case 20:
-                        return '#52c41a';
-                    case 30:
-                        return '#faad14';
-                }
-            };
-            const getFileTypeInfo = (status) => {
-                switch (status) {
-                    case 10:
-                        return '图片';
-                    case 20:
-                        return '视频';
-                    case 30:
-                        return '文件';
-                }
-            };
             return <Tag color={getFileTypeColor(record.file_type)}>{getFileTypeInfo(record.file_type)}</Tag>
         }
     },

@@ -85,6 +85,8 @@ Route::group('/v1', function () {
                 Route::post('/update', ['app\http\admin\controller\upload\GroupController', 'update']);
                 // 删除分组
                 Route::post('/delete', ['app\http\admin\controller\upload\GroupController', 'delete']);
+                // 下列列表
+                Route::post('/select', ['app\http\admin\controller\upload\GroupController', 'select']);
             });
             /** 文件资源 @date 2024/09/07 17:26 */
             Route::group('/file', function () {

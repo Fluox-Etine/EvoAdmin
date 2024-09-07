@@ -18,7 +18,7 @@
           :style="{ height: '650px', width: '100%'}"
           @change="fetchFileList"
       >
-        <a-tab-pane v-for="(item,index) in groupList" :key="index" :tab="`${item.name}`">
+        <a-tab-pane v-for="group in groupList" :key="group.value" :tab="`${group.label}`">
           <a-card class="w-full mt-4 h-600px">
             <div class="file-list-body">
               <!-- 文件列表 -->
@@ -86,7 +86,7 @@ const pagination = ref({
   itemCount: 0
 })
 const fileList = ref([])
-const groupList = ref([{id: 0, name: '全部分组'}])
+const groupList = ref([])
 
 /** 打开文件资源库弹窗 */
 const openFileModal = (type: FileTypeEnum, isMultiple: boolean, max: number, selected: number) => {
@@ -112,12 +112,7 @@ const handleChunkUpload = () => {
 
 /** 获取分组列表 */
 const fetchGroupList = async () => {
-  const response = await GroupApi.list()
-  response.forEach(item => {
-    if (!groupList.value.some(existingItem => existingItem.id === item.id)) {
-      groupList.value.push(item);
-    }
-  });
+  groupList.value = await GroupApi.selectGroupList()
 }
 
 /** 获取当前类型的文件列表 */

@@ -30,7 +30,7 @@ class GroupController
     {
         $params = $request->post();
         $list = UploadGroupLogic::handleLists($params);
-        return renderSuccess($list,'列表获取成功');
+        return renderSuccess($list, '列表获取成功');
     }
 
     /**
@@ -75,6 +75,17 @@ class GroupController
         $params = $request->post();
         $result = UploadGroupLogic::handleDelete($params);
         return $result ? renderSuccess('删除成功') : renderError('删除失败');
+    }
+
+
+    /**
+     * 获取文件分组下拉列表
+     * @return Response
+     */
+    public function select(): Response
+    {
+        $list = UploadGroupLogic::handleSelect();
+        return renderSuccess($list);
     }
 
 }

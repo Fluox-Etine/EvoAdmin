@@ -13,7 +13,7 @@ return [
 
     // 慢SQL拦截
     'show_sql' => [
-        'enable' => false,  // 是否开启
+        'enable' => true,  // 是否开启
         'limit' => 10,    // sql执行时间大于多少秒进行拦截（单位毫秒 默认1000）
     ],
 

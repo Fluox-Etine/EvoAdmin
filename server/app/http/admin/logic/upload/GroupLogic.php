@@ -104,4 +104,29 @@ class GroupLogic
             throw new RespBusinessException('删除数据异常');
         }
     }
+
+    /**
+     * 获取分组下拉列表
+     * @return array
+     */
+    public static function handleSelect(): array
+    {
+        $list = UploadGroupModel::query()->select('id as value', 'name as label')->orderByDesc('sort')->get();
+        if ($list->isEmpty()) {
+            return [
+                [
+                    'value' => 0,
+                    'label' => '全部分组'
+                ]
+            ];
+        } else {
+            // 把 默认分组放到最前面
+            $list = $list->toArray();
+            array_unshift($list, [
+                'value' => 0,
+                'label' => '全部分组'
+            ]);
+            return $list;
+        }
+    }
 }

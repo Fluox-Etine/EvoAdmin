@@ -57,6 +57,14 @@ const columns: TableColumnItem[] = [
     fixed: 'right',
     actions: ({record}) => [
       {
+        label: '详情',
+        auth: {
+          perm: 'upload:file:detail',
+          effect: 'disable',
+        },
+        onClick: () => openMenuModal(record),
+      },
+      {
         label: '删除',
         auth: {
           perm: 'upload:file:delete',
