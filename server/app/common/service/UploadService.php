@@ -69,7 +69,7 @@ class UploadService
      */
     public static function handleChunkServer($chunk, string $hash, int $index, string $fileName): bool
     {
-        $path = public_path() . config('env.upload.chunk_dir') . $hash . '/' . md5($fileName) . '/chunk_' . $index;
+        $path = public_path() . config('env.upload.chunk_dir') . $hash . '/' . md5($fileName) . '/' . $index;
         return $chunk->move($path) != false;
     }
 
@@ -84,25 +84,19 @@ class UploadService
     {
         $chunksDir = public_path() . config('env.upload.chunk_dir') . $hash . '/' . md5($fileName);
         $ext = pathinfo($fileName, PATHINFO_EXTENSION);
-        $fileName = bin2hex(pack('Nn', time(), rand(1, 65535))) . '.' . $ext;
-        $filePath = public_path() . config('env.upload.upload_dir') . $fileName;
+        $name = bin2hex(pack('Nn', time(), rand(1, 65535))) . '.' . $ext;
+        $filePath = public_path() . config('env.upload.upload_dir') . $name;
         // 创建上传目录
         check_dir(config('env.upload.upload_dir'));
         // 创建文件
         $fileHandle = fopen($filePath, 'w');
-
-        // 扫描切片目录，获取切片列表
-        $chunkList = scandir($chunksDir);
-        if (empty($chunkList)) {
+        $chunksList = scandir($chunksDir);
+        if (count($chunksList) === 0) {
             throw new \Exception('切片文件不存在');
         }
-        // 按照切片编号排序
-        sort($chunkList, SORT_NUMERIC);
-        // 逐个读取切片文件，写入新文件
-        foreach ($chunkList as $chunk) {
-            if ($chunk !== '.' && $chunk !== '..' && $chunk !== '.DS_Store') {
-                fwrite($fileHandle, file_get_contents("$chunksDir/$chunk"));
-            }
+        for ($i = 0; $i < count($chunksList) - 2; $i++) {
+            fwrite($fileHandle, file_get_contents("$chunksDir/$i"));
+            unlink("$chunksDir/$i");
         }
         fclose($fileHandle);
         // 删除切片文件
@@ -116,15 +110,13 @@ class UploadService
             rmdir($chunksDir);
         }
         // 判断文件是否存在
-        var_dump($filePath);
-        var_dump(file_exists($filePath));
         if (file_exists($filePath)) {
             return [
                 'file_name' => $fileName,
-                'file_path' => $filePath,
+                'file_path' => config('env.upload.upload_dir') . $name,
                 'file_size' => filesize($filePath),
                 'file_type' => $ext,
-                'preview_url' => config('env.upload.domain') . $filePath,
+                'preview_url' => config('env.upload.domain') . config('env.upload.upload_dir') . $name,
             ];
         }
         throw new \Exception('文件合并失败');
