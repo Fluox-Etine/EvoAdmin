@@ -15,7 +15,10 @@ const openMenuModal = async (record: Partial<TableListItem>) => {
     },
     formProps: {
       labelWidth: 100,
-      schemas: formSchemas(),
+      schemas: formSchemas,
     },
   });
+   formRef?.setFieldsValue({
+     ...record
+   });
 };
