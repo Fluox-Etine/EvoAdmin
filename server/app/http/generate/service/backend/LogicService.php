@@ -289,7 +289,7 @@ class LogicService
             '{WHERE_PK}',
             '{FIELDS}'
         ];
-        $fields = '*';
+        $fields = "'".'*'."'";
         if (!empty($listColumn)) {
             $fields = '';
             foreach ($listColumn as $value) {

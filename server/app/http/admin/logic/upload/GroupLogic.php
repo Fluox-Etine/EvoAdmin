@@ -4,6 +4,8 @@ declare (strict_types=1);
 namespace app\http\admin\logic\upload;
 
 use app\common\model\upload\GroupModel as UploadGroupModel;
+use app\common\model\upload\FileModel as UploadFileModel;
+use support\Db;
 use support\exception\RespBusinessException;
 
 /**
@@ -33,7 +35,7 @@ class GroupLogic
 
             !empty($param['name']) && $filter[] = ['name', 'like', '%' . $param['name'] . '%'];
 
-            $list = UploadGroupModel::query()->where($filter)->select('id', 'name', 'sort', 'created_at')->get();
+            $list = UploadGroupModel::query()->where($filter)->select('id', 'name', 'sort', 'created_at', 'updated_at')->get();
             return $list->isEmpty() ? [] : $list->toArray();
         } catch (\Exception $e) {
             throw new RespBusinessException('查询数据异常');
@@ -90,9 +92,15 @@ class GroupLogic
      */
     public static function handleDelete(array $params): bool
     {
+        Db::beginTransaction();
         try {
-            return UploadGroupModel::query()->where('id', $params['id'])->delete() != false;
-        } catch (\Exception $e) {
+            // 把当前分组下资源全部转移到默认分组
+            UploadFileModel::query()->where('group_id', $params['id'])->update(['group_id' => 0]);
+            UploadGroupModel::query()->where('id', $params['id'])->delete();
+            Db::commit();
+            return true;
+        } catch (\Throwable $e) {
+            Db::rollBack();
             throw new RespBusinessException('删除数据异常');
         }
     }

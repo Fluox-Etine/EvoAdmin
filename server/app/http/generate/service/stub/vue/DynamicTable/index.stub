@@ -18,21 +18,18 @@
 import {getCurrentInstance} from 'vue';
 import {useResizeObserver} from '@vueuse/core';
 import {baseColumns, type TableColumnItem} from './columns';{FORM_SCHEMAS}
-import {useTable} from '@/components/business/dynamic-table';
-import {useFormModal} from '@/hooks/useModal/';
+import {useTable} from '@/components/business/dynamic-table';{IMPORT_MODAL}
 import * as Api from '@/api/backend/{API}';
 defineOptions({
   name: '{NAME}',
 });
 
-const [DynamicTable, dynamicTableInstance] = useTable({
-  pagination: {PAGINATION},
+const [DynamicTable, dynamicTableInstance] = useTable({{PAGINATION}
   size: 'small',
   rowKey: '{PK}',
   bordered: true,
   autoHeight: true,
-});
-const [showModal] = useFormModal();
+});{CONST_MODAL}
 const currentInstance = getCurrentInstance();
 
 useResizeObserver(document.documentElement, () => {

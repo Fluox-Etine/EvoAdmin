@@ -19,6 +19,8 @@ class TableService
             '{SEARCH}', // 搜索
             '{TOOLBAR}', // 工具栏
             '{FORM_SCHEMAS}', // 表单
+            '{IMPORT_MODAL}', // 导入表单
+            '{CONST_MODAL}', // 定义表单实例
             '{API}', // api地址
             '{NAME}', // vue组建名称
             '{PK}', // 数据库主键
@@ -43,8 +45,12 @@ class TableService
         }
         $search = !$isSearch ? PHP_EOL . '      :search="false"' : '';
         $formSchemas = '';
+        $constModal = '';
+        $importModal = '';
         if ($params['gen']['create'] || $params['gen']['update']) {
             $formSchemas = PHP_EOL . "import {formSchemas} from './formSchemas';";
+            $importModal = PHP_EOL . "import {useFormModal} from '@/hooks/useModal';";
+            $constModal = PHP_EOL . "const [showModal] = useFormModal();";
         }
         // 等待替换的内容
         $waitReplace = [
@@ -52,13 +58,15 @@ class TableService
             $search,
             $params['gen']['create'] ? self::handleToolbar($upperCameNameArray) : '',
             $formSchemas,
+            $importModal,
+            $constModal,
             lcfirst($params['upperCameName']),
             $params['upperCameName'],
             $params['PK'],
             $function,
             $params['gen']['deleted'] ? self::handleDelete($params['PK']) : '',
             self::handleAction($upperCameNameArray, $params['gen']['update'], $params['gen']['deleted']),
-            $params['paginate'] ? 'true' : 'false',
+            !$params['paginate'] ? PHP_EOL . '  paginate: false' : '',
         ];
         return GenerateService::replaceFileData($needReplace, $waitReplace, GenerateService::getTemplatePath('vue/DynamicTable/index'));
     }
@@ -93,7 +101,7 @@ class TableService
     {
         return vsprintf(
             "// 删除方法\n" .
-            "const delRowConfirm = async (record: TableListItem) => {\n" .
+            "const delRowConfirm = async (record: TableColumnItem) => {\n" .
             "  await Api.deleted({%s: record.%s});\n" .
             "  dynamicTableInstance.reload();\n" .
             "};\n",
@@ -150,7 +158,7 @@ class TableService
     hideInSearch: true,
     fixed: 'right',
     actions: ({record}) => [" . PHP_EOL;
-            $action .= $str.PHP_EOL;
+            $action .= $str . PHP_EOL;
             $action .= "    ]
   },";
             return $action;

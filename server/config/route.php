@@ -86,13 +86,14 @@ Route::group('/v1', function () {
                 // 删除分组
                 Route::post('/delete', ['app\http\admin\controller\upload\GroupController', 'delete']);
             });
-
-            /** 文件 @date 2024/08/29 20:49 */
+            /** 文件资源 @date 2024/09/07 17:26 */
             Route::group('/file', function () {
                 // 列表接口
                 Route::post('/list', ['app\http\admin\controller\upload\FileController', 'list']);
                 // 删除接口
-                Route::post('/delete', ['app\http\admin\controller\upload\FileController', 'delete']);
+                Route::post('/deleted', ['app\http\admin\controller\upload\FileController', 'deleted']);
+                // 详情接口
+                Route::post('/detail', ['app\http\admin\controller\upload\FileController', 'detail']);
             });
         });
         /** 代码生成器 **/

@@ -9,21 +9,21 @@ use support\exception\RespBusinessException;
 use app\http\admin\logic\upload\FileLogic as UploadFileLogic;
 
 /**
- * 文件控制器类
+ * 文件资源控制器类
  * Class FileController
- * @package app\http\api\controller\upload
- * @date 2024/08/29 20:47
+ * @package app\http\admin\controller\upload
+ * @date 2024/09/07 17:26
  */
 class FileController
 {
 
 
     /**
-     * 获取文件列表
+     * 获取文件资源列表
      * @param Request $request
      * @return Response
      * @throws RespBusinessException
-     * @date 2024/08/29 20:47
+     * @date 2024/09/07 17:26
      */
     public function list(Request $request): Response
     {
@@ -33,17 +33,31 @@ class FileController
     }
 
     /**
-     * 删除文件
+     * 删除文件资源
      * @param Request $request
      * @return Response
      * @throws RespBusinessException
-     * @date 2024/08/29 20:47
+     * @date 2024/09/07 17:26
      */
-    public function delete(Request $request): Response
+    public function deleted(Request $request): Response
     {
         $params = $request->post();
         $result = UploadFileLogic::handleDelete($params);
         return $result ? renderSuccess('删除成功') : renderError('删除失败');
+    }
+
+    /**
+     * 获取文件资源详情
+     * @param Request $request
+     * @return Response
+     * @throws RespBusinessException
+     * @date 2024/09/07 17:26
+     */
+    public function detail(Request $request): Response
+    {
+        $params = $request->post();
+        $result = UploadFileLogic::handleDetail($params);
+        return renderSuccess($result);
     }
 
 }
