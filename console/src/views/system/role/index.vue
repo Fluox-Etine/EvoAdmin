@@ -66,7 +66,6 @@ const openMenuModal = async (record: Partial<TableListItem>) => {
           ...values,
           menuIds: [...menusRef.halfCheckedKeys, ...menusRef.checkedKeys],
         };
-        console.log('新增/编辑角色', params);
         if (record.id) {
           await Api.roleUpdate(params);
         } else {

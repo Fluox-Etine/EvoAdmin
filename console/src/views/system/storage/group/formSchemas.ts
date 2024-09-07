@@ -7,16 +7,16 @@ export const formSchemas: FormSchema<any>[] = [
         label: '分组名称',
         rules: [{ required: true }],
         colProps: {
-            span: 12,
+            span: 24,
         },
     },
     {
         field: 'sort',
-        component: 'Input',
-        label: '排序(数字越小越靠前)',
+        component: 'InputNumber',
+        label: '排序',
         rules: [{ required: true }],
         colProps: {
-            span: 12,
+            span: 24,
         },
     },
 

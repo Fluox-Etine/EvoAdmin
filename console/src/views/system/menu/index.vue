@@ -81,7 +81,6 @@ const openMenuModal = async (record: Partial<TableListItem>) => {
     parentId: record.parentId ?? -1,
     component: record.component?.split('/'),
   });
-  console.log('record', record);
 };
 const delRowConfirm = async (record: TableListItem) => {
   await Api.menuDelete({id: record.id});

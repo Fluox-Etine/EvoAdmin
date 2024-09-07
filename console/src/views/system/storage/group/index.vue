@@ -17,8 +17,6 @@
 </template>
 
 <script lang="ts" setup>
-import {getCurrentInstance} from 'vue';
-import {useResizeObserver} from '@vueuse/core';
 import {baseColumns, type TableColumnItem} from './columns';
 import {formSchemas} from './formSchemas';
 import {useTable} from '@/components/business/dynamic-table';
@@ -30,32 +28,23 @@ defineOptions({
 });
 
 const [DynamicTable, dynamicTableInstance] = useTable({
-  pagination: true,
   size: 'small',
   rowKey: 'id',
   bordered: true,
   autoHeight: true,
 });
 const [showModal] = useFormModal();
-const currentInstance = getCurrentInstance();
 
-useResizeObserver(document.documentElement, () => {
-  const el = currentInstance?.proxy?.$el as HTMLDivElement;
-  if (el) {
-    dynamicTableInstance.setProps({
-      scroll: {x: window.innerWidth > 2000 ? el.offsetWidth - 20 : 2000},
-    });
-  }
-});
 
 // 添加和编辑方法
-const openMenuModal = async (record: Partial<TableListItem>) => {
+const openMenuModal = async (record: Partial<TableColumnItem>) => {
   const [formRef] = await showModal({
     modalProps: {
       title: `${record.id ? '编辑' : '新增'}操作`,
       width: 700,
       onFinish: async (values) => {
         if (record.id) {
+          values.id = record.id;
           await Api.update(values);
         } else {
           await Api.create(values);
@@ -65,13 +54,16 @@ const openMenuModal = async (record: Partial<TableListItem>) => {
     },
     formProps: {
       labelWidth: 100,
-      schemas: formSchemas(),
+      schemas: formSchemas,
     },
+  });
+  formRef?.setFieldsValue({
+    ...record
   });
 };
 
 // 删除方法
-const delRowConfirm = async (record: TableListItem) => {
+const delRowConfirm = async (record: TableColumnItem) => {
   await Api.deleted({id: record.id});
   dynamicTableInstance.reload();
 };
@@ -80,7 +72,7 @@ const columns: TableColumnItem[] = [
   ...baseColumns,
   {
     title: '操作',
-    width: 130,
+    width: 30,
     dataIndex: 'ACTION',
     hideInSearch: true,
     fixed: 'right',
