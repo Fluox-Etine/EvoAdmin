@@ -6,6 +6,7 @@ const openMenuModal = async (record: Partial<TableListItem>) => {
       width: 700,
       onFinish: async (values) => {
         if (record.{PK}) {
+          values.{PK} = record.{PK};
           await Api.update(values);
         } else {
           await Api.create(values);
