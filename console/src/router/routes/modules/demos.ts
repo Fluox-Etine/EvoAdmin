@@ -29,6 +29,15 @@ const routes: Array<RouteRecordRaw> = [
                     icon: 'ant-design:file-text-outlined',
                 },
                 component: () => import('@/views/demos/editor/index.vue')
+            },
+            {
+                path: 'a-map',
+                name: `${moduleName}-a-map`,
+                meta: {
+                    title: '高德地图',
+                    icon: 'ant-design:file-text-outlined',
+                },
+                component: () => import('@/views/demos/a-map/index.vue')
             }
         ]
     }

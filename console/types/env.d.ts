@@ -17,6 +17,10 @@ interface ImportMetaEnv {
     readonly VITE_VIDEO_TYPE: string;
     /** 上传的文件类型 */
     readonly VITE_FILE_TYPE: string;
+    /** 高德地图的key */
+    readonly VITE_AMAP_KEY: string;
+    /** 高德地图安全密钥 */
+    readonly VITE_AMAP_SECRET_KEY: string;
 }
 
 interface ImportMeta {

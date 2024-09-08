@@ -10,7 +10,7 @@
           v-for="(item, index) in selectedItems"
           :key="index"
           class="file-item"
-          :style="{ width: `${width}px`, height: `${width}px` }"
+          :style="{ width: `${width}px`, height: `${height}px` }"
       >
         <!-- 预览图 -->
         <a :href="domain+item" target="_blank">
@@ -22,7 +22,7 @@
     <div
         v-show="(!multiple && selectedItems.length <= 0) || (multiple && selectedItems.length < maxNum)"
         class="selector"
-        :style="{ width: `${width}px`, height: `${width}px` }"
+        :style="{ width: `${width}px`, height: `${height}px` }"
         title="点击选择图片"
         @click="handleSelectImage">
       <PlusOutlined class="icon-plus" :style="{ fontSize: `${width * 0.4}px` }"/>

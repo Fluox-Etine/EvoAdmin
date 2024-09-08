@@ -1,5 +1,5 @@
 <template>
-  <div :width="props.width" :height="props.height" :id="id" style="margin-bottom: 20px;">
+  <div :style="{ width: `${width}px`, height: `${height}px` }" :id="id">
     <img
         v-if="showImage"
         style="background-color: black; object-fit: cover"
@@ -15,6 +15,7 @@
 import {onUnmounted, ref} from "vue";
 import Player from "xgplayer";
 import "xgplayer/dist/index.min.css";
+
 defineOptions({
   name: 'XgPlayer',
 });
