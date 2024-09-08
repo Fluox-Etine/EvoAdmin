@@ -1,31 +1,33 @@
 <template>
-  <DraggableModal
-      v-model:open="visible"
-      title="上传"
-      :width="800"
-      ok-text="开始上传"
-      :ok-button-props="{ disabled: disabledUpload }"
-      @ok="onOk"
-      @cancel="onCancel"
-  >
-    <a-flex justify="space-between" align="center">
-      <a-form-item>
-        <a-alert message="切片上传单个文件必须大于5MB" type="info" show-icon/>
-      </a-form-item>
-      <a-form-item>
-        <a-upload :multiple="true" :accept="accept" :before-upload="beforeUpload" :show-upload-list="false">
-          <a-button type="primary"> 切片上传</a-button>
-        </a-upload>
-      </a-form-item>
-    </a-flex>
-    <a-table :dataSource="fileList" :columns="columns">
-      <template #bodyCell="{ column, record }">
-        <template v-if="column.dataIndex === 'ACTION'">
-          <a @click="handleRemove(record)">删除</a>
+  <div>
+    <DraggableModal
+        v-model:open="visible"
+        title="上传"
+        :width="800"
+        ok-text="开始上传"
+        :ok-button-props="{ disabled: disabledUpload }"
+        @ok="onOk"
+        @cancel="onCancel"
+    >
+      <a-flex justify="space-between" align="center">
+        <a-form-item>
+          <a-alert message="切片上传单个文件必须大于5MB" type="info" show-icon/>
+        </a-form-item>
+        <a-form-item>
+          <a-upload :multiple="true" :accept="accept" :before-upload="beforeUpload" :show-upload-list="false">
+            <a-button type="primary"> 切片上传</a-button>
+          </a-upload>
+        </a-form-item>
+      </a-flex>
+      <a-table :dataSource="fileList" :columns="columns">
+        <template #bodyCell="{ column, record }">
+          <template v-if="column.dataIndex === 'ACTION'">
+            <a @click="handleRemove(record)">删除</a>
+          </template>
         </template>
-      </template>
-    </a-table>
-  </DraggableModal>
+      </a-table>
+    </DraggableModal>
+  </div>
 </template>
 
 <script setup lang="tsx">

@@ -4,7 +4,7 @@ import App from './App.vue'
 import {setupIcons} from "@/components/core/icon";
 import {setupRouter} from './router';
 import {setupStore} from '@/store';
-import {setupAntd, setupAssets, setupGlobalMethods, setupHighlight} from '@/plugins';
+import {setupAntd, setupAssets, setupGlobalMethods, setupHighlight, setupBoot} from '@/plugins';
 
 const app = createApp(App)
 
@@ -20,6 +20,8 @@ function setupPlugins() {
     setupGlobalMethods(app);
     // 注册语法语法高亮
     setupHighlight(app)
+    // 注册富文本编辑器插件
+    setupBoot()
 }
 
 async function setupApp() {

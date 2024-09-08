@@ -1,22 +1,24 @@
 <template>
-  <a-card>
-    <div class="border border-br flex flex-col" :style="styles">
-      <toolbar
-          class="border-b border-br"
-          :editor="editorRef"
-          :defaultConfig="toolbarConfig"
-          :mode="mode"
-      />
-      <w-editor
-          class="flex-1 overflow-hidden"
-          v-model="valueHtml"
-          :defaultConfig="editorConfig"
-          :mode="mode"
-          @onCreated="handleCreated"
-      />
-      <FileModal ref="FilesModal" @handleSubmit="handleSelectSubmit"/>
-    </div>
-  </a-card>
+  <div>
+    <a-card>
+      <div class="border border-br flex flex-col" :style="styles">
+        <toolbar
+            class="border-b border-br"
+            :editor="editorRef"
+            :defaultConfig="toolbarConfig"
+            :mode="mode"
+        />
+        <w-editor
+            class="flex-1 overflow-hidden"
+            v-model="valueHtml"
+            :defaultConfig="editorConfig"
+            :mode="mode"
+            @onCreated="handleCreated"
+        />
+        <FileModal ref="FilesModal" @handleSubmit="handleSelectSubmit"/>
+      </div>
+    </a-card>
+  </div>
 </template>
 <script setup lang="ts">
 import '@wangeditor/editor/dist/css/style.css' // 引入 css
@@ -34,16 +36,24 @@ const props = withDefaults(
       mode?: 'default' | 'simple'
       height?: string | number
       width?: string | number
-      toolbarConfig?: Partial<IToolbarConfig>
     }>(),
     {
       modelValue: '',
       mode: 'default',
       height: '100%',
       width: 'auto',
-      toolbarConfig: () => ({})
     }
 )
+
+//工具栏配置
+const toolbarConfig: Partial<IToolbarConfig> = {
+  // 插入哪些菜单
+  insertKeys: {
+    index: 24, // 自定义插入的位置
+    keys: ['uploadAttachment'], // “上传附件”菜单
+  },
+
+}
 const emit = defineEmits<{
   (event: 'update:modelValue', value: string): void
 }>()
@@ -68,6 +78,12 @@ const editorConfig: Partial<IEditorConfig> = {
         FilesModal.value.openFileModal(FileTypeEnum.VIDEO, false, 10, 0);
         insertFn = insert
       }
+    },
+    uploadAttachment: {
+      customBrowseAndUpload(insert: any) {
+        FilesModal.value.openFileModal(FileTypeEnum.FILE, false, 10, 0);
+        insertFn = insert
+      }
     }
   }
 }
@@ -86,9 +102,15 @@ const valueHtml = computed({
 })
 
 
-const handleSelectSubmit = (fileUrl: string[]) => {
-  fileUrl.forEach((url) => {
-    insertFn(domain + url.file_path)
+const handleSelectSubmit = (selectItems: string[]) => {
+  selectItems.forEach((item) => {
+    if (item.file_type === FileTypeEnum.IMAGE) {
+      insertFn(domain + item.file_path, item.file_name)
+    } else if (item.file_type === FileTypeEnum.FILE) {
+      insertFn(item.file_name, domain + item.file_path)
+    } else {
+      insertFn(domain + item.file_path)
+    }
   })
 }
 
