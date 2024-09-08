@@ -1,19 +1,14 @@
 import 'core-js/actual/promise/with-resolvers';
 import {createApp} from 'vue'
-import hljsVuePlugin from '@highlightjs/vue-plugin';
-import hljs from 'highlight.js/lib/core';
-import php from 'highlight.js/lib/languages/php';
 import App from './App.vue'
 import {setupIcons} from "@/components/core/icon";
-import 'highlight.js/styles/a11y-dark.css'
 import {setupRouter} from './router';
 import {setupStore} from '@/store';
-import {setupAntd, setupAssets, setupGlobalMethods} from '@/plugins';
+import {setupAntd, setupAssets, setupGlobalMethods, setupHighlight} from '@/plugins';
 
 const app = createApp(App)
 
 
-hljs.registerLanguage('php', php)
 function setupPlugins() {
     // 安装图标
     setupIcons();
@@ -23,6 +18,8 @@ function setupPlugins() {
     setupAssets();
     // 注册全局方法，如：app.config.globalProperties.$message = message
     setupGlobalMethods(app);
+    // 注册语法语法高亮
+    setupHighlight(app)
 }
 
 async function setupApp() {
@@ -31,7 +28,7 @@ async function setupApp() {
     // 挂载路由
     await setupRouter(app);
 
-    app.use(hljsVuePlugin).mount('#app');
+    app.mount('#app');
 }
 
 setupPlugins();
