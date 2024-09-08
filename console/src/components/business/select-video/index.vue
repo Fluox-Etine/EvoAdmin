@@ -42,8 +42,8 @@
       />
       <br>
     </a-modal>
+    <FileModal ref="FilesModal" :multiple="false" @handleSubmit="handleSelectVideoSubmit"/>
   </div>
-  <FileModal ref="FilesModal" :multiple="false" @handleSubmit="handleSelectImageSubmit"/>
 </template>
 
 <script setup lang="ts">
@@ -112,7 +112,7 @@ const handleSelectImage = () => {
 }
 
 /** 文件选择器提交回调 */
-const handleSelectImageSubmit = (result) => {
+const handleSelectVideoSubmit = (result) => {
   if (result.length) {
     const fileList = result.map(item => {
       return item.file_path;

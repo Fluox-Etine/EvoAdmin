@@ -1,8 +1,8 @@
 /**
  * example
- * path -> ./modules/user
+ * path -> ./components/user
  * <a-button v-if="$auth('user.add')">Button</a-button>
- * path -> ./modules/sys/user
+ * path -> ./components/sys/user
  * <a-button v-if="$auth('sysUser.add')">Button</a-button>
  */
 

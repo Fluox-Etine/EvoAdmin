@@ -1,75 +1,77 @@
 <template>
-  <a-modal v-model:open="open" :width="985" title="文件资源库" @ok="onOk">
-    <div style="width: 85%;float: right">
-      <a-flex justify="space-between" align="center">
-        <a-input-search placeholder="请输入文件名" style="width: 40%;"/>
-        <a-space :size="15">
-          <a-button danger type="dashed" @click="handleChunkUpload"> 大文件上传</a-button>
-          <a-button type="primary" @click="handleUpload"> 普通上传</a-button>
-          <a-button type="dashed">添加分组</a-button>
-        </a-space>
-      </a-flex>
-    </div>
-    <div style="height: 650px;">
-      <br>
-      <a-tabs
-          v-model:activeKey="activeKey"
-          tab-position="left"
-          :style="{ height: '650px', width: '100%'}"
-          @change="fetchFileList"
-      >
-        <a-tab-pane v-for="group in groupList" :key="group.value" :tab="`${group.label}`">
-          <a-card class="w-full mt-4 h-600px">
-            <div class="file-list-body">
-              <!-- 文件列表 -->
-              <ul v-if="fileList && fileList.length" class="file-list-ul clearfix">
-                <li
-                    class="file-item"
-                    :class="{ active: selectedItems.indexOf(item) > -1 }"
-                    v-for="(item, index) in fileList"
-                    :key="index"
-                    @click="onSelectItem(item)"
-                >
-                  <div
-                      v-if="item.file_type === FileTypeEnum.IMAGE"
-                      class="img-cover"
-                      :style="{ backgroundImage: `url('${domain+item.file_path}')`, width: '95px' }"
-                  ></div>
-                  <div
-                      v-if="item.file_type !== FileTypeEnum.IMAGE"
-                      class="img-cover"
-                      :style="handleBackgroundStyle(item)"
-                  ></div>
-                  <div class="file-name oneline-hide">{{ item.file_name }}</div>
-                  <div class="select-mask">
-                    <CheckOutlined class="selected-icon" type="check"/>
-                  </div>
-                </li>
-              </ul>
-              <!-- 无数据时显示 -->
-              <a-empty v-else-if="!isLoading"/>
-              <!-- 底部操作栏 -->
-              <div class="footer-operate clearfix">
+  <div>
+    <a-modal v-model:open="open" :width="985" :title="title" @ok="onOk" @cancel="handleCancel">
+      <div style="width: 85%;float: right">
+        <a-flex justify="space-between" align="center">
+          <a-input-search placeholder="请输入文件名" style="width: 40%;"/>
+          <a-space :size="15">
+            <a-button danger type="dashed" @click="handleChunkUpload"> 大文件上传</a-button>
+            <a-button type="primary" @click="handleUpload"> 普通上传</a-button>
+            <a-button type="dashed">添加分组</a-button>
+          </a-space>
+        </a-flex>
+      </div>
+      <div style="height: 650px;">
+        <br>
+        <a-tabs
+            v-model:activeKey="activeKey"
+            tab-position="left"
+            :style="{ height: '650px', width: '100%'}"
+            @change="fetchFileList"
+        >
+          <a-tab-pane v-for="group in groupList" :key="group.value" :tab="`${group.label}`">
+            <a-card class="w-full mt-4 h-600px">
+              <div class="file-list-body">
+                <!-- 文件列表 -->
+                <ul v-if="fileList && fileList.length" class="file-list-ul clearfix">
+                  <li
+                      class="file-item"
+                      :class="{ active: selectedItems.indexOf(item) > -1 }"
+                      v-for="(item, index) in fileList"
+                      :key="index"
+                      @click="onSelectItem(item)"
+                  >
+                    <div
+                        v-if="item.file_type === FileTypeEnum.IMAGE"
+                        class="img-cover"
+                        :style="{ backgroundImage: `url('${domain+item.file_path}')`, width: '95px' }"
+                    ></div>
+                    <div
+                        v-if="item.file_type !== FileTypeEnum.IMAGE"
+                        class="img-cover"
+                        :style="handleBackgroundStyle(item)"
+                    ></div>
+                    <div class="file-name oneline-hide">{{ item.file_name }}</div>
+                    <div class="select-mask">
+                      <CheckOutlined class="selected-icon" type="check"/>
+                    </div>
+                  </li>
+                </ul>
+                <!-- 无数据时显示 -->
+                <a-empty v-else-if="!isLoading"/>
+                <!-- 底部操作栏 -->
+                <div class="footer-operate clearfix">
+                </div>
               </div>
-            </div>
-          </a-card>
-        </a-tab-pane>
-      </a-tabs>
-      <UploadModal ref="UploadModalRef" @upload-success="handleUploadSuccess"/>
-      <ChunkModal ref="ChunkModalRef" @upload-success="handleUploadSuccess"/>
-    </div>
-  </a-modal>
+            </a-card>
+          </a-tab-pane>
+        </a-tabs>
+        <UploadModal ref="UploadModalRef" @upload-success="handleUploadSuccess"/>
+        <ChunkModal ref="ChunkModalRef" @upload-success="handleUploadSuccess"/>
+      </div>
+    </a-modal>
+  </div>
 </template>
 
 <script setup lang="ts">
 import {ref} from "vue";
 import * as GroupApi from '@/api/backend/uploadGroup.ts'
-import * as FileApi from '@/api/backend/file.ts'
+import * as FileApi from '@/api/backend/uploadFile.ts'
 import {FileTypeEnum} from "@/enums/fileTypeEnum.ts";
 import {CheckOutlined} from "@ant-design/icons-vue";
 import {message as $message} from "ant-design-vue/es/components";
 
-const emit = defineEmits(['handleSubmit']);
+const emit = defineEmits(['handleSubmit', 'handleCancel']);
 const domain = import.meta.env.VITE_DOMAIN_URL;
 const open = ref<boolean>(false);
 const UploadModalRef = ref();
@@ -81,6 +83,7 @@ const maxNum = ref<number>(1)
 const selectedNum = ref<number>(0)
 const isLoading = ref(false)
 const selectedItems = ref<any>([])
+const title = ref<string>('文件资源库')
 const pagination = ref({
   currentPage: 1,
   itemCount: 0
@@ -90,6 +93,13 @@ const groupList = ref([])
 
 /** 打开文件资源库弹窗 */
 const openFileModal = (type: FileTypeEnum, isMultiple: boolean, max: number, selected: number) => {
+  if (type === FileTypeEnum.IMAGE) {
+    title.value = '文件资源库（图片）'
+  } else if (type === FileTypeEnum.VIDEO) {
+    title.value = '文件资源库（视频）'
+  } else {
+    title.value = '文件资源库（文件）'
+  }
   selectedItems.value = []
   fileType.value = type
   multiple.value = isMultiple
@@ -167,6 +177,10 @@ const handleBackgroundStyle = (item) => {
 const onOk = () => {
   emit('handleSubmit', selectedItems.value)
   open.value = false
+}
+
+const handleCancel = () => {
+  emit('handleCancel')
 }
 
 // 暴露方法

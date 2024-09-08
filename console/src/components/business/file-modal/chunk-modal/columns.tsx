@@ -1,5 +1,7 @@
 import {Tag, Image, Progress} from 'ant-design-vue';
 import type {TableColumn} from '@/components/core/dynamic-table';
+import {formatSizeUnits} from "@/utils";
+import {FileTypeEnum} from "@/enums/fileTypeEnum.ts";
 
 export type FileItem = {
     file: File;
@@ -9,6 +11,7 @@ export type FileItem = {
     status: string;
     thumbUrl: string;
     percent: number;
+    type: number
 };
 
 export enum UploadResultStatus {
@@ -25,8 +28,12 @@ export const fileListColumns: TableColumn<FileItem>[] = [
         title: '缩略图',
         width: 100,
         customRender: ({record}) => {
-            const {thumbUrl} = record;
-            return thumbUrl && <Image src={thumbUrl}/>;
+            if (record.type === FileTypeEnum.IMAGE) {
+                const {thumbUrl} = record;
+                return thumbUrl && <Image src={thumbUrl}/>;
+            } else {
+                return '不支持预览'
+            }
         },
     },
     {
@@ -58,7 +65,7 @@ export const fileListColumns: TableColumn<FileItem>[] = [
         title: '文件大小',
         width: 100,
         customRender: ({text = 0}) => {
-            return text && `${(text / 1024).toFixed(2)}KB`;
+            return formatSizeUnits(text);
         },
     },
     {

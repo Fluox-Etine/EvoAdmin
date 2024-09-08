@@ -15,7 +15,9 @@
 import {onUnmounted, ref} from "vue";
 import Player from "xgplayer";
 import "xgplayer/dist/index.min.css";
-
+defineOptions({
+  name: 'XgPlayer',
+});
 const props = defineProps({
   id: {
     type: String,
@@ -60,6 +62,14 @@ onUnmounted(() => {
   }
 });
 
+// 销毁播放器实例
+const destroyPlayer = () => {
+  console.log("销毁播放器实例")
+  if (player) {
+    player.destroy();
+  }
+};
+
 // 初始化西瓜视频
 const initPlayer = () => {
   player = new Player({
@@ -67,7 +77,7 @@ const initPlayer = () => {
     volume: 0.5,
     id: props.id,
     url: props.videoUrl,
-    poster: props.poster,
+    // poster: props.poster,
     playsinline: props.playsinline,
     height: props.height,
     width: props.width,
@@ -89,4 +99,7 @@ const initPlayer = () => {
   });
   player.play();
 };
+
+defineExpose({destroyPlayer});
+
 </script>

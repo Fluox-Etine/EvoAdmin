@@ -31,7 +31,7 @@
       <PlusOutlined class="icon-plus" :style="{ fontSize: `${width * 0.4}px` }"/>
     </div>
   </div>
-  <FileModal ref="FilesModal" :multiple="false" @handleSubmit="handleSelectImageSubmit"/>
+  <FileModal ref="FilesModal" :multiple="false" @handleSubmit="handleSelectFileSubmit"/>
 </template>
 
 <script setup lang="ts">
@@ -98,7 +98,7 @@ const handleSelectImage = () => {
 }
 
 /** 文件选择器提交回调 */
-const handleSelectImageSubmit = (result) => {
+const handleSelectFileSubmit = (result) => {
   if (result.length) {
     const fileList = result.map(item => {
       return item.file_path;

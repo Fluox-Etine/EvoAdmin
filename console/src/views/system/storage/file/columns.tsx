@@ -4,11 +4,12 @@ import {Image, Tag} from 'ant-design-vue';
 import {FileTypeEnum} from "@/enums/fileTypeEnum.ts";
 import * as GroupApi from '@/api/backend/uploadGroup.ts'
 import {ref} from "vue";
+import {formatSizeUnits} from "@/utils";
 
 export const domain = import.meta.env.VITE_DOMAIN_URL;
 
-export const getFileTypeColor = (status) => {
-    switch (status) {
+export const getFileTypeColor = (type) => {
+    switch (type) {
         case 10:
             return '#b63535';
         case 20:
@@ -17,8 +18,8 @@ export const getFileTypeColor = (status) => {
             return '#faad14';
     }
 };
-export const getFileTypeInfo = (status) => {
-    switch (status) {
+export const getFileTypeInfo = (type) => {
+    switch (type) {
         case 10:
             return '图片';
         case 20:
@@ -27,16 +28,17 @@ export const getFileTypeInfo = (status) => {
             return '文件';
     }
 };
-const group = ref([]);
-GroupApi.selectGroupList().then(res => {
-    group.value = res
-})
-const getGroupName = (id) => {
+const group = ref<any>([]);
+
+
+export const getGroupName = (id) => {
     // 使用 findIndex 而不是 find，因为 find 返回的是第一个匹配项，而 findIndex 返回的是索引
     const index = group.value.findIndex(item => item.value === id);
     // 如果找到了对应的项，则返回标签名，否则返回 undefined
-    return index !== -1 ? group.value[index].label : undefined;
+    return index !== -1 ? group.value[index].label : '全部分组';
 }
+
+
 export type TableColumnItem = TableColumn<any>;
 export const baseColumns: TableColumnItem[] = [
     {
@@ -52,9 +54,9 @@ export const baseColumns: TableColumnItem[] = [
         width: 150
     },
     {
-        title: '图片预览',
+        title: '资源预览',
         dataIndex: 'file_path',
-        hideInSearch: false,
+        hideInSearch: true,
         width: 150,
         customRender({record}) {
             if (record.file_type === FileTypeEnum.IMAGE) {
@@ -63,6 +65,12 @@ export const baseColumns: TableColumnItem[] = [
                 return '不支持预览'
             }
         },
+    },
+    {
+        title: '文件后缀',
+        dataIndex: 'file_ext',
+        hideInSearch: true,
+        width: 60,
     },
     {
         title: '上传来源',
@@ -92,8 +100,18 @@ export const baseColumns: TableColumnItem[] = [
     {
         title: '文件分组',
         dataIndex: 'group_id',
-        hideInSearch: true,
+        hideInSearch: false,
         width: 150,
+        formItemProps: {
+            component: 'Select',
+            componentProps: {
+                request: async () => {
+                    const data = await GroupApi.selectGroupList()
+                    group.value = data
+                    return data
+                }
+            },
+        },
         customRender: ({record}) => {
             return <Tag color="cyan">{getGroupName(record.group_id)}</Tag>
         },
@@ -104,13 +122,13 @@ export const baseColumns: TableColumnItem[] = [
         hideInSearch: true,
         width: 100,
         customRender: ({text = 0}) => {
-            return text && `${(text / 1024).toFixed(2)}KB`;
+            return formatSizeUnits(text);
         },
     },
     {
         title: '文件类型',
         dataIndex: 'file_type',
-        hideInSearch: true,
+        hideInSearch: false,
         width: 100,
         formItemProps: {
             component: 'Select',
@@ -142,7 +160,7 @@ export const baseColumns: TableColumnItem[] = [
         width: 80,
     },
     {
-        title: '创建时间',
+        title: '上传时间',
         dataIndex: 'created_at',
         hideInSearch: true,
         width: 150,

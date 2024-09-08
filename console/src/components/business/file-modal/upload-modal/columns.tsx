@@ -1,5 +1,6 @@
 import {Tag, Image, Progress} from 'ant-design-vue';
 import type {TableColumn} from '@/components/core/dynamic-table';
+import {FileTypeEnum} from "@/enums/fileTypeEnum.ts";
 
 export type FileItem = {
     file: File;
@@ -23,8 +24,12 @@ export const fileListColumns: TableColumn<FileItem>[] = [
         title: '缩略图',
         width: 100,
         customRender: ({record}) => {
-            const {thumbUrl} = record;
-            return thumbUrl && <Image src={thumbUrl}/>;
+            if (record.type === FileTypeEnum.IMAGE) {
+                const {thumbUrl} = record;
+                return thumbUrl && <Image src={thumbUrl}/>;
+            } else {
+                return '不支持预览'
+            }
         },
     },
     {

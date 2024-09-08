@@ -176,6 +176,10 @@ const beforeUpload: UploadProps['beforeUpload'] = async (file) => {
   if (file.size / 1024 / 1024 < 5) {
     message.error('当前文件小于5MB，请使用普通上传');
   } else {
+    let thumbUrl = ''
+    if (fileType.value._value === FileTypeEnum.IMAGE) {
+      thumbUrl = await fileToBase64(file);
+    }
     const item: FileItem = {
       file,
       uid: file.uid,
@@ -183,7 +187,8 @@ const beforeUpload: UploadProps['beforeUpload'] = async (file) => {
       size: file.size,
       status: '',
       percent: 0,
-      thumbUrl: await fileToBase64(file),
+      thumbUrl: thumbUrl,
+      type: fileType.value._value
     };
     fileList.value.push(item);
   }

@@ -346,8 +346,8 @@ import {h, reactive, ref, type UnwrapRef} from 'vue';
 import {CodeOutlined} from '@ant-design/icons-vue';
 import * as Api from '@/api/backend/gen'
 import {message as $message} from "ant-design-vue/es/components";
-import CodeView from "./modules/codeView.vue";
-import TableSheet from "./modules/tableSheet.vue";
+import CodeView from "@/views/develop/generate/components/code-view.vue";
+import TableSheet from "@/views/develop/generate/components/table-sheet.vue";
 
 const tabBaseList = [
   {
