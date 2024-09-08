@@ -322,6 +322,21 @@ function formattedRequest(array $fields): array
     foreach ($fields as $field) {
         $requestData[$field] = request()->input($field, null);
     }
-
     return $requestData;
+}
+
+/**
+ * 删除文件
+ * @param string $filePath
+ * @return void
+ */
+function deleteFile(string $filePath): void
+{
+    // 判断是不是以 uploads 开头。只能删除 uploads 目录下的文件
+    if (str_starts_with($filePath, '/uploads')) {
+        if (file_exists(public_path() . $filePath)) {
+            unlink(public_path() . $filePath);
+        }
+    }
+
 }

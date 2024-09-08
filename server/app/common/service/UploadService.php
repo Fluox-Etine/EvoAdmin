@@ -108,6 +108,7 @@ class UploadService
                 }
             }
             rmdir($chunksDir);
+            rmdir(public_path() . config('env.upload.chunk_dir') . $hash);
         }
         // 判断文件是否存在
         if (file_exists($filePath)) {
