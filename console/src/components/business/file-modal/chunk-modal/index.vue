@@ -140,8 +140,8 @@ async function chunkUploadFile(file, name, onUploadProgress) {
       await Api.chunkMerge({
         hash: hash,
         fileName: name,
-        type: fileType.value._value,
-        group: groupId.value._value
+        type: fileType.value,
+        group: groupId.value
       });
       onUploadProgress({status: UploadResultStatus.SUCCESS, percent: 100});
     } catch (error) {
@@ -188,7 +188,7 @@ const beforeUpload: UploadProps['beforeUpload'] = async (file) => {
     message.error('当前文件小于5MB，请使用普通上传');
   } else {
     let thumbUrl = ''
-    if (fileType.value._value === FileTypeEnum.IMAGE) {
+    if (fileType.value === FileTypeEnum.IMAGE) {
       thumbUrl = await fileToBase64(file);
     }
     const item: FileItem = {
@@ -199,7 +199,7 @@ const beforeUpload: UploadProps['beforeUpload'] = async (file) => {
       status: '',
       percent: 0,
       thumbUrl: thumbUrl,
-      type: fileType.value._value
+      type: fileType.value
     };
     fileList.value.push(item);
   }
@@ -222,9 +222,9 @@ const columns: TableColumn<FileItem>[] = [
 ];
 
 const openChunkUploadModal = (type: FileTypeEnum, group: number) => {
-  if (type._value === FileTypeEnum.IMAGE) {
+  if (type === FileTypeEnum.IMAGE) {
     accept.value = import.meta.env.VITE_IMAGE_TYPE;
-  } else if (type._value === FileTypeEnum.VIDEO) {
+  } else if (type === FileTypeEnum.VIDEO) {
     accept.value = import.meta.env.VITE_VIDEO_TYPE;
   } else {
     accept.value = import.meta.env.VITE_FILE_TYPE;

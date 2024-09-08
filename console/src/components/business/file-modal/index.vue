@@ -1,9 +1,10 @@
 <template>
   <div>
-    <a-modal v-model:open="open" :width="985" :title="title" @ok="onOk" @cancel="handleCancel">
+    <a-modal v-model:open="open" :width="985" :title="state.title" @ok="onOk" @cancel="handleCancel">
       <div style="width: 85%;float: right">
         <a-flex justify="space-between" align="center">
-          <a-input-search placeholder="请输入文件名" style="width: 40%;"/>
+          <a-input-search v-model:value="state.file_name" placeholder="请输入文件名" style="width: 40%;"
+                          @search="fetchFileList"/>
           <a-space :size="15">
             <a-button danger type="dashed" @click="handleChunkUpload"> 大文件上传</a-button>
             <a-button type="primary" @click="handleUpload"> 普通上传</a-button>
@@ -13,7 +14,7 @@
       <div style="height: 650px;">
         <br>
         <a-tabs
-            v-model:activeKey="activeKey"
+            v-model:activeKey="state.activeKey"
             tab-position="left"
             :style="{ height: '650px', width: '100%'}"
             @change="fetchFileList"
@@ -25,7 +26,7 @@
                 <ul v-if="fileList && fileList.length" class="file-list-ul clearfix">
                   <li
                       class="file-item"
-                      :class="{ active: selectedItems.indexOf(item) > -1 }"
+                      :class="{ active: state.selectedItems.indexOf(item) > -1 }"
                       v-for="(item, index) in fileList"
                       :key="index"
                       @click="onSelectItem(item)"
@@ -47,7 +48,7 @@
                   </li>
                 </ul>
                 <!-- 无数据时显示 -->
-                <a-empty v-else-if="!isLoading"/>
+                <a-empty v-else-if="!state.isLoading"/>
                 <!-- 底部操作栏 -->
                 <div class="footer-operate clearfix">
                 </div>
@@ -63,7 +64,7 @@
 </template>
 
 <script setup lang="ts">
-import {ref} from "vue";
+import {reactive, ref} from "vue";
 import * as GroupApi from '@/api/backend/uploadGroup.ts'
 import * as FileApi from '@/api/backend/uploadFile.ts'
 import {FileTypeEnum} from "@/enums/fileTypeEnum.ts";
@@ -75,14 +76,16 @@ const domain = import.meta.env.VITE_DOMAIN_URL;
 const open = ref<boolean>(false);
 const UploadModalRef = ref();
 const ChunkModalRef = ref();
-const activeKey = ref(0);
-const fileType = ref<FileTypeEnum>(10);
-const multiple = ref<number>(false)
-const maxNum = ref<number>(1)
-const selectedNum = ref<number>(0)
-const isLoading = ref(false)
-const selectedItems = ref<any>([])
-const title = ref<string>('文件资源库')
+const state = reactive({
+  activeKey: 0,
+  file_name: '',
+  fileType: FileTypeEnum.IMAGE,
+  multiple: false,
+  maxNum: 1,
+  isLoading: false,
+  title: '文件资源库',
+  selectedItems: []
+})
 const pagination = ref({
   currentPage: 1,
   itemCount: 0
@@ -93,17 +96,17 @@ const groupList = ref([])
 /** 打开文件资源库弹窗 */
 const openFileModal = (type: FileTypeEnum, isMultiple: boolean, max: number, selected: number) => {
   if (type === FileTypeEnum.IMAGE) {
-    title.value = '文件资源库（图片）'
+    state.title = '文件资源库（图片）'
   } else if (type === FileTypeEnum.VIDEO) {
-    title.value = '文件资源库（视频）'
+    state.title = '文件资源库（视频）'
   } else {
-    title.value = '文件资源库（文件）'
+    state.title = '文件资源库（文件）'
   }
-  selectedItems.value = []
-  fileType.value = type
-  multiple.value = isMultiple
-  maxNum.value = max
-  selectedNum.value = selected
+  state.selectedItems = []
+  state.fileType = type
+  state.multiple = isMultiple
+  state.maxNum = max
+  state.selectedNum = selected
   fetchFileList()
   fetchGroupList()
   open.value = true
@@ -111,12 +114,12 @@ const openFileModal = (type: FileTypeEnum, isMultiple: boolean, max: number, sel
 
 /** 打开上传文件弹窗 */
 const handleUpload = () => {
-  UploadModalRef.value.openUploadModal(fileType, activeKey)
+  UploadModalRef.value.openUploadModal(state.fileType, state.activeKey)
 }
 
 /** 打开大文件上传弹窗 */
 const handleChunkUpload = () => {
-  ChunkModalRef.value.openChunkUploadModal(fileType, activeKey)
+  ChunkModalRef.value.openChunkUploadModal(state.fileType, state.activeKey)
 }
 
 /** 获取分组列表 */
@@ -126,11 +129,16 @@ const fetchGroupList = async () => {
 
 /** 获取当前类型的文件列表 */
 const fetchFileList = async () => {
-  isLoading.value = true
-  const {meta, items} = await FileApi.list({page: 1, file_type: fileType.value, group_id: activeKey.value})
+  state.isLoading = true
+  const {meta, items} = await FileApi.list({
+    page: 1,
+    file_type: state.fileType,
+    group_id: state.activeKey,
+    file_name: state.file_name
+  })
   pagination.value = meta
   fileList.value = items
-  isLoading.value = false
+  state.isLoading = false
 }
 
 /** 上传成功回调 */
@@ -143,20 +151,20 @@ const handleUploadSuccess = () => {
 const onSelectItem = function (item) {
   // 记录选中状态
   if (!multiple.value) {
-    selectedItems.value = [item]
+    state.selectedItems = [item]
     return
   }
   const key = selectedItems.value.indexOf(item)
   const selected = key > -1
   // 验证数量限制
-  if (!selected && (selectedItems.value.length + selectedNum.value) >= maxNum.value) {
+  if (!selected && (state.selectedItems.length + state.selectedNum) >= state.maxNum) {
     $message.warning(`最多可选${maxNum.value}个文件`, 1)
     return
   }
   if (!selected) {
-    selectedItems.value.push(item)
+    state.selectedItems.push(item)
   } else {
-    selectedItems.value.splice(key, 1)
+    state.selectedItems.splice(key, 1)
   }
 }
 
@@ -174,14 +182,13 @@ const handleBackgroundStyle = (item) => {
   };
 }
 const onOk = () => {
-  emit('handleSubmit', selectedItems.value)
+  emit('handleSubmit', state.selectedItems)
   open.value = false
 }
 
 const handleCancel = () => {
   emit('handleCancel')
 }
-
 // 暴露方法
 defineExpose({
   openFileModal

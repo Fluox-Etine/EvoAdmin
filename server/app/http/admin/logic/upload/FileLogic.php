@@ -97,6 +97,14 @@ class FileLogic
     public static function handleDelete(array $params): bool
     {
         try {
+            if (is_array($params['id'])) {
+                // 批量删除
+                $filePathList = UploadFileModel::query()->whereIn('id', $params['id'])->pluck('file_path');
+                foreach ($filePathList as $filePath) {
+                    deleteFile($filePath);
+                }
+                return UploadFileModel::query()->whereIn('id', $params['id'])->delete() != false;
+            }
             // 查询文件路径地址
             $filePath = UploadFileModel::query()->where('id', $params['id'])->value('file_path');
             // 删除文件

@@ -90,8 +90,8 @@ const onOk = async () => {
       await Api.uploadUpload({
         file: item.file,
         fileName: item.name,
-        type: fileType.value._value,
-        group: groupId.value._value
+        type: fileType.value,
+        group: groupId.value
       }, undefined, {
         onUploadProgress(progressEvent) {
           item.percent = ((progressEvent.loaded / progressEvent.total!) * 100) | 0;
@@ -114,7 +114,7 @@ const beforeUpload: UploadProps['beforeUpload'] = async (file) => {
     message.error('单个文件不超过5MB');
   } else {
     let thumbUrl = ''
-    if (fileType.value._value === FileTypeEnum.IMAGE) {
+    if (fileType.value === FileTypeEnum.IMAGE) {
       thumbUrl = await fileToBase64(file);
     }
     const item: FileItem = {
@@ -125,7 +125,7 @@ const beforeUpload: UploadProps['beforeUpload'] = async (file) => {
       status: '',
       percent: 0,
       thumbUrl: thumbUrl,
-      type: fileType.value._value
+      type: fileType.value
     };
     fileList.value.push(item);
   }
@@ -134,7 +134,6 @@ const beforeUpload: UploadProps['beforeUpload'] = async (file) => {
 };
 
 const handleRemove = (record: FileItem) => {
-  console.log('handleRemove', record)
   fileList.value = fileList.value.filter((n) => n.uid !== record.uid);
 };
 
@@ -148,9 +147,9 @@ const columns: TableColumn<FileItem>[] = [
 ];
 
 const openUploadModal = (type: FileTypeEnum, group: number) => {
-  if (type._value === FileTypeEnum.IMAGE) {
+  if (type === FileTypeEnum.IMAGE) {
     accept.value = import.meta.env.VITE_IMAGE_TYPE;
-  } else if (type._value === FileTypeEnum.VIDEO) {
+  } else if (type === FileTypeEnum.VIDEO) {
     accept.value = import.meta.env.VITE_VIDEO_TYPE;
   } else {
     accept.value = import.meta.env.VITE_FILE_TYPE;

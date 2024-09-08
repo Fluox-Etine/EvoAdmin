@@ -8,8 +8,25 @@
         :columns="columns"
         bordered
         size="small"
+        :row-selection="rowSelection"
     >
+      <template v-if="isCheckRows" #title>
+        <Alert class="w-full" type="info" show-icon>
+          <template #message>
+            已选 {{ isCheckRows }} 项
+            <a-button type="link" @click="rowSelection.selectedRowKeys = []">取消选择</a-button>
+          </template>
+        </Alert>
+      </template>
       <template #toolbar>
+        <a-button
+            type="error"
+            :disabled="!isCheckRows || !$auth('upload:file:delete')"
+            @click="delRowConfirm(rowSelection.selectedRowKeys)"
+        >
+          <Icon icon="ant-design:delete-outlined"/>
+          批量删除
+        </a-button>
         <a-button type="dashed" danger @click="handleUpload(10)">
           上传图片
         </a-button>
@@ -27,7 +44,8 @@
 </template>
 
 <script lang="ts" setup>
-import {getCurrentInstance, ref} from 'vue';
+import {Alert} from 'ant-design-vue';
+import {computed, getCurrentInstance, ref} from 'vue';
 import {useResizeObserver} from '@vueuse/core';
 import {baseColumns, type TableColumnItem} from './columns';
 import {useTable} from '@/components/business/dynamic-table';
@@ -57,6 +75,15 @@ useResizeObserver(document.documentElement, () => {
   }
 });
 
+const rowSelection = ref({
+  selectedRowKeys: [] as number[],
+  onChange: (selectedRowKeys: number[]) => {
+    rowSelection.value.selectedRowKeys = selectedRowKeys;
+  },
+});
+
+// 是否勾选了表格行
+const isCheckRows = computed(() => rowSelection.value.selectedRowKeys.length);
 const handleClickFileItem = (record: TableColumnItem) => {
   previewDrawerRef.value?.open(record.id)
 };
@@ -69,8 +96,8 @@ const handleCancel = () => {
   dynamicTableInstance?.reload();
 }
 // 删除方法
-const delRowConfirm = async (record: TableColumnItem) => {
-  await Api.deleted({id: record.id});
+const delRowConfirm = async (id: number | number[]) => {
+  await Api.deleted({id});
   dynamicTableInstance.reload();
 };
 
@@ -100,7 +127,7 @@ const columns: TableColumnItem[] = [
         popConfirm: {
           title: '你确定要删除（服务器资源文件）吗？',
           placement: 'left',
-          onConfirm: () => delRowConfirm(record),
+          onConfirm: () => delRowConfirm(record.id),
         },
       },
     ]
