@@ -75,13 +75,13 @@ const editorConfig: Partial<IEditorConfig> = {
     },
     uploadVideo: {
       customBrowseAndUpload(insert: any) {
-        FilesModal.value.openFileModal(FileTypeEnum.VIDEO, false, 10, 0);
+        FilesModal.value.openFileModal(FileTypeEnum.VIDEO, false, 1, 0);
         insertFn = insert
       }
     },
     uploadAttachment: {
       customBrowseAndUpload(insert: any) {
-        FilesModal.value.openFileModal(FileTypeEnum.FILE, false, 10, 0);
+        FilesModal.value.openFileModal(FileTypeEnum.FILE, false, 1, 0);
         insertFn = insert
       }
     }
