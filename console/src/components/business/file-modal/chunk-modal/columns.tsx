@@ -1,5 +1,5 @@
 import {Tag, Image, Progress} from 'ant-design-vue';
-import type {TableColumn} from '@/components/core/dynamic-table';
+import type {TableColumn} from '@/components/business/dynamic-table';
 import {formatSizeUnits} from "@/utils";
 import {FileTypeEnum} from "@/enums/fileTypeEnum.ts";
 

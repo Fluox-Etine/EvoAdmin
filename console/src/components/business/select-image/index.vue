@@ -27,8 +27,8 @@
         @click="handleSelectImage">
       <PlusOutlined class="icon-plus" :style="{ fontSize: `${width * 0.4}px` }"/>
     </div>
+    <FileModal ref="FilesModal" @handleSubmit="handleSelectImageSubmit"/>
   </div>
-  <FileModal ref="FilesModal" :multiple="false" @handleSubmit="handleSelectImageSubmit"/>
 </template>
 
 <script setup lang="ts">

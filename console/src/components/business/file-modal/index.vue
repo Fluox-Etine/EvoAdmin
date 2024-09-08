@@ -7,7 +7,6 @@
           <a-space :size="15">
             <a-button danger type="dashed" @click="handleChunkUpload"> 大文件上传</a-button>
             <a-button type="primary" @click="handleUpload"> 普通上传</a-button>
-            <a-button type="dashed">添加分组</a-button>
           </a-space>
         </a-flex>
       </div>

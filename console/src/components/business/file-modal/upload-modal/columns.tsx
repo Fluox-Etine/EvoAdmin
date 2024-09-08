@@ -1,5 +1,5 @@
 import {Tag, Image, Progress} from 'ant-design-vue';
-import type {TableColumn} from '@/components/core/dynamic-table';
+import type {TableColumn} from '@/components/business/dynamic-table';
 import {FileTypeEnum} from "@/enums/fileTypeEnum.ts";
 
 export type FileItem = {
@@ -10,6 +10,7 @@ export type FileItem = {
     status: string;
     thumbUrl: string;
     percent: number;
+    type: number
 };
 
 export enum UploadResultStatus {

@@ -9,12 +9,22 @@
       @cancel="onCancel"
   >
     <a-flex justify="space-between" align="center">
-      <a-alert message="切片上传单个文件必须大于5MB" type="info" show-icon/>
-      <a-upload :multiple="true" :accept="accept" :before-upload="beforeUpload" :show-upload-list="false">
-        <a-button type="primary"> 切片上传</a-button>
-      </a-upload>
+      <a-form-item>
+        <a-alert message="切片上传单个文件必须大于5MB" type="info" show-icon/>
+      </a-form-item>
+      <a-form-item>
+        <a-upload :multiple="true" :accept="accept" :before-upload="beforeUpload" :show-upload-list="false">
+          <a-button type="primary"> 切片上传</a-button>
+        </a-upload>
+      </a-form-item>
     </a-flex>
-    <DynamicTable :search="false" :data-source="fileList" :columns="columns"/>
+    <a-table :dataSource="fileList" :columns="columns">
+      <template #bodyCell="{ column, record }">
+        <template v-if="column.dataIndex === 'ACTION'">
+          <a @click="handleRemove(record)">删除</a>
+        </template>
+      </template>
+    </a-table>
   </DraggableModal>
 </template>
 
@@ -24,13 +34,12 @@ import {computed, ref} from 'vue';
 import {message, type UploadProps} from 'ant-design-vue';
 import {type FileItem, fileListColumns, UploadResultStatus} from './columns.tsx';
 import {DraggableModal} from '@/components/business/draggable-modal/index.ts';
-import {type TableColumn, useTable} from '@/components/business/dynamic-table';
+import {type TableColumn} from '@/components/business/dynamic-table';
 import {FileTypeEnum} from "@/enums/fileTypeEnum.ts";
 import * as Api from '@/api/backend/upload.ts';
 
 const emit = defineEmits(['uploadSuccess']);
 
-const [DynamicTable] = useTable();
 const chunkSize = import.meta.env.VITE_CHUNK_SIZE * 1024 * 1024;
 const visible = ref(false);
 const fileList = ref<FileItem[]>([]);
@@ -207,14 +216,6 @@ const columns: TableColumn<FileItem>[] = [
     width: 120,
     title: '操作',
     dataIndex: 'ACTION',
-    fixed: false,
-    actions: ({record}) => [
-      {
-        label: '删除',
-        color: 'red',
-        onClick: () => handleRemove(record),
-      },
-    ],
   },
 ];
 

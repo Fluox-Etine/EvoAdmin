@@ -1,21 +1,33 @@
 <template>
-  <DraggableModal
-      v-model:open="visible"
-      title="上传"
-      :width="800"
-      ok-text="开始上传"
-      :ok-button-props="{ disabled: disabledUpload }"
-      @ok="onOk"
-      @cancel="onCancel"
-  >
-    <a-flex justify="space-between" align="center">
-      <a-alert message="普通上传单个文件不超过5MB" type="info" show-icon/>
-      <a-upload :multiple="true" :accept="accept" :before-upload="beforeUpload" :show-upload-list="false">
-        <a-button type="primary"> 立即上传</a-button>
-      </a-upload>
-    </a-flex>
-    <DynamicTable :search="false" :data-source="fileList" :columns="columns"/>
-  </DraggableModal>
+  <div>
+    <DraggableModal
+        v-model:open="visible"
+        title="上传"
+        :width="800"
+        ok-text="开始上传"
+        :ok-button-props="{ disabled: disabledUpload }"
+        @ok="onOk"
+        @cancel="onCancel"
+    >
+      <a-flex justify="space-between" align="center">
+        <a-form-item-rest>
+          <a-alert message="普通上传单个文件不超过5MB" type="info" show-icon/>
+        </a-form-item-rest>
+        <a-form-item-rest>
+          <a-upload :multiple="true" :accept="accept" :before-upload="beforeUpload" :show-upload-list="false">
+            <a-button type="primary"> 立即上传</a-button>
+          </a-upload>
+        </a-form-item-rest>
+      </a-flex>
+      <a-table :dataSource="fileList" :columns="columns">
+        <template #bodyCell="{ column, record }">
+          <template v-if="column.dataIndex === 'ACTION'">
+            <a @click="handleRemove(record)">删除</a>
+          </template>
+        </template>
+      </a-table>
+    </DraggableModal>
+  </div>
 </template>
 
 <script setup lang="tsx">
@@ -23,13 +35,15 @@ import {computed, ref} from 'vue';
 import {message, type UploadProps} from 'ant-design-vue';
 import {type FileItem, fileListColumns, UploadResultStatus} from './columns.tsx';
 import {DraggableModal} from '@/components/business/draggable-modal/index.ts';
-import {type TableColumn, useTable} from '@/components/business/dynamic-table';
+import {type TableColumn} from '@/components/business/dynamic-table';
 import * as Api from '@/api/backend/upload.ts';
 import {FileTypeEnum} from "@/enums/fileTypeEnum.ts";
 
+defineOptions({
+  name: 'UploadModal',
+  inheritAttrs: false,
+});
 const emit = defineEmits(['uploadSuccess']);
-
-const [DynamicTable] = useTable();
 
 const visible = ref(false);
 const fileList = ref<FileItem[]>([]);
@@ -100,7 +114,7 @@ const beforeUpload: UploadProps['beforeUpload'] = async (file) => {
     message.error('单个文件不超过5MB');
   } else {
     let thumbUrl = ''
-    if(fileType.value._value === FileTypeEnum.IMAGE){
+    if (fileType.value._value === FileTypeEnum.IMAGE) {
       thumbUrl = await fileToBase64(file);
     }
     const item: FileItem = {
@@ -120,6 +134,7 @@ const beforeUpload: UploadProps['beforeUpload'] = async (file) => {
 };
 
 const handleRemove = (record: FileItem) => {
+  console.log('handleRemove', record)
   fileList.value = fileList.value.filter((n) => n.uid !== record.uid);
 };
 
@@ -129,15 +144,7 @@ const columns: TableColumn<FileItem>[] = [
     width: 120,
     title: '操作',
     dataIndex: 'ACTION',
-    fixed: false,
-    actions: ({record}) => [
-      {
-        label: '删除',
-        color: 'red',
-        onClick: () => handleRemove(record),
-      },
-    ],
-  },
+  }
 ];
 
 const openUploadModal = (type: FileTypeEnum, group: number) => {
