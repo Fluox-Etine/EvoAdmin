@@ -1,6 +1,7 @@
 <template>
   <ProConfigProvider>
-    <a-watermark :content="userStore.userInfo.username" v-show="userStore.userInfo.username" :zIndex="9999999" :gap="[75,75]">
+    <a-watermark :content="userStore.userInfo.username" v-show="userStore.userInfo" :zIndex="9999999"
+                 :gap="[75,75]">
       <router-view #="{ Component }">
         <component :is="Component"/>
       </router-view>
@@ -13,6 +14,6 @@ import ProConfigProvider from "@/components/core/pro-config-provider/index.vue";
 import {useUserStore} from "@/store/modules/user.ts";
 
 const userStore = useUserStore()
-console.log(userStore.userInfo.username)
+console.log(userStore)
 
 </script>
