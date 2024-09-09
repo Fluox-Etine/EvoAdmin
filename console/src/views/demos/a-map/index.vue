@@ -1,10 +1,13 @@
 <script setup lang="ts">
+import {ref} from "vue";
 
+const lngLatInfo = ref()
 </script>
 
 <template>
   <div>
-    <a-map/>
+    {{ lngLatInfo }}
+    <a-map v-model="lngLatInfo"/>
   </div>
 </template>
 

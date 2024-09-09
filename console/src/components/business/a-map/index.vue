@@ -1,5 +1,5 @@
 <script setup>
-import {defineProps, onMounted, onUnmounted, ref} from "vue";
+import {defineEmits, defineProps, onMounted, onUnmounted, reactive} from "vue";
 import AMapLoader from "@amap/amap-jsapi-loader";
 
 const props = defineProps({
@@ -29,10 +29,17 @@ const props = defineProps({
   },
 });
 
-let map = null;
+let map = null
 let marker = null
+let geocoder = null
 const key = import.meta.env.VITE_AMAP_KEY;
 const secret = import.meta.env.VITE_AMAP_SECRET_KEY;
+const emit = defineEmits(["update:modelValue"]);
+
+const state = reactive({
+  latLng: '',
+  address: ''
+})
 const base64Icon = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABcAAAAZCAYAAADaILXQAAAACXBIWXMAAC4jAAAuIwF4pT92AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAArlJREFUeNqllt1LU3EYx49Nj5EmLdfWZtHM2XHM7eyssjIhh60ta8WMdmEhgrdR3nTRVQODqFisS/sDgiIoiYgwyKAiki6ySE2DmmZMZ9uqIfTCr+/vdAZy9lt78eJzsbfP8+x5nj3PuFAoxKl5bnKVAx2wPTVJXSNGZ/eDjY6u24ZmYchgr2V9hgVLLIBLYOLVZomMmZ3kDRgzS2QUj/H8C3AWbCpYrmR7AsxObZNIrL2DpIJBkurpIQmfj3xtaSGLdjv5bHWQiQYnDfIS7CtUfhr8/NK+n/wYGCDf+/tJwu2WhSw+CiINEAPu/8rxBh9ILnT6SToSIUm/n8RzSBkBpoGFKccLevAoKraQdDhMEh5PXulyphvlABHAs+Q069+p3l6SDASKElPizXYqXwImlvzilEUk3/r6ihZneFsvN7ibJb8XFXeShNdbslwpzVWWfGhmeytZFMWS5fSbw3OFKf8klC7OJ78fFRwrkmcmhiUfeG9ZWeZ0PcATZMk9r7dIJYsX/o1iItcomsBItMmxkpIMgspcP/8ASNMsihHPYok9M7nm7hrsDo7jKoAGrGItrmvF1J7uHoh/XdcJ5yBsAg2gDqwDPChbLjeCUfo1C5FPYu3e1NseGjT8EYh8wAs6wG5QD1arD4UVzM/kqf8HJIDLNCny1Sch8avoBHvB+qw1ibMWRIA/MVuOOiPwY6MzfrxKf4YhphwEO0BN9g7muPI7hubw+FZnlngeARF86bzWfJkhPQwOgF1gg9xchlzjqlxrxiEenlI1mAYc1Ak3VEJaBg9oAxZQTR3MAy13Gc04VVO3Z9gojmcaTO/mLb1tpFZTcQyvH1Ia6AYuZUqqlHEsy3n9lwXgL2jr254Ypbl3yBgNHDdq+KPKRLSCRqCVp0LJNO9fC3X9qQANJsqIWZV6rlFnyeIvmIDJtcarlTEAAAAASUVORK5CYII='
 onMounted(() => {
   window._AMapSecurityConfig = {
@@ -52,6 +59,10 @@ onMounted(() => {
         });
         marker = new AMap.Marker();
 
+        AMap.plugin("AMap.Geocoder", function () {
+          geocoder = new AMap.Geocoder({});
+        });
+
         map.on("click", function (ev) {
           handleClearMarker()
           handleAddMarker(ev.lnglat)
@@ -62,8 +73,11 @@ onMounted(() => {
       });
 });
 
+/** 添加marker */
 const handleAddMarker = (e) => {
   const lngLat = [e.lng, e.lat]
+  state.latLng = e.lng + ',' + e.lat
+  handleGeoCoder(lngLat)
   map.setCenter(lngLat)
   map.setZoom(15)
   if (!marker) {
@@ -74,14 +88,24 @@ const handleAddMarker = (e) => {
     })
     marker.setMap(map)
   }
-  // parent.setCoordinate([lng, lat, address])
 }
 
+/** 清除marker */
 const handleClearMarker = () => {
   if (marker) {
     marker.setMap(null);
     marker = null;
   }
+}
+
+/** 逆地理编码 */
+const handleGeoCoder = (lngLat) => {
+  geocoder.getAddress(lngLat, function (status, result) {
+    if (status === "complete" && result.info === "OK") {
+      state.address = result.regeocode.formattedAddress
+      emit("update:modelValue", [state.latLng, state.address])
+    }
+  });
 }
 onUnmounted(() => {
   map?.destroy();
@@ -92,18 +116,45 @@ onUnmounted(() => {
   <div id="container" :style="{ width: `${width}`, height: `${height}` }">
     <a-row>
       <a-col :span="8" :offset="16">
-        <a-card style="z-index: 999999;margin-top: 8px;">
-          <a-space>
-            坐标: 114.123, 39.123
-          </a-space>
-          <a-space>
-            地址: 阿多诺金卡使得卡斯阿斯顿把三剑客的巴克斯郡
-          </a-space>
+        <a-card style="z-index: 999999;margin-top: 8px;" id="box">
+          <div style="font-size: 16px; width: 360px;min-height:48px;display:block">
+            <span v-if="state.address">{{ state.address }}</span>
+            <span v-else>鼠标点击地图获取坐标</span>
+          </div>
+          <div style="margin-top:3px">
+            <span style="font-size:14px; height: 22px;width: 360px;display:block;margin-bottom: 4px;">坐标</span>
+            <a-input v-model:value="state.latLng"
+                     style="padding: 0 0 0 8px; height: 32px;line-height: 32px;background:rgba(27, 32, 44, .03);border: 1px solid #ced2d9;border-radius: 4px;font-size: 14px;font-weight: 400;"/>
+            <br>
+            <br>
+            <span style="font-size:14px; height: 22px;width: 360px;display:block;margin-bottom: 4px;">地址</span>
+            <a-input v-model:value="state.address"
+                     style="padding: 0 0 0 8px; height: 32px;line-height: 32px;background:rgba(27, 32, 44, .03);border: 1px solid #ced2d9;border-radius: 4px;font-size: 14px;font-weight: 400;"/>
+          </div>
         </a-card>
       </a-col>
     </a-row>
   </div>
+  <div id="box">
+
+  </div>
 </template>
 
 <style scoped>
+#container {
+}
+
+#box {
+  background: #FFF;
+  //padding: 30px 30px 0;
+  color: #1b202c;
+  font-weight: 600;
+  border-radius: 10px;
+}
+
+.amap-icon img,
+.amap-marker-content img {
+  width: 41px;
+  height: 55px;
+}
 </style>
