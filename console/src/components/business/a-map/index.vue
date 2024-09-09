@@ -3,19 +3,10 @@ import {defineEmits, defineProps, onMounted, onUnmounted, reactive} from "vue";
 import AMapLoader from "@amap/amap-jsapi-loader";
 
 const props = defineProps({
-  // 经度
-  lng: {
-    type: Number,
-    default: 116.397428
-  },
-  // 纬度
-  lat: {
-    type: Number,
-    default: 39.90923
-  },
   // 绑定父组件的默认值
   modelValue: {
     type: Array,
+    default: () => []
   },
   // 元素的尺寸(宽)
   width: {
@@ -25,7 +16,7 @@ const props = defineProps({
   // 元素的尺寸(高)
   height: {
     type: String,
-    default: '800px'
+    default: '84vh'
   },
 });
 
@@ -45,6 +36,12 @@ onMounted(() => {
   window._AMapSecurityConfig = {
     securityJsCode: secret,
   };
+  let center = [116.397428, 39.90923]
+  if (props.modelValue.length > 1) {
+    // 转换成数组 "116.4346,39.942381"
+    const latLng = props.modelValue.split(',')
+    center = [parseFloat(latLng[0]), parseFloat(latLng[1])]
+  }
   AMapLoader.load({
     key: key, // 申请好的Web端开发者Key，首次调用 load 时必填
     version: "2.0", // 指定要加载的 JSAPI 的版本，缺省时默认为 1.4.15
@@ -55,7 +52,7 @@ onMounted(() => {
           // 设置地图容器id
           viewMode: "3D", // 是否为3D地图模式
           zoom: 11, // 初始化地图级别
-          center: [116.397428, 39.90923], // 初始化地图中心点位置
+          center: center, // 初始化地图中心点位置
         });
         marker = new AMap.Marker();
 
@@ -115,19 +112,19 @@ onUnmounted(() => {
 <template>
   <div id="container" :style="{ width: `${width}`, height: `${height}` }">
     <a-row>
-      <a-col :span="8" :offset="16">
+      <a-col :span="7" :offset="17">
         <a-card style="z-index: 999999;margin-top: 8px;" id="box">
-          <div style="font-size: 16px; width: 360px;min-height:48px;display:block">
+          <div style="font-size: 16px; min-height:48px;display:block">
             <span v-if="state.address">{{ state.address }}</span>
             <span v-else>鼠标点击地图获取坐标</span>
           </div>
           <div style="margin-top:3px">
-            <span style="font-size:14px; height: 22px;width: 360px;display:block;margin-bottom: 4px;">坐标</span>
+            <span style="font-size:14px; height: 22px;display:block;margin-bottom: 4px;">坐标</span>
             <a-input v-model:value="state.latLng"
                      style="padding: 0 0 0 8px; height: 32px;line-height: 32px;background:rgba(27, 32, 44, .03);border: 1px solid #ced2d9;border-radius: 4px;font-size: 14px;font-weight: 400;"/>
             <br>
             <br>
-            <span style="font-size:14px; height: 22px;width: 360px;display:block;margin-bottom: 4px;">地址</span>
+            <span style="font-size:14px; height: 22px;display:block;margin-bottom: 4px;">地址</span>
             <a-input v-model:value="state.address"
                      style="padding: 0 0 0 8px; height: 32px;line-height: 32px;background:rgba(27, 32, 44, .03);border: 1px solid #ced2d9;border-radius: 4px;font-size: 14px;font-weight: 400;"/>
           </div>

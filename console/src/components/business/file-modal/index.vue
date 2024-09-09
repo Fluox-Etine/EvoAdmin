@@ -150,7 +150,7 @@ const handleUploadSuccess = () => {
 /** 点击文件列表项 */
 const onSelectItem = function (item) {
   // 记录选中状态
-  if (!multiple.value) {
+  if (!state.multiple) {
     state.selectedItems = [item]
     return
   }
@@ -158,7 +158,7 @@ const onSelectItem = function (item) {
   const selected = key > -1
   // 验证数量限制
   if (!selected && (state.selectedItems.length + state.selectedNum) >= state.maxNum) {
-    $message.warning(`最多可选${maxNum.value}个文件`, 1)
+    $message.warning(`最多可选${state.maxNum}个文件`, 1)
     return
   }
   if (!selected) {
