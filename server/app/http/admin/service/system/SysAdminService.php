@@ -4,6 +4,7 @@ namespace app\http\admin\service\system;
 
 use app\common\enum\RedisKeyEnum;
 use app\common\model\sys\AdminModel;
+use app\common\model\sys\LogLoginModel as SysLoginLogModel;
 use support\exception\RespBusinessException;
 use support\Redis;
 
@@ -18,16 +19,24 @@ class SysAdminService
      */
     public static function handleLogin(array $param): string
     {
+        $log = [];
         try {
             $detail = AdminModel::query()->where('username', $param['username'])->first();
             if (is_null($detail)) {
+                $log['status'] = 20;
                 throw new \Exception('用户不存在');
             }
+            $log['uid'] = $detail->id;
+            $log['username'] = $param['username'];
             if (!password_verify($param['password'], $detail->password)) {
+                $log['status'] = 30;
                 throw new \Exception('密码错误');
             }
+            $log['status'] = 10;
+            self::handleLoginLog($log);
             return self::makeToken($detail->id);
         } catch (\Exception $e) {
+            self::handleLoginLog($log);
             throw new RespBusinessException($e->getMessage());
         }
     }
@@ -64,5 +73,17 @@ class SysAdminService
             throw new RespBusinessException('身份验证信息已过期');
         }
         return $id;
+    }
+
+    /**
+     * 登录日志
+     * @param array $log
+     */
+    private static function handleLoginLog(array $log): void
+    {
+        $log['ip'] = get_ip();
+        $log['user_agent'] = get_user_agent();
+        $log['updated_at'] = time();
+        SysLoginLogModel::insert($log);
     }
 }

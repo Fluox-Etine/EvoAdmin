@@ -14,6 +14,5 @@ import ProConfigProvider from "@/components/core/pro-config-provider/index.vue";
 import {useUserStore} from "@/store/modules/user.ts";
 
 const userStore = useUserStore()
-console.log(userStore)
 
 </script>

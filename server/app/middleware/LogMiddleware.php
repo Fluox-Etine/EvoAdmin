@@ -26,12 +26,11 @@ class LogMiddleware implements MiddlewareInterface
         $start = microtime(true);
         $traceId = guidV4();
         $data = [
-            'ip' => $this->getIp($request),
+            'ip' => get_ip(),
             'uri' => $request->uri(),
             'method' => $request->method(),
             'traceId' => $traceId,
-            'refer' => $request->header('referer'),
-            'user_agent' => $request->header('user-agent'),
+            'user_agent' => get_user_agent(),
             'query' => $request->all(),
             'created_at' => date('Y-m-d H:i:s'),
         ];
@@ -51,34 +50,9 @@ class LogMiddleware implements MiddlewareInterface
         $exec_time = round(($end - $start) * 1000, 2);
         $data['exec_time'] = $exec_time;
         // 投递到异步日志队列
-        Log::info(RedisKeyEnum::REDIS_QUEUE_LOG_MIDDLEWARE, $data);
+        Log::info(RedisKeyEnum::REDIS_QUEUE_LOG_MIDDLEWARE->value, $data);
         // Redis::send(RedisKeyEnum::REDIS_QUEUE_LOG_MIDDLEWARE, $data);
         return $response;
     }
 
-    /**
-     * 获取客户端IP
-     * @param Request $request
-     * @return bool|string
-     */
-    private function getIp(Request $request): bool|string
-    {
-        $forward_ip = $request->header('X-Forwarded-For');
-        $ip1 = $request->header('x-real-ip');
-        $ip2 = $request->header('remote_addr');
-        if (!$ip1 && !$ip2 && !$forward_ip) {
-            return false;
-        }
-        $request_ips = [];
-        if ($forward_ip) {
-            $request_ips[] = $forward_ip;
-        }
-        if ($ip1) {
-            $request_ips[] = $ip1;
-        }
-        if ($ip2) {
-            $request_ips[] = $ip2;
-        }
-        return implode(',', $request_ips);
-    }
 }

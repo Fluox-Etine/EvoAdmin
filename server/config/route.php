@@ -61,6 +61,12 @@ Route::group('/v1', function () {
                 // 服务监控
                 Route::POST('/server', ['app\http\admin\controller\system\MonitorController', 'server']);
             });
+            Route::group('/log', function () {
+                Route::group('/login', function () {
+                    // 列表接口
+                    Route::post('/list', ['app\http\admin\controller\system\LogLoginController', 'list']);
+                });
+            });
         });
 
         /** 公共部分接口 */
@@ -110,6 +116,6 @@ Route::group('/v1', function () {
             Route::post('/generate', [app\http\generate\controller\GenerateController::class, 'generate']);
         });
 
-    });
+    })->middleware(\app\middleware\LogMiddleware::class);
 });
 Route::disableDefaultRoute();

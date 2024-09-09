@@ -183,3 +183,22 @@ function format_log(mixed $value): bool|string
 {
     return is_string($value) ? $value : print_r($value, true);
 }
+
+
+/**
+ * 获取客户端IP
+ * @return string
+ */
+function get_ip(): string
+{
+    return request()->getRealIp($safe_mode = true);
+}
+
+/**
+ * 获取客户端UA
+ * @return string
+ */
+function get_user_agent(): string
+{
+    return request()->header('user-agent');
+}
