@@ -3,7 +3,7 @@
 namespace app\http\admin\controller;
 
 use app\common\enum\RedisKeyEnum;
-use app\http\admin\logic\system\SysAdminLogic;
+use app\http\admin\logic\system\AdminLogic;
 use app\http\admin\service\system\SysAdminService;
 use app\http\admin\service\system\SysMenuService;
 use app\http\admin\service\system\SysPermissionsService;
@@ -34,7 +34,7 @@ class AccountController
      */
     public function profile(): Response
     {
-        $data = SysAdminLogic::handleProfile();
+        $data = AdminLogic::handleProfile();
         return renderSuccess($data);
     }
 

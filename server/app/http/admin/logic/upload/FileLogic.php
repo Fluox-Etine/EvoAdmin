@@ -3,7 +3,7 @@ declare (strict_types=1);
 
 namespace app\http\admin\logic\upload;
 
-use app\common\model\sys\SysAdminModel;
+use app\common\model\sys\AdminModel;
 use app\common\model\upload\FileModel as UploadFileModel;
 use app\common\model\upload\GroupModel as UploadGroupModel;
 use support\exception\RespBusinessException;
@@ -65,7 +65,7 @@ class FileLogic
             $detail = UploadFileModel::query()->where('id', $params['id'])->select('*')->first();
             // 判断文件是用户端还是管理端
             if ($detail->channel == 10) {
-                $detail->uploader_name = SysAdminModel::query()->where('id', $detail->uploader_id)->value('username') ?? '未知管理员用户';
+                $detail->uploader_name = AdminModel::query()->where('id', $detail->uploader_id)->value('username') ?? '未知管理员用户';
             } elseif ($detail->channel == 20) {
                 $detail->uploader_name = '前端用户未知';
             } else {

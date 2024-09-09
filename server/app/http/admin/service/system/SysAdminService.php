@@ -3,7 +3,7 @@
 namespace app\http\admin\service\system;
 
 use app\common\enum\RedisKeyEnum;
-use app\common\model\sys\SysAdminModel;
+use app\common\model\sys\AdminModel;
 use support\exception\RespBusinessException;
 use support\Redis;
 
@@ -19,7 +19,7 @@ class SysAdminService
     public static function handleLogin(array $param): string
     {
         try {
-            $detail = SysAdminModel::query()->where('username', $param['username'])->first();
+            $detail = AdminModel::query()->where('username', $param['username'])->first();
             if (is_null($detail)) {
                 throw new \Exception('用户不存在');
             }

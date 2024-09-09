@@ -60,7 +60,9 @@
 <script lang="ts" setup>
 import {ref} from "vue";
 import {CopyOutlined} from '@ant-design/icons-vue';
-
+defineOptions({
+  name: 'CodeView',
+});
 interface CodeType {
   controller?: string;
   logic?: string;

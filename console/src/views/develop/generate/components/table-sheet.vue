@@ -28,7 +28,9 @@
 import {h, ref} from "vue";
 import * as Api from "@/api/backend/gen.ts"
 import {CheckOutlined} from "@ant-design/icons-vue";
-
+defineOptions({
+  name: 'TableSheet',
+});
 defineProps({
   handleCheckTable: {
     type: Function

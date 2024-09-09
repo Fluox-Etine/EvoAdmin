@@ -2,7 +2,7 @@
 
 namespace app\http\admin\controller\system;
 
-use app\http\admin\logic\system\SysRoleLogic;
+use app\http\admin\logic\system\RoleLogic;
 use support\exception\RespBusinessException;
 use support\Request;
 use support\Response;
@@ -17,7 +17,7 @@ class RoleController
     {
         $fields = ['pageSize', 'name', 'value', 'status', 'remark'];
         $params = formattedRequest($fields);
-        $list = SysRoleLogic::list($params);
+        $list = RoleLogic::list($params);
         return renderSuccess($list);
     }
 
@@ -30,7 +30,7 @@ class RoleController
     public function create(Request $request): Response
     {
         // TODO 后期增加数据校验功能
-        if (SysRoleLogic::create($request->post())) {
+        if (RoleLogic::create($request->post())) {
             return renderSuccess("创建角色成功");
         }
         return renderError("创建角色失败");
@@ -44,7 +44,7 @@ class RoleController
      */
     public function update(Request $request): Response
     {
-        if (SysRoleLogic::update($request->post())) {
+        if (RoleLogic::update($request->post())) {
             return renderSuccess("更新角色成功");
         }
         return renderError("更新角色失败");
@@ -58,7 +58,7 @@ class RoleController
      */
     public function delete(Request $request): Response
     {
-        if (SysRoleLogic::delete($request->get())) {
+        if (RoleLogic::delete($request->get())) {
             return renderSuccess("删除角色成功");
         }
         return renderError("删除角色失败");
@@ -71,7 +71,7 @@ class RoleController
      */
     public function detail(Request $request): Response
     {
-        $detail = SysRoleLogic::detail($request->get('id'));
+        $detail = RoleLogic::detail($request->get('id'));
         return renderSuccess($detail);
     }
 }

@@ -2,13 +2,13 @@
 
 namespace app\http\admin\logic\system;
 
-use app\common\model\sys\SysAdminRoleModel;
-use app\common\model\sys\SysRoleMenuModel;
-use app\common\model\sys\SysRoleModel;
+use app\common\model\sys\AdminRoleModel;
+use app\common\model\sys\RoleMenuModel;
+use app\common\model\sys\RoleModel;
 use support\Db;
 use support\exception\RespBusinessException;
 
-class SysRoleLogic
+class RoleLogic
 {
     /**
      * 角色列表
@@ -28,7 +28,7 @@ class SysRoleLogic
         !is_null($params['value']) && $filter[] = ['value', 'like', "%{$params['value']}%"];
         !is_null($params['status']) && $filter[] = ['status', '=', $params['status']];
         !is_null($params['remark']) && $filter[] = ['remark', 'like', "%{$params['remark']}%"];
-        $list = SysRoleModel::query()->where($filter)->paginate($params['pageSize']);
+        $list = RoleModel::query()->where($filter)->paginate($params['pageSize']);
         return formattedPaginate($list);
     }
 
@@ -43,12 +43,12 @@ class SysRoleLogic
     {
         try {
             // 检查 角色名称是否重复 角色值是否重复
-            if (SysRoleModel::checkExists((new SysRoleModel), ['name' => $params['name']]) || SysRoleModel::checkExists((new SysRoleModel), ['value' => $params['value']])) {
+            if (RoleModel::checkExists((new RoleModel), ['name' => $params['name']]) || RoleModel::checkExists((new RoleModel), ['value' => $params['value']])) {
                 throw new \Exception('角色名称或角色值重复');
             }
             DB::transaction(function () use ($params) {
                 // 先提交创建角色 在提交角色菜单关联
-                $roleId = SysRoleModel::insertGetId(
+                $roleId = RoleModel::insertGetId(
                     [
                         'name' => $params['name'],
                         'remark' => $params['remark'],
@@ -62,7 +62,7 @@ class SysRoleLogic
                 $save = array_map(function ($menuId) use ($roleId) {
                     return ['menu_id' => $menuId, 'role_id' => $roleId];
                 }, $menuIds);
-                SysRoleMenuModel::insert($save);
+                RoleMenuModel::insert($save);
             });
             return true;
         } catch (\Exception $e) {
@@ -81,12 +81,12 @@ class SysRoleLogic
     {
         try {
             // 检查 角色名称是否重复 角色值是否重复
-            if (SysRoleModel::checkExists((new SysRoleModel), [['name', '=', $params['name']], ['id', '<>', $params['id']]]) || SysRoleModel::checkExists((new SysRoleModel), [['value', '=', $params['value']], ['id', '<>', $params['id']]])) {
+            if (RoleModel::checkExists((new RoleModel), [['name', '=', $params['name']], ['id', '<>', $params['id']]]) || RoleModel::checkExists((new RoleModel), [['value', '=', $params['value']], ['id', '<>', $params['id']]])) {
                 throw new \Exception('角色名称或角色值重复');
             }
 
             DB::transaction(function () use ($params) {
-                SysRoleModel::query()->where('id', $params['id'])->update(
+                RoleModel::query()->where('id', $params['id'])->update(
                     [
                         'name' => $params['name'],
                         'remark' => $params['remark'],
@@ -97,7 +97,7 @@ class SysRoleLogic
                 );
 
                 // 查询以前的 menuIds
-                $oldMenuIds = SysRoleMenuModel::query()->where('role_id', $params['id'])->pluck('menu_id')->toArray();
+                $oldMenuIds = RoleMenuModel::query()->where('role_id', $params['id'])->pluck('menu_id')->toArray();
                 // 前端传递的 menuIds
                 $menuIds = $params['menuIds'];
                 // 找出需要删除的 menuIds
@@ -105,13 +105,13 @@ class SysRoleLogic
                 // 找出需要新增的 menuIds
                 $addMenuIds = array_diff($menuIds, $oldMenuIds);
                 if ($deleteMenuIds) {
-                    SysRoleMenuModel::query()->where('role_id', $params['id'])->whereIn('menu_id', $deleteMenuIds)->delete();
+                    RoleMenuModel::query()->where('role_id', $params['id'])->whereIn('menu_id', $deleteMenuIds)->delete();
                 }
                 if ($addMenuIds) {
                     $save = array_map(function ($menuId) use ($params) {
                         return ['menu_id' => $menuId, 'role_id' => $params['id']];
                     }, $addMenuIds);
-                    SysRoleMenuModel::insert($save);
+                    RoleMenuModel::insert($save);
                 }
             });
             return true;
@@ -132,15 +132,15 @@ class SysRoleLogic
     {
         try {
             // 判断当前角色是否存在用户
-            $userExists = SysAdminRoleModel::checkExists((new SysAdminRoleModel), ['role_id' => $params['id']]);
+            $userExists = AdminRoleModel::checkExists((new AdminRoleModel), ['role_id' => $params['id']]);
             if ($userExists) {
                 throw new RespBusinessException('当前角色下存在用户，无法删除');
             }
             DB::transaction(function () use ($params) {
                 // 删除角色
-                SysRoleModel::query()->where('id', $params['id'])->delete();
+                RoleModel::query()->where('id', $params['id'])->delete();
                 // 删除角色菜单关联
-                SysRoleMenuModel::query()->where('role_id', $params['id'])->delete();
+                RoleMenuModel::query()->where('role_id', $params['id'])->delete();
             });
             return true;
         } catch (\Exception $e) {
@@ -155,9 +155,9 @@ class SysRoleLogic
      */
     public static function detail(string $id): array
     {
-        $detail = SysRoleModel::find($id)->toArray();
+        $detail = RoleModel::find($id)->toArray();
         if (!empty($detail)) {
-            $menuIds = SysRoleMenuModel::query()->where('role_id', $id)->pluck('menu_id');
+            $menuIds = RoleMenuModel::query()->where('role_id', $id)->pluck('menu_id');
         }
         $detail['menuIds'] = $menuIds ?? [];
         return $detail;

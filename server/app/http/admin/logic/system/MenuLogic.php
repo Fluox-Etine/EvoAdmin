@@ -2,11 +2,11 @@
 
 namespace app\http\admin\logic\system;
 
-use app\common\model\sys\SysMenuModel;
-use app\common\model\sys\SysRoleMenuModel;
+use app\common\model\sys\MenuModel;
+use app\common\model\sys\RoleMenuModel;
 use support\exception\RespBusinessException;
 
-class SysMenuLogic
+class MenuLogic
 {
     /**
      * 菜单列表
@@ -25,7 +25,7 @@ class SysMenuLogic
         !is_null($param['path']) && $filter[] = ['path', 'like', '%' . $param['path'] . '%'];
         !is_null($param['component']) && $filter[] = ['component', 'like', '%' . $param['component'] . '%'];
 
-        $list = SysMenuModel::query()->where($filter)->orderBy('order_no')->get();
+        $list = MenuModel::query()->where($filter)->orderBy('order_no')->get();
         if (empty($list)) {
             return [];
         }
@@ -110,7 +110,7 @@ class SysMenuLogic
         try {
             self::checkMenuParams($params);
 
-            SysMenuModel::insert([
+            MenuModel::insert([
                 'name' => $params['name'],
                 'parent_id' => $params['parent_id'],
                 'path' => $params['path'],
@@ -144,7 +144,7 @@ class SysMenuLogic
         try {
             self::checkMenuParams($params);
             $params['updated_at'] = time();
-            return SysMenuModel::query()->where('id', $params['id'])->update($params) != false;
+            return MenuModel::query()->where('id', $params['id'])->update($params) != false;
         } catch (\Exception $e) {
             throw new RespBusinessException($e->getMessage());
         }
@@ -163,7 +163,7 @@ class SysMenuLogic
             throw new \Exception('权限必须包含父节点');
         }
         if ($params['type'] == 1 && $params['parent_id']) {
-            $parent = SysMenuModel::find($params['parent_id'])->toArray();
+            $parent = MenuModel::find($params['parent_id'])->toArray();
             if (empty($parent)) {
                 throw new \Exception('父级菜单不存在');
             }
@@ -184,14 +184,14 @@ class SysMenuLogic
     {
         try {
             // 检查是否有角色关联
-            $role = SysRoleMenuModel::query()->where('menu_id', $id)->first();
+            $role = RoleMenuModel::query()->where('menu_id', $id)->first();
             if ($role) {
                 throw new \Exception('该菜单已关联角色，请先解除关联关系');
             }
             // 如果有子菜单，则删除子菜单，一起删除子菜单
-            $childMenus = SysMenuModel::query()->where('parent_id', $id)->pluck('id')->toArray();
+            $childMenus = MenuModel::query()->where('parent_id', $id)->pluck('id')->toArray();
             $ids = array_merge([$id], $childMenus);
-            return SysMenuModel::destroy($ids) != false;
+            return MenuModel::destroy($ids) != false;
         } catch (\Exception $e) {
             throw new RespBusinessException($e->getMessage());
         }
@@ -205,7 +205,7 @@ class SysMenuLogic
     public static function permissions(): array
     {
         try {
-            $permissions = SysMenuModel::pluck('permission')->toArray();
+            $permissions = MenuModel::pluck('permission')->toArray();
             // 过滤掉空值
             $filteredPermissions = array_filter($permissions, function ($item) {
                 return $item;

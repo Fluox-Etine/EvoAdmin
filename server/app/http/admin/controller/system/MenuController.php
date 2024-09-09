@@ -2,7 +2,7 @@
 
 namespace app\http\admin\controller\system;
 
-use app\http\admin\logic\system\SysMenuLogic;
+use app\http\admin\logic\system\MenuLogic;
 use support\exception\RespBusinessException;
 use support\Request;
 use support\Response;
@@ -17,7 +17,7 @@ class MenuController
     {
         $fields = ['name', 'path', 'component'];
         $params = formattedRequest($fields);
-        $list = SysMenuLogic::list($params);
+        $list = MenuLogic::list($params);
         return renderSuccess($list);
     }
 
@@ -31,7 +31,7 @@ class MenuController
     {
         // TODO 后期增加数据校验功能
         $data = $this->processRequestData($request);
-        if (SysMenuLogic::create($data)) {
+        if (MenuLogic::create($data)) {
             return renderSuccess("创建菜单成功");
         }
         return renderError("创建菜单失败");
@@ -48,7 +48,7 @@ class MenuController
     {
         $data = $this->processRequestData($request);
         var_dump($data);
-        if (SysMenuLogic::update($data)) {
+        if (MenuLogic::update($data)) {
             return renderSuccess("更新菜单成功");
         }
         return renderError("更新菜单失败");
@@ -62,7 +62,7 @@ class MenuController
      */
     public function delete(Request $request): Response
     {
-        if (SysMenuLogic::delete((int)$request->get('id'))) {
+        if (MenuLogic::delete((int)$request->get('id'))) {
             return renderSuccess("删除菜单成功");
         }
         return renderError("删除菜单失败");
@@ -75,7 +75,7 @@ class MenuController
      */
     public function permissions(): Response
     {
-        $data = SysMenuLogic::permissions();
+        $data = MenuLogic::permissions();
         return renderSuccess($data);
     }
 
