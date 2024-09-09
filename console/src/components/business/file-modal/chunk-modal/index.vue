@@ -39,7 +39,9 @@ import {DraggableModal} from '@/components/business/draggable-modal/index.ts';
 import {type TableColumn} from '@/components/business/dynamic-table';
 import {FileTypeEnum} from "@/enums/fileTypeEnum.ts";
 import * as Api from '@/api/backend/upload.ts';
-
+defineOptions({
+  name: 'ChunkModal',
+});
 const emit = defineEmits(['uploadSuccess']);
 
 const chunkSize = import.meta.env.VITE_CHUNK_SIZE * 1024 * 1024;

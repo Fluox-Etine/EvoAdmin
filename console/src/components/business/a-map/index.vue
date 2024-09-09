@@ -1,7 +1,9 @@
 <script setup>
 import {defineEmits, defineProps, onMounted, onUnmounted, reactive} from "vue";
 import AMapLoader from "@amap/amap-jsapi-loader";
-
+defineOptions({
+  name: 'AMap',
+});
 const props = defineProps({
   // 绑定父组件的默认值
   modelValue: {

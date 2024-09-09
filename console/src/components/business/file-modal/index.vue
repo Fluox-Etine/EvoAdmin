@@ -70,7 +70,9 @@ import * as FileApi from '@/api/backend/uploadFile.ts'
 import {FileTypeEnum} from "@/enums/fileTypeEnum.ts";
 import {CheckOutlined} from "@ant-design/icons-vue";
 import {message as $message} from "ant-design-vue/es/components";
-
+defineOptions({
+  name: 'FileModal',
+});
 const emit = defineEmits(['handleSubmit', 'handleCancel']);
 const domain = import.meta.env.VITE_DOMAIN_URL;
 const open = ref<boolean>(false);

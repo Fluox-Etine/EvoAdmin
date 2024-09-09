@@ -52,7 +52,9 @@ import {defineEmits, defineProps, ref, watch} from "vue";
 import {CloseCircleTwoTone, PlusOutlined} from '@ant-design/icons-vue';
 import {FileTypeEnum} from "@/enums/fileTypeEnum.ts";
 import _ from 'lodash-es'
-
+defineOptions({
+  name: 'SelectVideo',
+});
 const props = defineProps({
   // 默认选中的值
   defaultList: {

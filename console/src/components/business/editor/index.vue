@@ -26,10 +26,11 @@ import '@wangeditor/editor/dist/css/style.css' // 引入 css
 import type {IEditorConfig, IToolbarConfig} from '@wangeditor/editor'
 import {Editor as WEditor, Toolbar} from '@wangeditor/editor-for-vue'
 import {computed, type CSSProperties, defineProps, onBeforeUnmount, ref, shallowRef} from 'vue'
-
 import {addUnit} from '@/utils'
 import {FileTypeEnum} from "@/enums/fileTypeEnum.ts";
-
+defineOptions({
+  name: 'Editor',
+});
 const props = withDefaults(
     defineProps<{
       modelValue?: string
