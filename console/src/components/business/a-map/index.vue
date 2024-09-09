@@ -105,7 +105,9 @@ const handleGeoCoder = (lngLat) => {
   });
 }
 onUnmounted(() => {
-  map?.destroy();
+  if (map) {
+    map?.destroy();
+  }
 });
 </script>
 
