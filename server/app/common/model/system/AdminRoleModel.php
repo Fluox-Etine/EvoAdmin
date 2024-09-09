@@ -1,6 +1,6 @@
 <?php
 
-namespace app\common\model\sys;
+namespace app\common\model\system;
 
 
 use app\common\model\BaseModel;

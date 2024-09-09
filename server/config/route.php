@@ -72,11 +72,11 @@ Route::group('/v1', function () {
         /** 公共部分接口 */
         Route::group('/common', function () {
             // 文件上传
-            Route::post('/upload', [app\http\admin\controller\common\UploadController::class, 'upload']);
+            Route::post('/upload', [app\http\admin\controller\common\UploadController::class, 'upload'])->middleware(ActionMiddleware::class);
             // 切片文件上传
-            Route::post('/uploadChunk', [app\http\admin\controller\common\UploadController::class, 'chunk']);
+            Route::post('/uploadChunk', [app\http\admin\controller\common\UploadController::class, 'chunk'])->middleware(ActionMiddleware::class);
             // 切片合并文件
-            Route::post('/chunkMerge', [app\http\admin\controller\common\UploadController::class, 'merge']);
+            Route::post('/chunkMerge', [app\http\admin\controller\common\UploadController::class, 'merge'])->middleware(ActionMiddleware::class);
         });
 
         /** 文件部分 */
@@ -99,7 +99,7 @@ Route::group('/v1', function () {
                 // 列表接口
                 Route::post('/list', ['app\http\admin\controller\upload\FileController', 'list']);
                 // 删除接口
-                Route::post('/deleted', ['app\http\admin\controller\upload\FileController', 'deleted']);
+                Route::post('/deleted', ['app\http\admin\controller\upload\FileController', 'deleted'])->middleware(ActionMiddleware::class);
                 // 详情接口
                 Route::post('/detail', ['app\http\admin\controller\upload\FileController', 'detail']);
             });

@@ -2,7 +2,7 @@
 
 namespace app\http\admin\logic\system;
 
-use app\common\model\sys\AdminModel;
+use app\common\model\system\AdminModel;
 use app\http\admin\service\system\SysAdminService;
 use support\exception\RespBusinessException;
 

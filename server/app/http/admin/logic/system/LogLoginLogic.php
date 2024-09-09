@@ -2,7 +2,7 @@
 
 namespace app\http\admin\logic\system;
 
-use app\common\model\sys\LogLoginModel as SystemLoginLogModel;
+use app\common\model\system\LogLoginModel as SystemLoginLogModel;
 use support\exception\RespBusinessException;
 
 /**

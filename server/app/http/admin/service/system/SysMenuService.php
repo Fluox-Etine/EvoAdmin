@@ -2,9 +2,9 @@
 
 namespace app\http\admin\service\system;
 
-use app\common\model\sys\AdminRoleModel;
-use app\common\model\sys\MenuModel;
-use app\common\model\sys\RoleMenuModel;
+use app\common\model\system\AdminRoleModel;
+use app\common\model\system\MenuModel;
+use app\common\model\system\RoleMenuModel;
 use support\exception\RespBusinessException;
 
 class SysMenuService

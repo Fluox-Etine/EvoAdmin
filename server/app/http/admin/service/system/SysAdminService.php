@@ -3,8 +3,8 @@
 namespace app\http\admin\service\system;
 
 use app\common\enum\RedisKeyEnum;
-use app\common\model\sys\AdminModel;
-use app\common\model\sys\LogLoginModel as SysLoginLogModel;
+use app\common\model\system\AdminModel;
+use app\common\model\system\LogLoginModel as SysLoginLogModel;
 use support\exception\RespBusinessException;
 use support\Redis;
 

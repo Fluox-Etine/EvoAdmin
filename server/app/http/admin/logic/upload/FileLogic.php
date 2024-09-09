@@ -3,7 +3,7 @@ declare (strict_types=1);
 
 namespace app\http\admin\logic\upload;
 
-use app\common\model\sys\AdminModel;
+use app\common\model\system\AdminModel;
 use app\common\model\upload\FileModel as UploadFileModel;
 use app\common\model\upload\GroupModel as UploadGroupModel;
 use support\exception\RespBusinessException;

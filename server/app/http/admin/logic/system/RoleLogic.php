@@ -2,9 +2,9 @@
 
 namespace app\http\admin\logic\system;
 
-use app\common\model\sys\AdminRoleModel;
-use app\common\model\sys\RoleMenuModel;
-use app\common\model\sys\RoleModel;
+use app\common\model\system\AdminRoleModel;
+use app\common\model\system\RoleMenuModel;
+use app\common\model\system\RoleModel;
 use support\Db;
 use support\exception\RespBusinessException;
 

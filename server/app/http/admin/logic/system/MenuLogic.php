@@ -2,8 +2,8 @@
 
 namespace app\http\admin\logic\system;
 
-use app\common\model\sys\MenuModel;
-use app\common\model\sys\RoleMenuModel;
+use app\common\model\system\MenuModel;
+use app\common\model\system\RoleMenuModel;
 use support\exception\RespBusinessException;
 
 class MenuLogic
