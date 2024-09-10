@@ -49,19 +49,7 @@ class RequestService
                 'DATA_TYPE' => 'int',
             ];
         }
-        if ($params['paginate']) {
-            $action['list'][] = [
-                'COLUMN_NAME' => 'page',
-                'COLUMN_COMMENT' => '页码',
-                'DATA_TYPE' => 'int',
-            ];
-            $action['list'][] = [
-                'COLUMN_NAME' => 'pageSize',
-                'COLUMN_COMMENT' => '每页条数',
-                'DATA_TYPE' => 'int',
-            ];
-        }
-        $request = self::handleRequestFunctions(!empty($action['list']), $params['upperCameName'], $params['classComment'], $params['gen']);
+        $request = self::handleRequestFunctions($params['upperCameName'], $params['classComment'], $params['gen']);
         $types = self::handleTypes($action, $params['upperCameName'], $params['gen']);
         return [
             'request' => $request,
@@ -72,13 +60,12 @@ class RequestService
 
     /**
      * 生成请求文件方法
-     * @param bool $query
      * @param string $upperCameName
      * @param string $classComment
      * @param array $gen
      * @return string
      */
-    protected static function handleRequestFunctions(bool $query, string $upperCameName, string $classComment, array $gen): string
+    protected static function handleRequestFunctions(string $upperCameName, string $classComment, array $gen): string
     {
         // 需要替换的变量
         $needReplace = [
@@ -95,23 +82,18 @@ class RequestService
         foreach ($function as $key => $value) {
             if (empty($gen[$key])) continue;
             $endpoint = strtolower($key);
-            $bodyRequest = ' body: API.' . $upperCameName . ucfirst($key) . 'Dto, ';
+            $bodyRequest = 'body: API.' . $upperCameName . ucfirst($key) . 'Dto, ';
             if ($key != 'list') {
                 $text = '操作成功';
                 $successMessageKey = ' successMsg:' . "'" . $text . "' ";
                 if ($key == 'deleted' || $key == 'detail') {
-                    $bodyRequest = ' body: API.QueryId, ';
+                    $bodyRequest = 'body: API.QueryId, ';
                 }
             } else {
                 $successMessageKey = '';
-                if (!$query) {
-                    $bodyRequest = '';
-                }
+                $bodyRequest = 'body: any, ';
             }
-            $bodyData = '';
-            if ($bodyRequest) {
-                $bodyData = 'data: body,';
-            }
+            $bodyData = 'data: body,';
             // 格式化字符串
             $str .= vsprintf(
                 "/** %s POST %s */\n" .
