@@ -4,7 +4,7 @@ namespace app\http\admin\controller\common;
 
 use app\common\logic\UploadLogic;
 use app\common\service\UploadService;
-use app\http\admin\service\system\SysAdminService;
+use app\http\admin\service\system\AdminService;
 use support\exception\RespBusinessException;
 use support\Request;
 use support\Response;
@@ -24,7 +24,7 @@ class UploadController
         $result = UploadLogic::handleUpload(
             $file,
             $request->post('fileName'),
-            SysAdminService::getCurrentLoginId(),
+            AdminService::getCurrentLoginId(),
             $request->post('group', 0),
             10,
             $request->post('type', 10)
@@ -67,7 +67,7 @@ class UploadController
         $result = UploadLogic::handleMerge(
             $request->post('hash'),
             $request->post('fileName'),
-            SysAdminService::getCurrentLoginId(),
+            AdminService::getCurrentLoginId(),
             $request->post('group', 0),
             10,
             $request->post('type', 10)

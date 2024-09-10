@@ -2,6 +2,7 @@
 
 namespace app\middleware;
 
+use support\Context;
 use Webman\Http\Request;
 use Webman\Http\Response;
 use Webman\MiddlewareInterface;
@@ -20,6 +21,10 @@ class CrossMiddleware implements MiddlewareInterface
      */
     public function process(Request $request, callable $handler): Response
     {
+        // 记录每一个请求的traceId
+        Context::set('Request-traceId', guidV4());
+        // 记录请求开始时间
+        Context::set('Request-start', microtime(true));
         // 如果是options请求则返回一个空响应，否则继续向洋葱芯穿越，并得到一个响应
         $response = $request->method() == 'OPTIONS' ? response('') : $handler($request);
 
@@ -30,9 +35,7 @@ class CrossMiddleware implements MiddlewareInterface
             'Access-Control-Allow-Methods' => $request->header('access-control-request-method', '*'),
             'Access-Control-Allow-Headers' => $request->header('access-control-request-headers', '*'),
         ]);
-
         $response->header('Server', 'nginx');
-        // 继续向洋葱芯穿越，直至执行控制器得到响应
         return $response;
     }
 }

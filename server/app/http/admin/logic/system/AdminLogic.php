@@ -3,7 +3,7 @@
 namespace app\http\admin\logic\system;
 
 use app\common\model\system\AdminModel;
-use app\http\admin\service\system\SysAdminService;
+use app\http\admin\service\system\AdminService;
 use support\exception\RespBusinessException;
 
 class AdminLogic
@@ -15,7 +15,7 @@ class AdminLogic
      */
     public static function handleProfile(): array
     {
-        $detail = AdminModel::query()->where('id', SysAdminService::getCurrentLoginId())->first();
+        $detail = AdminModel::query()->where('id', AdminService::getCurrentLoginId())->first();
         if (is_null($detail)) {
             throw new RespBusinessException('用户信息不存在');
         }

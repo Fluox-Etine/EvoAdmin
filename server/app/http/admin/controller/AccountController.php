@@ -4,9 +4,9 @@ namespace app\http\admin\controller;
 
 use app\common\enum\RedisKeyEnum;
 use app\http\admin\logic\system\AdminLogic;
-use app\http\admin\service\system\SysAdminService;
-use app\http\admin\service\system\SysMenuService;
-use app\http\admin\service\system\SysPermissionsService;
+use app\http\admin\service\system\AdminService;
+use app\http\admin\service\system\MenuService;
+use app\http\admin\service\system\PermissionsService;
 use support\exception\RespBusinessException;
 use support\Redis;
 use support\Response;
@@ -23,7 +23,7 @@ class AccountController
      */
     public function login(Request $request): Response
     {
-        $token = SysAdminService::handleLogin($request->post());
+        $token = AdminService::handleLogin($request->post());
         return renderSuccess(['token' => $token], '登录成功');
     }
 
@@ -55,7 +55,7 @@ class AccountController
      */
     public function menus(): Response
     {
-        $data = SysMenuService::handleLoginMenuList();
+        $data = MenuService::handleLoginMenuList();
         return renderSuccess($data);
     }
 
@@ -66,7 +66,7 @@ class AccountController
      */
     public function permissions(): Response
     {
-        $data = SysPermissionsService::handleLoginPermissionsList();
+        $data = PermissionsService::handleLoginPermissionsList();
         return renderSuccess($data);
     }
 }
