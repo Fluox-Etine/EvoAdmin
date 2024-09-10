@@ -1,9 +1,74 @@
 <script setup lang="ts">
+import {Drawer, Space, Spin, Descriptions} from 'ant-design-vue';
+import {ref} from "vue";
+import {formatToDateTime} from "@/utils/dateUtil.ts";
+import * as Api from "@/api/backend/logRequest.ts"
+
+defineOptions({
+  name: 'ResponseDrawer',
+});
+const loading = ref(false);
+const visible = ref(false);
+const record = ref<any>();
+
+const recordMap = new Map([
+  ['uuid', 'uuid'],
+  ['uri', '请求地址'],
+  ['method', '请求方式'],
+  ['user_agent', '请求头信息'],
+  ['ip', '请求IP'],
+  ['uid', '操作人'],
+  ['_status', '请求状态'],
+  ['pid', '进程id'],
+  ['exec_time', '执行时间（ms）'],
+  ['_created_at', '创建时间'],
+] as const);
+
+const recordInfo = ref<Partial<any & { name: string; fsize: string }>>({});
+
+const open = async (options: any) => {
+  options._created_at = formatToDateTime(options.created_at);
+  options._status = options.status === 10 ? '成功' : '失败';
+  Array.from(recordMap.keys()).forEach((key) => {
+    recordInfo.value[key] = options[key];
+  });
+  record.value = await Api.detail({id: options.id, field: 'response'});
+  visible.value = true;
+  loading.value = false;
+}
+
+const handleClose = () => {
+  visible.value = false;
+  recordInfo.value = {};
+  record.value = {};
+}
+
+defineExpose({open});
 
 </script>
 
 <template>
-
+  <div>
+    <Drawer title="响应数据" :width="600" :visible="visible" @close="handleClose" destroyOnClose>
+      <Spin :spinning="loading" class="preview-drawer-inner-box">
+        <Space direction="vertical">
+          <Descriptions bordered :column="1" size="small">
+            <template v-for="key in recordMap.keys()" :key="key">
+              <Descriptions.Item
+                  :label="recordMap.get(key)"
+                  :label-style="{ whiteSpace: 'nowrap' }"
+              >
+                {{ recordInfo[key] }}
+              </Descriptions.Item>
+            </template>
+            <Descriptions.Item label="响应数据">
+              <pre>{{ record }}</pre>
+            </Descriptions.Item>
+          </Descriptions>
+        </Space>
+      </Spin>
+    </Drawer>
+  </div>
 </template>
 
 <style scoped lang="less">

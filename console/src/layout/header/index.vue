@@ -65,6 +65,7 @@ import {useRouter, useRoute, createRouter as $router} from 'vue-router';
   import { useKeepAliveStore } from '@/store/modules/keepAlive';
   import { LOGIN_NAME } from '@/router/constant';
   import { useLayoutSettingStore } from '@/store/modules/layoutSetting';
+import {message } from "ant-design-vue/es/components";
 
 
 defineProps({

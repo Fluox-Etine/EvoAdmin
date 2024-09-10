@@ -33,12 +33,13 @@
 <script setup lang="tsx">
 import SparkMD5 from 'spark-md5'
 import {computed, ref} from 'vue';
-import {message, type UploadProps} from 'ant-design-vue';
+import {type UploadProps} from 'ant-design-vue';
 import {type FileItem, fileListColumns, UploadResultStatus} from './columns.tsx';
 import {DraggableModal} from '@/components/business/draggable-modal/index.ts';
 import {type TableColumn} from '@/components/business/dynamic-table';
 import {FileTypeEnum} from "@/enums/fileTypeEnum.ts";
 import * as Api from '@/api/backend/upload.ts';
+import {message } from "ant-design-vue/es/components";
 defineOptions({
   name: 'ChunkModal',
 });
@@ -174,7 +175,7 @@ const calculateHash = async (file: any) => {
       }
     }
     fileReader.onerror = () => {
-      $message.error(`读取文件${file.name}哈希值失败，上传终止`);
+      message.error(`读取文件${file.name}哈希值失败，上传终止`);
     }
     const loadNext = () => {
       const start = currentChunk * chunkSize

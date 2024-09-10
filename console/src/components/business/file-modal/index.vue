@@ -69,7 +69,7 @@ import * as GroupApi from '@/api/backend/uploadGroup.ts'
 import * as FileApi from '@/api/backend/uploadFile.ts'
 import {FileTypeEnum} from "@/enums/fileTypeEnum.ts";
 import {CheckOutlined} from "@ant-design/icons-vue";
-import {message as $message} from "ant-design-vue/es/components";
+import {message } from "ant-design-vue/es/components";
 defineOptions({
   name: 'FileModal',
 });
@@ -160,7 +160,7 @@ const onSelectItem = function (item) {
   const selected = key > -1
   // 验证数量限制
   if (!selected && (state.selectedItems.length + state.selectedNum) >= state.maxNum) {
-    $message.warning(`最多可选${state.maxNum}个文件`, 1)
+    message.warning(`最多可选${state.maxNum}个文件`, 1)
     return
   }
   if (!selected) {

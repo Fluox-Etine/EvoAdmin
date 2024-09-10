@@ -3,7 +3,7 @@
 use app\middleware\ActionMiddleware;
 use Webman\Route;
 
-Route::post('/test', [\app\admin\controller\TestController::class, 'test']);
+Route::post('/test', ['app\admin\controller\TestController', 'test']);
 Route::group('/v1', function () {
 
     /** 后台管理 */
@@ -11,20 +11,20 @@ Route::group('/v1', function () {
         /** 不需要授权 */
         Route::group('/auth', function () {
             // 登录
-            Route::post('/login', [\app\admin\controller\AccountController::class, 'login']);
+            Route::post('/login', ['app\admin\controller\AccountController', 'login']);
         });
         /** 需要授权 */
         Route::group('', function () {
             // 个人相关
             Route::group('/account', function () {
                 // 个人信息
-                Route::get('/profile', [\app\admin\controller\AccountController::class, 'profile']);
+                Route::get('/profile', ['app\admin\controller\AccountController', 'profile']);
                 // 退出登录
-                Route::post('/logout', [\app\admin\controller\AccountController::class, 'logout']);
+                Route::post('/logout', ['app\admin\controller\AccountController', 'logout']);
                 // 菜单
-                Route::post('/menus', [\app\admin\controller\AccountController::class, 'menus']);
+                Route::post('/menus', ['app\admin\controller\AccountController', 'menus']);
                 // 权限
-                Route::post('/permissions', [\app\admin\controller\AccountController::class, 'permissions']);
+                Route::post('/permissions', ['app\admin\controller\AccountController', 'permissions']);
             });
         });
 
@@ -61,20 +61,29 @@ Route::group('/v1', function () {
                 // 服务监控
                 Route::POST('/server', ['app\admin\controller\system\MonitorController', 'server']);
             });
+
             Route::group('/log/login', function () {
                 // 列表接口
                 Route::post('/list', ['app\admin\controller\system\LogLoginController', 'list']);
+            });
+
+            /** 请求日志 @date 2024/09/10 20:21 */
+            Route::group('/log/request', function () {
+                // 列表接口
+                Route::post('/list', ['app\admin\controller\system\LogRequestController', 'list']);
+                // 详情接口
+                Route::post('/detail', ['app\admin\controller\system\LogRequestController', 'detail']);
             });
         });
 
         /** 公共部分接口 */
         Route::group('/common', function () {
             // 文件上传
-            Route::post('/upload', [\app\admin\controller\common\UploadController::class, 'upload'])->middleware(ActionMiddleware::class);
+            Route::post('/upload', ['app\admin\controller\common\UploadController', 'upload'])->middleware(ActionMiddleware::class);
             // 切片文件上传
-            Route::post('/uploadChunk', [\app\admin\controller\common\UploadController::class, 'chunk'])->middleware(ActionMiddleware::class);
+            Route::post('/uploadChunk', ['app\admin\controller\common\UploadController', 'chunk'])->middleware(ActionMiddleware::class);
             // 切片合并文件
-            Route::post('/chunkMerge', [\app\admin\controller\common\UploadController::class, 'merge'])->middleware(ActionMiddleware::class);
+            Route::post('/chunkMerge', ['app\admin\controller\common\UploadController', 'merge'])->middleware(ActionMiddleware::class);
         });
 
         /** 文件部分 */
@@ -105,15 +114,15 @@ Route::group('/v1', function () {
         /** 代码生成器 **/
         Route::group('/gen', function () {
             // 所有数据表
-            Route::get('/table/sheet', [\app\generate\controller\GenerateController::class, 'dataSheet']);
+            Route::get('/table/sheet', ['app\generate\controller\GenerateController', 'dataSheet']);
             // SQL 语句
-            Route::post('/table/sql', [\app\generate\controller\GenerateController::class, 'tableSql']);
+            Route::post('/table/sql', ['app\generate\controller\GenerateController', 'tableSql']);
             // 数据表详情
-            Route::get('/table/sheet/detail', [\app\generate\controller\GenerateController::class, 'dataSheetDetail']);
+            Route::get('/table/sheet/detail', ['app\generate\controller\GenerateController', 'dataSheetDetail']);
             // 开始生成
-            Route::post('/generate', [\app\generate\controller\GenerateController::class, 'generate']);
+            Route::post('/generate', ['app\generate\controller\GenerateController', 'generate']);
         });
 
-    })->middleware(\app\middleware\LogMiddleware::class);
+    });
 });
 Route::disableDefaultRoute();

@@ -10,5 +10,10 @@ return [
     'admin' => [
         // 日志中间件
         app\middleware\LogMiddleware::class,
+    ],
+    // 代码生成器中间件
+    'generate' => [
+        // 日志中间件
+        app\middleware\LogMiddleware::class,
     ]
 ];

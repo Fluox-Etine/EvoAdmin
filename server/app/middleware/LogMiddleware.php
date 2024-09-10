@@ -46,7 +46,7 @@ class LogMiddleware implements MiddlewareInterface
         $end = microtime(true);
         $exec_time = round(($end - Context::get('Request-start')) * 1000, 2);
         $data['exec_time'] = $exec_time;
-        $data['uid'] = 0;
+        $data['uid'] = Context::get('Request-aid') ?? 0;
         $data['pid'] = getmypid();
         Db::table('sys_log_request')->insert($data);
         return $response;

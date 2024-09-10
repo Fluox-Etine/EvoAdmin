@@ -345,7 +345,7 @@
 import {h, reactive, ref, type UnwrapRef} from 'vue';
 import {CodeOutlined} from '@ant-design/icons-vue';
 import * as Api from '@/api/backend/gen'
-import {message as $message} from "ant-design-vue/es/components";
+import {message } from "ant-design-vue/es/components";
 import CodeView from "@/views/develop/generate/components/code-view.vue";
 import TableSheet from "@/views/develop/generate/components/table-sheet.vue";
 
@@ -521,7 +521,7 @@ const dataFieldsSource = ref([]);
 /** 切换tab */
 const onBaseTabChange = (value: string) => {
   if (value !== 'table' && formState.tableName == '') {
-    $message.error('请先选择数据表');
+    message.error('请先选择数据表');
     baseKey.value = 'table';
     return;
   }
@@ -625,19 +625,18 @@ const fetchTableDetailData = async (tableName: string) => {
   formState.upperCameName = table.upperCameName;
   formState.classDir = table.classDir;
   dataFieldsSource.value = fields;
-  console.log(fields)
   baseKey.value = 'base';
 }
 
 const handleStart = async () => {
   if (!formState.PK) {
-    $message.error('请填写数据表主键');
+    message.error('请填写数据表主键');
     return
   }
   // 拦截数据
   if (!formState.upperCameName) {
     baseKey.value = 'base';
-    $message.error('请填写类名');
+    message.error('请填写类名');
     return
   }
   let data = {

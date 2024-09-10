@@ -8,4 +8,12 @@ declare namespace API {
         /** 每页条数 */
         pageSize?: number;
     };
+
+    /** 列表参数 */
+    type SystemLogRequestListDto = {
+        /** 页码 */
+        page?: number;
+        /** 每页条数 */
+        pageSize?: number;
+    };
 }

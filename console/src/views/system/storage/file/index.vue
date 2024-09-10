@@ -84,6 +84,7 @@ const rowSelection = ref({
 
 // 是否勾选了表格行
 const isCheckRows = computed(() => rowSelection.value.selectedRowKeys.length);
+
 const handleClickFileItem = (record: TableColumnItem) => {
   previewDrawerRef.value?.open(record.id)
 };
