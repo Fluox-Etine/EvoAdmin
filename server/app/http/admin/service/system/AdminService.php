@@ -8,7 +8,7 @@ use app\common\model\system\LogLoginModel as SysLoginLogModel;
 use support\exception\RespBusinessException;
 use support\Redis;
 
-class SysAdminService
+class AdminService
 {
 
     /**
@@ -84,6 +84,7 @@ class SysAdminService
         $log['ip'] = get_ip();
         $log['user_agent'] = get_user_agent();
         $log['updated_at'] = time();
+        $log['pid'] = getmypid();
         SysLoginLogModel::insert($log);
     }
 }

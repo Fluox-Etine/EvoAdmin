@@ -338,5 +338,4 @@ function deleteFile(string $filePath): void
             unlink(public_path() . $filePath);
         }
     }
-
 }

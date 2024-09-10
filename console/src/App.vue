@@ -1,6 +1,6 @@
 <template>
   <ProConfigProvider>
-    <a-watermark :content="userStore.userInfo.username" v-show="userStore.userInfo" :zIndex="9999999"
+    <a-watermark :content="userStore.userInfo?.username" v-show="userStore.userInfo" :zIndex="9999999"
                  :gap="[75,75]">
       <router-view #="{ Component }">
         <component :is="Component"/>

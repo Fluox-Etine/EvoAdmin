@@ -6,7 +6,7 @@
     </div>
     <a-form layout="horizontal" :model="loginFormModel" @submit.prevent="handleSubmit">
       <a-form-item>
-        <a-input v-model:value="loginFormModel.username" size="large" placeholder="admin">
+        <a-input v-model:value="loginFormModel.username" size="large" placeholder="请输入账户名" autocomplete="username">
           <template #prefix>
             <Icon icon="ant-design:user-outlined"/>
           </template>
@@ -17,8 +17,8 @@
             v-model:value="loginFormModel.password"
             size="large"
             type="password"
-            placeholder="a123456"
-            autocomplete="new-password"
+            placeholder="请输入密码"
+            autocomplete="current-password"
         >
           <template #prefix>
             <Icon icon="ant-design:lock-outlined"/>

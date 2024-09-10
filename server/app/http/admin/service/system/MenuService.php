@@ -7,7 +7,7 @@ use app\common\model\system\MenuModel;
 use app\common\model\system\RoleMenuModel;
 use support\exception\RespBusinessException;
 
-class SysMenuService
+class MenuService
 {
 
     /**
@@ -19,7 +19,7 @@ class SysMenuService
     {
         try {
             // 查询对应的roleIds
-            $roleIds = AdminRoleModel::query()->where('admin_id', SysAdminService::getCurrentLoginId())->pluck('role_id');
+            $roleIds = AdminRoleModel::query()->where('admin_id', AdminService::getCurrentLoginId())->pluck('role_id');
             if (empty($roleIds)) {
                 throw new RespBusinessException('用户未分配角色');
             }

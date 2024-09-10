@@ -2,9 +2,8 @@
 
 namespace app\middleware;
 
-use app\common\enum\RedisKeyEnum;
 use support\Context;
-use support\Log;
+use support\Db;
 use Webman\Http\Request;
 use Webman\Http\Response;
 use Webman\MiddlewareInterface;
@@ -23,35 +22,33 @@ class LogMiddleware implements MiddlewareInterface
      */
     public function process(Request $request, callable $handler): Response
     {
-        $start = microtime(true);
-        $traceId = guidV4();
         $data = [
             'ip' => get_ip(),
             'uri' => $request->uri(),
             'method' => $request->method(),
-            'traceId' => $traceId,
+            'uuid' => Context::get('Request-traceId'),
             'user_agent' => get_user_agent(),
-            'query' => $request->all(),
-            'created_at' => date('Y-m-d H:i:s'),
+            'query' => is_array($request->all()) ? jsonEncode($request->all()) : $request->all(),
+            'created_at' => time(),
         ];
-
-        //记录全局traced 后期做异常追踪有用
-        Context::set('traceId', $data['traceId']);
 
         $response = $handler($request);
         $err = $response->exception();
         // 判断当前接口是否异常报错了
         if (isset($err)) {
-            $data['error'] = $err->getMessage();
+            $data['status'] = 20;
+            $data['response'] = $err->getMessage();
         } else {
-            $data['error'] = '';
+            $data['status'] = 10;
+            $data['response'] = is_array($response->rawBody()) ? jsonEncode($response->rawBody()) : $response->rawBody();
         }
+
         $end = microtime(true);
-        $exec_time = round(($end - $start) * 1000, 2);
+        $exec_time = round(($end - Context::get('Request-start')) * 1000, 2);
         $data['exec_time'] = $exec_time;
-        // 投递到异步日志队列
-        Log::info(RedisKeyEnum::REDIS_QUEUE_LOG_MIDDLEWARE->value, $data);
-        // Redis::send(RedisKeyEnum::REDIS_QUEUE_LOG_MIDDLEWARE, $data);
+        $data['uid'] = 0;
+        $data['pid'] = getmypid();
+        Db::table('sys_log_request')->insert($data);
         return $response;
     }
 
