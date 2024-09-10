@@ -65,9 +65,9 @@ class LogRequestLogic
                 throw new \Exception('数据不存在');
             }
             if ($params['field'] === 'query') {
-                return jsonDecode($detail->query);
+                return !empty($detail->query) ? jsonDecode($detail->query) : [];
             } else {
-                return jsonDecode($detail->response);
+                return !empty($detail->response) ? jsonDecode($detail->response) : [];
             }
         } catch (\Exception $e) {
             exceptionLog($e);

@@ -7,13 +7,13 @@ return [
     ],
     'generate' => [
         'exclude_table' => [], // 排除部分数据表禁止生成'
-        'template_dir' => base_path() . '/app/http/generate/service/stub/', // 模板路径
+        'template_dir' => base_path() . '/app/generate/service/stub/', // 模板路径
         'generator_dir' => run_path() . '/generate/', // 生成路径
     ],
 
     // 慢SQL拦截
     'show_sql' => [
-        'enable' => true,  // 是否开启
+        'enable' => false,  // 是否开启
         'limit' => 10,    // sql执行时间大于多少秒进行拦截（单位毫秒 默认1000）
     ],
 
@@ -36,5 +36,16 @@ return [
         'domain' => 'http://localhost:19878',
         // 切片文件上传临时目录
         'chunk_dir' => '/uploads/chunk/',
-    ]
+    ],
+
+    'log' => [
+        // 禁止请求参数记录
+        'query_exclude' => [
+            '/v1/console/auth/login'
+        ],
+        // 禁止响应参数记录
+        'response_exclude' => [
+            '/v1/console/auth/login'
+        ]
+    ],
 ];

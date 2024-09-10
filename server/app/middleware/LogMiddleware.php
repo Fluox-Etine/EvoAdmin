@@ -48,6 +48,12 @@ class LogMiddleware implements MiddlewareInterface
         $data['exec_time'] = $exec_time;
         $data['uid'] = Context::get('Request-aid') ?? 0;
         $data['pid'] = getmypid();
+        if (in_array($data['uri'], config('env.log.query_exclude'))) {
+            $data['query'] = '';
+        }
+        if (in_array($data['uri'], config('env.log.response_exclude'))) {
+            $data['response'] = '';
+        }
         Db::table('sys_log_request')->insert($data);
         return $response;
     }
