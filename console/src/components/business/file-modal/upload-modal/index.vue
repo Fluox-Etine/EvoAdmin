@@ -38,7 +38,6 @@ import {DraggableModal} from '@/components/business/draggable-modal/index.ts';
 import {type TableColumn} from '@/components/business/dynamic-table';
 import * as Api from '@/api/backend/upload.ts';
 import {FileTypeEnum} from "@/enums/fileTypeEnum.ts";
-import {message } from "ant-design-vue/es/components";
 
 defineOptions({
   name: 'UploadModal',
