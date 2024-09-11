@@ -21,10 +21,16 @@ class CrossMiddleware implements MiddlewareInterface
      */
     public function process(Request $request, callable $handler): Response
     {
-        // 记录每一个请求的traceId
-        Context::set('Request-traceId', guidV4());
-        // 记录请求开始时间
-        Context::set('Request-start', microtime(true));
+        if (in_array($request->uri(), config('env.log.exclude_uri'))) {
+            Context::set('Request-Log-Enable', false);
+        } else {
+            Context::set('Request-Log-Enable', true);
+            // 记录每一个请求的traceId
+            Context::set('Request-traceId', guidV4());
+            // 记录请求开始时间
+            Context::set('Request-start', microtime(true));
+        }
+
         // 如果是options请求则返回一个空响应，否则继续向洋葱芯穿越，并得到一个响应
         $response = $request->method() == 'OPTIONS' ? response('') : $handler($request);
 

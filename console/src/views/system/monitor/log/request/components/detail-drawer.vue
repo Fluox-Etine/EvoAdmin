@@ -65,10 +65,10 @@ defineExpose({open});
               </Descriptions.Item>
             </template>
             <Descriptions.Item label="请求参数" v-if="type === 1">
-              <p>{{ record }}</p>
+              <pre>{{ record }}</pre>
             </Descriptions.Item>
             <Descriptions.Item label="响应数据" v-else-if="type === 2">
-              <p>{{ record }}</p>
+              <pre>{{ record }}</pre>
             </Descriptions.Item>
             <Descriptions.Item label="MySQL日志" v-else-if="type === 3">
               <a-card v-show="record.length"
