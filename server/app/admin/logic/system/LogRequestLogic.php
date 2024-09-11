@@ -3,6 +3,7 @@ declare (strict_types=1);
 
 namespace app\admin\logic\system;
 
+use app\common\model\system\LogMySQLModel as SystemLogMySQLModel;
 use app\common\model\system\LogRequestModel as SystemLogRequestModel;
 use support\exception\RespBusinessException;
 
@@ -59,15 +60,21 @@ class LogRequestLogic
     public static function handleDetail(array $params): array
     {
         try {
-            $detail = SystemLogRequestModel::query()->where('id', $params['id'])->select($params['field'])->first();
-            if (is_null($detail)) {
-                // TODO 抛出异常（直接返回，不经过异常）
-                throw new \Exception('数据不存在');
-            }
-            if ($params['field'] === 'query') {
-                return !empty($detail->query) ? jsonDecode($detail->query) : [];
+            if ($params['type'] == 3) {
+                $list = SystemLogMySQLModel::query()->where('uuid', $params['id'])->get();
+                return empty($list) ? [] : $list->toArray();
             } else {
-                return !empty($detail->response) ? jsonDecode($detail->response) : [];
+                $field = $params['type'] == 1 ? 'query' : 'response';
+                $detail = SystemLogRequestModel::query()->where('id', $params['id'])->select($field)->first();
+                if (is_null($detail)) {
+                    // TODO 抛出异常（直接返回，不经过异常）
+                    throw new \Exception('数据不存在');
+                }
+                if ($field === 'query') {
+                    return !empty($detail->query) ? jsonDecode($detail->query) : [];
+                } else {
+                    return !empty($detail->response) ? jsonDecode($detail->response) : [];
+                }
             }
         } catch (\Exception $e) {
             exceptionLog($e);

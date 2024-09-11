@@ -26,5 +26,10 @@ return [
                 'enable_memory_monitor' => DIRECTORY_SEPARATOR === '/',
             ]
         ]
-    ]
+    ],
+
+    // SQL语句落库日志
+    'SQL_LOG' => [
+        'handler' => \app\console\task\SQLLogTask::class,
+    ],
 ];

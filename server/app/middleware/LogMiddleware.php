@@ -23,6 +23,10 @@ class LogMiddleware implements MiddlewareInterface
      */
     public function process(Request $request, callable $handler): Response
     {
+        $response = $handler($request);
+        if(in_array($request->uri(), config('env.log.exclude_uri'))){
+            return $response;
+        }
         $data = [
             'ip' => get_ip(),
             'uri' => $request->uri(),
@@ -33,7 +37,6 @@ class LogMiddleware implements MiddlewareInterface
             'created_at' => time(),
         ];
 
-        $response = $handler($request);
         $err = $response->exception();
         // 判断当前接口是否异常报错了
         if (isset($err)) {
