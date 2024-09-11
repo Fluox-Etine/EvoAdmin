@@ -2,6 +2,7 @@
 
 namespace app\middleware;
 
+use app\admin\service\system\AdminService;
 use support\Context;
 use support\Db;
 use Webman\Http\Request;
@@ -46,7 +47,7 @@ class LogMiddleware implements MiddlewareInterface
         $end = microtime(true);
         $exec_time = round(($end - Context::get('Request-start')) * 1000, 2);
         $data['exec_time'] = $exec_time;
-        $data['uid'] = Context::get('Request-aid') ?? 0;
+        $data['uid'] = AdminService::handleLogUid();
         $data['pid'] = getmypid();
         if (in_array($data['uri'], config('env.log.query_exclude'))) {
             $data['query'] = '';

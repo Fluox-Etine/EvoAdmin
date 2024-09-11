@@ -5,7 +5,6 @@ namespace app\admin\service\system;
 use app\common\enum\RedisKeyEnum;
 use app\common\model\system\AdminModel;
 use app\common\model\system\LogLoginModel as SysLoginLogModel;
-use support\Context;
 use support\exception\RespBusinessException;
 use support\Redis;
 
@@ -73,7 +72,6 @@ class AdminService
         if (empty($id)) {
             throw new RespBusinessException('身份验证信息已过期');
         }
-        Context::set('Request-aid', $id);
         return $id;
     }
 
@@ -88,5 +86,18 @@ class AdminService
         $log['updated_at'] = time();
         $log['pid'] = getmypid();
         SysLoginLogModel::insert($log);
+    }
+
+    /**
+     * 获取日志登录操作人id
+     * @return int
+     */
+    public static function handleLogUid(): int
+    {
+        $token = get_token();
+        if (empty($token)) {
+            return 0;
+        }
+        return Redis::get(RedisKeyEnum::ADMIN_TOKEN->value . $token) ?? 0;
     }
 }
