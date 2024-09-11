@@ -13,8 +13,7 @@
 
       </template>
     </DynamicTable>
-    <query-drawer ref="queryDrawerRef"/>
-    <response-drawer ref="responseDrawerRef"/>
+    <detail-drawer ref="detailDrawerRef"/>
   </div>
 </template>
 
@@ -24,9 +23,8 @@ import {useResizeObserver} from '@vueuse/core';
 import {baseColumns, type TableColumnItem} from './columns';
 import {useTable} from '@/components/business/dynamic-table';
 import * as Api from '@/api/backend/logRequest.ts';
-import QueryDrawer from "./components/query-drawer.vue";
-import ResponseDrawer from "./components/response-drawer.vue";
 import {message} from "ant-design-vue";
+import DetailDrawer from "./components/detail-drawer.vue";
 
 defineOptions({
   name: 'SystemLogRequest',
@@ -40,8 +38,7 @@ const [DynamicTable, dynamicTableInstance] = useTable({
 });
 const currentInstance = getCurrentInstance();
 
-const queryDrawerRef = ref<InstanceType<typeof QueryDrawer>>();
-const responseDrawerRef = ref<InstanceType<typeof ResponseDrawer>>();
+const detailDrawerRef = ref<InstanceType<typeof DetailDrawer>>();
 
 useResizeObserver(document.documentElement, () => {
   const el = currentInstance?.proxy?.$el as HTMLDivElement;
@@ -52,13 +49,10 @@ useResizeObserver(document.documentElement, () => {
   }
 });
 
-const handleClickQueryItem = (record: TableColumnItem) => {
-  queryDrawerRef.value?.open(record)
+const handleClickDetailItem = (record: TableColumnItem, type: number) => {
+  detailDrawerRef.value?.open(record, type)
 };
 
-const handleClickResponseItem = (record: TableColumnItem) => {
-  responseDrawerRef.value?.open(record)
-};
 
 const handleClickRedisItem = () => {
   message.info('暂未实现')
@@ -75,14 +69,15 @@ const columns: TableColumnItem[] = [
     actions: ({record}) => [
       {
         label: '请求参数',
-        onClick: () => handleClickQueryItem(record),
+        onClick: () => handleClickDetailItem(record, 1),
       },
       {
         label: '响应数据',
-        onClick: () => handleClickResponseItem(record),
+        onClick: () => handleClickDetailItem(record, 2),
       },
       {
         label: 'MySQL',
+        onClick: () => handleClickDetailItem(record, 3),
       },
       {
         label: 'Redis',

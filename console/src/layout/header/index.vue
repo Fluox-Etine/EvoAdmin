@@ -24,6 +24,7 @@
           <template #overlay>
             <Menu>
               <Menu.Item @click="$router.push({ name: 'account-settings' })">
+                <setting-outlined/>
                 个人设置
               </Menu.Item>
               <Menu.Divider/>
@@ -50,6 +51,7 @@ import {
   MenuFoldOutlined,
   MenuUnfoldOutlined,
   PoweroffOutlined,
+  SettingOutlined
 } from '@ant-design/icons-vue';
 import {
   Layout,
