@@ -197,11 +197,29 @@
               <template v-else-if="column.dataIndex === 'PAGE_CONTROL'">
                 <a-select
                     v-model:value="record.PAGE_CONTROL"
-                    style="width: 120px"
+                    style="width: 150px"
                 >
+                  <a-select-option :value="1">Input输入框</a-select-option>
+                  <a-select-option :value="2">Select下拉列表</a-select-option>
+                  <a-select-option :value="3">Radio单选框</a-select-option>
+                  <a-select-option :value="4">Checkbox多选框</a-select-option>
+                  <a-select-option :value="5">Cascader级联选择</a-select-option>
+                  <a-select-option :value="6">DatePicker日期选择框</a-select-option>
+                  <a-select-option :value="7">InputNumber数字输入框</a-select-option>
+                  <a-select-option :value="8">Switch开关</a-select-option>
+                  <a-select-option :value="9">TimePicker时间选择框</a-select-option>
+                  <a-select-option :value="10">TreeSelect树选择</a-select-option>
+                  <a-select-option :value="11">Slider滑动输入条</a-select-option>
+                  <a-select-option :value="12">Rate评分</a-select-option>
+                  <a-select-option :value="30">上传组件</a-select-option>
+                  <a-select-option :value="31">富文本组件</a-select-option>
+                  <a-select-option :value="32">地图组件</a-select-option>
                 </a-select>
+                <a style="margin-left: 6px;font-size: 11px" v-show="record.PAGE_CONTROL"
+                   @click="handleSettingModal(record)">设置</a>
               </template>
 
+              <!--              验证器-->
               <template v-else-if="column.dataIndex === 'VALIDATE'">
                 <a-select
                     mode="multiple"
@@ -345,7 +363,7 @@
 import {h, reactive, ref, type UnwrapRef} from 'vue';
 import {CodeOutlined} from '@ant-design/icons-vue';
 import * as Api from '@/api/backend/gen'
-import {message } from "ant-design-vue/es/components";
+import {message} from "ant-design-vue/es/components";
 import CodeView from "@/views/develop/generate/components/code-view.vue";
 import TableSheet from "@/views/develop/generate/components/table-sheet.vue";
 
@@ -430,7 +448,7 @@ const columns = [
   {
     title: '页面控件',
     dataIndex: 'PAGE_CONTROL',
-    width: 150,
+    width: 220,
   },
   {
     title: '数据字典',
@@ -512,7 +530,6 @@ const formState: UnwrapRef<any> = reactive({
   },
 });
 
-
 const baseKey = ref('table');
 
 const dataFieldsSource = ref([]);
@@ -521,9 +538,10 @@ const dataFieldsSource = ref([]);
 /** 切换tab */
 const onBaseTabChange = (value: string) => {
   if (value !== 'table' && formState.tableName == '') {
-    message.error('请先选择数据表');
-    baseKey.value = 'table';
-    return;
+    // message.error('请先选择数据表');
+    // baseKey.value = 'table';
+    // return;
+    fetchTableDetailData('evo_test_goods');
   }
   baseKey.value = value;
 };
@@ -628,6 +646,7 @@ const fetchTableDetailData = async (tableName: string) => {
   baseKey.value = 'base';
 }
 
+/** 生成代码 */
 const handleStart = async () => {
   if (!formState.PK) {
     message.error('请填写数据表主键');
@@ -647,6 +666,9 @@ const handleStart = async () => {
   const {controller, logic, model, validate, route, request, types, table, columns, form} = response;
   Object.assign(codeData.value, {controller, logic, model, validate, route, request, types, table, columns, form});
   baseKey.value = 'code';
+}
+
+const handleSettingModal = () => {
 }
 </script>
 
