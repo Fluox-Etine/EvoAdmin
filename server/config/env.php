@@ -13,8 +13,8 @@ return [
 
     // 慢SQL拦截
     'show_sql' => [
-        'enable' => false,  // 是否开启
-        'limit' => 10,    // sql执行时间大于多少秒进行拦截（单位毫秒 默认1000）
+        'enable' => true,  // 是否开启
+        'limit' => 1000,    // sql执行时间大于多少秒进行拦截（单位毫秒 默认1000）
     ],
 
     // 上传文件配置
@@ -38,7 +38,15 @@ return [
         'chunk_dir' => '/uploads/chunk/',
     ],
 
+    // 日志功能配置
     'log' => [
+        // 禁止记录的uri
+        'exclude_uri' => [
+            '/v1/console/auth/login',
+            '/v1/console/system/log/request/detail',
+            '/v1/console/system/log/request/list',
+            '/v1/console/system/log/login/list'
+        ],
         // 禁止请求参数记录
         'query_exclude' => [
             '/v1/console/auth/login'
@@ -46,6 +54,18 @@ return [
         // 禁止响应参数记录
         'response_exclude' => [
             '/v1/console/auth/login'
+        ],
+        // sql的落库时间定时器间隔
+        'sql_log_timer' => 180,
+        // 每次落库的sql数量
+        'sql_log_limit' => 50,
+        // 排除记录数据表的名称（全名称） // 只是排除了 insert update delete
+        'exclude_table' => [
+            'evo_sys_log_login',
+            'evo_sys_log_mysql',
+            'evo_sys_log_request'
         ]
     ],
+
+    // 命令行配置
 ];
