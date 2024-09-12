@@ -13,9 +13,13 @@
         :active-tab-key="codeKey"
         @tabChange="key => onCodeTabChange(key)"
     >
+      <a-tooltip>
+        <template #title>复制代码</template>
+        <CopyOutlined :style="{fontSize: '24px', color: '#08c'}" style="position: fixed; top: 480px; right: 120px;"
+                      @click="handleCopy(codeKey)"/>
+      </a-tooltip>
       <div v-show="codeKey === 'controller'" class="w-full">
         <highlightjs v-if="code.controller" language="php" :code="code.controller"/>
-        <CopyOutlined v-if="code.controller" style="position: fixed; top: 120px; right: 20px;">我是按钮阿</CopyOutlined>
         <a-empty v-else/>
       </div>
       <div v-show="codeKey === 'logic'" class="w-full">
@@ -59,10 +63,14 @@
 </template>
 <script lang="ts" setup>
 import {ref} from "vue";
+import useClipboard from 'vue-clipboard3'
 import {CopyOutlined} from '@ant-design/icons-vue';
+import {message} from "ant-design-vue";
+
 defineOptions({
   name: 'CodeView',
 });
+
 interface CodeType {
   controller?: string;
   logic?: string;
@@ -76,7 +84,9 @@ interface CodeType {
   form?: string
 }
 
-defineProps<{ code: CodeType }>();
+const prop = defineProps<{ code: CodeType }>();
+
+const {toClipboard} = useClipboard()
 
 const tabCodeList = [
   {
@@ -123,11 +133,25 @@ const tabCodeList = [
 
 const codeKey = ref('controller');
 
-
 /** 切换tab */
 const onCodeTabChange = (value: string) => {
   codeKey.value = value;
 };
+
+const handleCopy = async (key: string) => {
+  try {
+    // 确保 prop.code 是一个对象
+    if (typeof prop.code === 'object' && prop.code !== null) {
+      // 使用给定的键名从 prop.code 对象中获取值
+      await toClipboard(prop.code[key])
+      message.success('复制成功')
+    } else {
+      message.error('当前模块没有代码')
+    }
+  } catch (e) {
+    message.error('复制失败')
+  }
+}
 </script>
 <style scoped lang="less">
 
