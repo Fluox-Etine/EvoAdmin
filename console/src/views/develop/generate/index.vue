@@ -357,6 +357,7 @@
       </a-form>
     </a-card>
 
+    <setting-domal ref="settingDomalRef"/>
   </div>
 </template>
 <script lang="ts" setup>
@@ -366,6 +367,7 @@ import * as Api from '@/api/backend/gen'
 import {message} from "ant-design-vue/es/components";
 import CodeView from "@/views/develop/generate/components/code-view.vue";
 import TableSheet from "@/views/develop/generate/components/table-sheet.vue";
+import SettingDomal from "@/views/develop/generate/components/dynamic-form/setting-domal.vue";
 
 const tabBaseList = [
   {
@@ -534,6 +536,7 @@ const baseKey = ref('table');
 
 const dataFieldsSource = ref([]);
 
+const settingDomalRef = ref<InstanceType<typeof SettingDomal>>();
 
 /** 切换tab */
 const onBaseTabChange = (value: string) => {
@@ -669,6 +672,7 @@ const handleStart = async () => {
 }
 
 const handleSettingModal = () => {
+  settingDomalRef.value?.openSettingModal();
 }
 </script>
 

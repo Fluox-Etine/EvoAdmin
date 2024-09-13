@@ -22,6 +22,7 @@ declare module 'vue' {
     AFormItem: typeof import('ant-design-vue/es')['FormItem']
     AFormItemRest: typeof import('ant-design-vue/es')['FormItemRest']
     AInput: typeof import('ant-design-vue/es')['Input']
+    AInputNumber: typeof import('ant-design-vue/es')['InputNumber']
     AInputSearch: typeof import('ant-design-vue/es')['InputSearch']
     AMap: typeof import('./../src/components/business/a-map/index.vue')['default']
     AMenu: typeof import('ant-design-vue/es')['Menu']
