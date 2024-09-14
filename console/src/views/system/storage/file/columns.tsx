@@ -93,7 +93,7 @@ export const baseColumns: TableColumnItem[] = [
             },
         },
         customRender: ({record}) => {
-            const isEnable = ~~record.channel === 20;
+            const isEnable = ~~record.channel === 10;
             return <Tag color={isEnable ? 'success' : 'red'}>{isEnable ? '管理端' : '用户端'}</Tag>;
         },
     },
