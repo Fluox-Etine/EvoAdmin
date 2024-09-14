@@ -40,15 +40,10 @@ const [showModal] = useFormModal();
 const openMenuModal = async (record: Partial<TableColumnItem>) => {
   const [formRef] = await showModal({
     modalProps: {
-      title: `${record.id ? '编辑' : '新增'}操作`,
-      width: 700,
+      title: `'新增字典`,
+      width: 630,
       onFinish: async (values) => {
-        if (record.id) {
-          values.id = record.id;
-          await Api.update(values);
-        } else {
-          await Api.create(values);
-        }
+        await Api.create(values);
         dynamicTableInstance.reload();
       },
     },

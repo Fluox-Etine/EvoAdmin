@@ -1,47 +1,68 @@
 import type {FormSchema} from '@/components/business/schema-form/';
 import * as Api from "@/api/backend/gen.ts"
-import {ref} from "vue";
 
-const field = ref([])
 export const formSchemas: FormSchema<any>[] = [
+    {
+        field: 'name',
+        component: 'Input',
+        label: '字典名称',
+        required: true,
+        colProps: {
+            span: 24,
+        },
+    },
     {
         field: 'table',
         component: 'Select',
         label: '数据表',
-        rules: [{required: true}],
+        required: true,
         colProps: {
             span: 24,
         },
-        componentProps: {
-            request: async () => {
-                const {data} = await Api.tableSheet();
-                return data.map(item => {
-                    return {
-                        label: item.comment + '（' + item.name + '）',
-                        value: item.name,
-                    }
-                })
-            },
-            onChange: async (e, formModel) => {
-                console.log(formModel)
-                // formModel.label_field = ''
-                field.value = []
-                const {fields} = await Api.tableDetail({tableName: e})
-                field.value = fields.map(item => {
-                    return {
-                        label: item.COLUMN_NAME + '（' + item.COLUMN_COMMENT + '）',
-                        value: item.COLUMN_COMMENT,
-                    }
-                })
-                console.log(field.value)
-            },
+        componentProps: ({formModel, formInstance}) => {
+            return {
+                request: async () => {
+                    const {data} = await Api.tableSheet();
+                    return data.map(item => {
+                        return {
+                            label: item.comment + '（' + item.name + '）',
+                            value: item.name,
+                        }
+                    })
+                },
+                onChange: async (e: any) => {
+                    const {fields} = await Api.tableDetail({tableName: e})
+                    const field = fields.map(item => {
+                        return {
+                            label: item.COLUMN_COMMENT + '（' + item.COLUMN_NAME + '）',
+                            value: item.COLUMN_NAME,
+                        }
+                    })
+                    const {updateSchema} = formInstance;
+                    formModel.label_field = undefined
+                    formModel.value_field = undefined
+                    updateSchema({
+                        field: 'label_field',
+                        componentProps: {
+                            options: field,
+                        },
+                    });
+                    updateSchema({
+                        field: 'value_field',
+                        componentProps: {
+                            options: field,
+                        },
+                    })
+                },
+            }
         },
     },
     {
         field: 'dict_type',
         component: 'RadioGroup',
         label: '字典类型',
-        rules: [{required: true}],
+        defaultValue: 1,
+        required: true,
         colProps: {
             span: 24,
         },
@@ -68,15 +89,7 @@ export const formSchemas: FormSchema<any>[] = [
             span: 24,
         },
         componentProps: {
-            request: {
-                watchFields: ['table'],
-                options: {
-                    immediate: true,
-                },
-                callback: async () => {
-                    return field.value
-                },
-            }
+            options: []
         },
     },
     {
@@ -89,18 +102,7 @@ export const formSchemas: FormSchema<any>[] = [
             span: 24,
         },
         componentProps: {
-            options: field.value,
-        },
-    },
-    {
-        field: 'fields',
-        component: 'Select',
-        label: '额外字段',
-        colProps: {
-            span: 24,
-        },
-        componentProps: {
-            options: field.value,
+            options: []
         },
     },
     {
@@ -108,7 +110,9 @@ export const formSchemas: FormSchema<any>[] = [
         component: 'RadioGroup',
         label: '缓存数据',
         helpMessage: ['开启后，数据会优先查询缓存，如果没有，则查询数据库'],
-        rules: [{required: true}],
+        required: true,
+        mode: 'multiple',
+        defaultValue: 2,
         colProps: {
             span: 24,
         },
@@ -129,7 +133,7 @@ export const formSchemas: FormSchema<any>[] = [
         field: 'cache_enhance',
         component: 'RadioGroup',
         label: '缓存增强',
-        rules: [{required: true}],
+        defaultValue: 1,
         helpMessage: ['开启后，查询优先级分别为：静态数组、Redis缓存、数据库', '关闭后，查询优先级分别为：Redis缓存、数据库'],
         vShow: ({formModel}) => {
             return formModel.cache_type === 1;
@@ -154,7 +158,7 @@ export const formSchemas: FormSchema<any>[] = [
         field: 'cache_detail',
         component: 'RadioGroup',
         label: '缓存详情',
-        rules: [{required: true}],
+        defaultValue: 1,
         vShow: ({formModel}) => {
             return formModel.cache_type === 1;
         },

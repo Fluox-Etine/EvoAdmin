@@ -1,6 +1,6 @@
 <template>
   <div>
-    <a-modal v-model:open="open" :width="985" :title="state.title" @ok="onOk" @cancel="handleCancel">
+    <a-modal v-model:open="open" :width="940" :title="state.title" @ok="onOk" @cancel="handleCancel">
       <div style="width: 85%;float: right">
         <a-flex justify="space-between" align="center">
           <a-input-search v-model:value="state.file_name" placeholder="请输入文件名" style="width: 40%;"
@@ -16,11 +16,11 @@
         <a-tabs
             v-model:activeKey="state.activeKey"
             tab-position="left"
-            :style="{ height: '650px', width: '100%'}"
+            :style="{ height: '100%', width: '100%'}"
             @change="fetchFileList"
         >
           <a-tab-pane v-for="group in groupList" :key="group.value" :tab="`${group.label}`">
-            <a-card class="w-full mt-4 h-600px">
+            <a-card class="w-full mt-1 h-620px">
               <div class="file-list-body">
                 <!-- 文件列表 -->
                 <ul v-if="fileList && fileList.length" class="file-list-ul clearfix">
@@ -49,9 +49,16 @@
                 </ul>
                 <!-- 无数据时显示 -->
                 <a-empty v-else-if="!state.isLoading"/>
-                <!-- 底部操作栏 -->
-                <div class="footer-operate clearfix">
-                </div>
+              </div>
+              <!-- 底部操作栏 -->
+              <div v-show="pagination.totalPages > 1" style="padding-top: 10px;">
+                <a-pagination
+                    v-model:current="pagination.currentPage"
+                    :total="pagination.totalItems"
+                    :defaultPageSize="24"
+                    @change="fetchFileList"
+                    :showSizeChanger="false"
+                />
               </div>
             </a-card>
           </a-tab-pane>
@@ -69,7 +76,8 @@ import * as GroupApi from '@/api/backend/uploadGroup.ts'
 import * as FileApi from '@/api/backend/uploadFile.ts'
 import {FileTypeEnum} from "@/enums/fileTypeEnum.ts";
 import {CheckOutlined} from "@ant-design/icons-vue";
-import {message } from "ant-design-vue/es/components";
+import {message} from "ant-design-vue/es/components";
+
 defineOptions({
   name: 'FileModal',
 });
@@ -90,7 +98,8 @@ const state = reactive({
 })
 const pagination = ref({
   currentPage: 1,
-  itemCount: 0
+  totalItems: 0,
+  totalPages: 0
 })
 const fileList = ref([])
 const groupList = ref([])
@@ -133,12 +142,14 @@ const fetchGroupList = async () => {
 const fetchFileList = async () => {
   state.isLoading = true
   const {meta, items} = await FileApi.list({
-    page: 1,
+    page: pagination.value.currentPage,
     file_type: state.fileType,
     group_id: state.activeKey,
-    file_name: state.file_name
+    file_name: state.file_name,
+    pageSize: 24
   })
   pagination.value = meta
+  console.log(pagination.value)
   fileList.value = items
   state.isLoading = false
 }
@@ -202,12 +213,10 @@ defineExpose({
 }
 
 .file-list-body {
-  height: 455px;
-
+  height: 550px;
   .file-list-ul {
     margin: 0;
     padding: 0;
-    height: 417px;
     list-style-type: none;
   }
 
@@ -219,7 +228,7 @@ defineExpose({
     padding: 4px;
     border: 1px solid rgba(0, 0, 0, 0.05);
     float: left;
-    margin: 8px;
+    margin: 4px;
     -webkit-transition: All 0.2s ease-in-out;
     -moz-transition: All 0.2s ease-in-out;
     -o-transition: All 0.2s ease-in-out;
@@ -271,23 +280,6 @@ defineExpose({
         top: 38%;
         left: 38%;
       }
-    }
-  }
-
-  // 底部操作栏
-  .footer-operate {
-    height: 28px;
-    margin-top: 10px;
-
-    .footer-desc {
-      color: #999;
-      margin-right: 10px;
-    }
-
-    .btn-mini {
-      font-size: 13px;
-      padding: 0 15px;
-      height: 28px;
     }
   }
 }
