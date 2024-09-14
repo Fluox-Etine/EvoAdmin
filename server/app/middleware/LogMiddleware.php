@@ -24,7 +24,7 @@ class LogMiddleware implements MiddlewareInterface
     public function process(Request $request, callable $handler): Response
     {
         $response = $handler($request);
-        if(in_array($request->uri(), config('env.log.exclude_uri'))){
+        if (in_array($request->uri(), config('env.log.exclude_uri'))) {
             return $response;
         }
         $data = [
@@ -33,7 +33,7 @@ class LogMiddleware implements MiddlewareInterface
             'method' => $request->method(),
             'uuid' => Context::get('Request-traceId'),
             'user_agent' => get_user_agent(),
-            'query' => is_array($request->all()) ? jsonEncode($request->all()) : $request->all(),
+            'query' => jsonEncode($request->all()),
             'created_at' => time(),
         ];
 
@@ -41,10 +41,15 @@ class LogMiddleware implements MiddlewareInterface
         // 判断当前接口是否异常报错了
         if (isset($err)) {
             $data['status'] = 20;
-            $data['response'] = $err->getMessage();
+            $data['response'] = jsonEncode([
+                'message' => $err->getMessage(),
+                'code' => $err->getCode(),
+                'file' => $err->getFile(),
+                'line' => $err->getLine()
+            ]);
         } else {
             $data['status'] = 10;
-            $data['response'] = is_array($response->rawBody()) ? jsonEncode($response->rawBody()) : $response->rawBody();
+            $data['response'] = jsonEncode($response->rawBody());
         }
 
         $end = microtime(true);
