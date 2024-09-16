@@ -5,6 +5,7 @@ namespace app\admin\service\system;
 use app\common\enum\RedisKeyEnum;
 use app\common\model\system\AdminModel;
 use app\common\model\system\LogLoginModel as SysLoginLogModel;
+use support\Cache;
 use support\exception\RespBusinessException;
 use support\Redis;
 
@@ -52,7 +53,7 @@ class AdminService
         $guid = guidV4();
         $timeStamp = microtime(true);
         $token = md5($guid . $timeStamp . $id);
-        Redis::setEx(RedisKeyEnum::ADMIN_TOKEN->value . $token, 60 * 60 * 24 * 30, $id);
+        Cache::set(RedisKeyEnum::ADMIN_TOKEN->value . $token, $id, 60 * 60 * 24 * 30);
         return $token;
     }
 
@@ -68,7 +69,7 @@ class AdminService
         if (empty($token)) {
             throw new RespBusinessException('非法登录');
         }
-        $id = Redis::get(RedisKeyEnum::ADMIN_TOKEN->value . $token);
+        $id = Cache::get(RedisKeyEnum::ADMIN_TOKEN->value . $token);
         if (empty($id)) {
             throw new RespBusinessException('身份验证信息已过期');
         }
@@ -98,6 +99,6 @@ class AdminService
         if (empty($token)) {
             return 0;
         }
-        return Redis::get(RedisKeyEnum::ADMIN_TOKEN->value . $token) ?? 0;
+        return Cache::get(RedisKeyEnum::ADMIN_TOKEN->value . $token) ?? 0;
     }
 }

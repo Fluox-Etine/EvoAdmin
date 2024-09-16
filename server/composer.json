@@ -27,14 +27,15 @@
     "php": ">=8.1",
     "ext-mbstring": "*",
     "ext-pdo": "*",
-    "workerman/webman-framework": "^1.5.0",
+    "workerman/webman-framework": "^1.5.24",
     "monolog/monolog": "^2.0",
     "illuminate/database": "^10.48",
-    "illuminate/redis": "^10.48",
-    "illuminate/events": "^10.48",
     "ext-bcmath": "*",
     "workerman/validation": "^3.1",
-    "illuminate/pagination": "^10.48"
+    "illuminate/pagination": "^10.48",
+    "symfony/cache": "^7.1",
+    "illuminate/redis": "^10.48",
+    "illuminate/events": "^10.48"
   },
   "suggest": {
     "ext-event": "For better performance. "
@@ -59,11 +60,5 @@
     "pre-package-uninstall": [
       "support\\Plugin::uninstall"
     ]
-  },
-  "repositories": {
-    "packagist": {
-      "type": "composer",
-      "url": "https://mirrors.aliyun.com/composer/"
-    }
   }
 }

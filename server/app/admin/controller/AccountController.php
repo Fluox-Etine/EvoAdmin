@@ -7,6 +7,7 @@ use app\admin\service\system\AdminService;
 use app\admin\service\system\MenuService;
 use app\admin\service\system\PermissionsService;
 use app\common\enum\RedisKeyEnum;
+use support\Cache;
 use support\exception\RespBusinessException;
 use support\Redis;
 use support\Response;
@@ -44,7 +45,7 @@ class AccountController
      */
     public function logout(): Response
     {
-        Redis::del(RedisKeyEnum::ADMIN_TOKEN->value . get_token());
+        Cache::delete(RedisKeyEnum::ADMIN_TOKEN->value . get_token());
         return renderSuccess('退出成功');
     }
 
