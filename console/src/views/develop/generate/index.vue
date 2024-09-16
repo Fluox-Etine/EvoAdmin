@@ -41,9 +41,6 @@
                            tooltip="生成代码文件放在的目录，例如：api，生成文件路径为：api / test；不填写时，默认为对应根目录">
                 <a-input v-model:value="formState.classDir"/>
               </a-form-item>
-              <a-form-item label="菜单名称" :labelCol="{ span: 4 }" :wrapperCol="{ span: 20 }">
-                <a-input v-model:value="formState.menuName"/>
-              </a-form-item>
             </a-col>
             <a-col :span="12">
               <a-form-item label="表描述" :labelCol="{ span: 4 }" :wrapperCol="{ span: 20 }">
@@ -62,14 +59,6 @@
               <a-form-item label="类注释" tooltip="类注释，例如：注释信息" :labelCol="{ span: 4 }"
                            :wrapperCol="{ span: 20 }">
                 <a-input v-model:value="formState.classComment"/>
-              </a-form-item>
-              <a-form-item label="菜单构建" tooltip="自动构建：自动执行生成菜单sql。手动添加：自行添加菜单。"
-                           :labelCol="{ span: 4 }" :wrapperCol="{ span: 20 }">
-                <a-radio-group v-model:value="formState.menuBuild">
-                  <a-radio :value="1">自行构建</a-radio>
-                  <a-radio :value="2">手动构建</a-radio>
-                  <a-radio :value="3">不构建</a-radio>
-                </a-radio-group>
               </a-form-item>
             </a-col>
           </a-row>
