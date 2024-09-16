@@ -49,7 +49,7 @@ class LogMiddleware implements MiddlewareInterface
             ]);
         } else {
             $data['status'] = 10;
-            $data['response'] = jsonEncode($response->rawBody());
+            $data['response'] = $response->rawBody();
         }
 
         $end = microtime(true);

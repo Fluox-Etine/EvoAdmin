@@ -2,9 +2,11 @@
 
 namespace app\admin\service\system;
 
+use app\common\enum\RedisKeyEnum;
 use app\common\model\system\AdminRoleModel;
 use app\common\model\system\MenuModel;
 use app\common\model\system\RoleMenuModel;
+use support\Cache;
 use support\exception\RespBusinessException;
 
 class MenuService
@@ -23,17 +25,14 @@ class MenuService
             if (empty($roleIds)) {
                 throw new RespBusinessException('用户未分配角色');
             }
-            $menuIds = RoleMenuModel::query()->whereIn('role_id', $roleIds)->pluck('menu_id');
+            $menuIds = self::getRoleMenuIdsCache($roleIds);
             if (empty($menuIds)) {
                 throw new RespBusinessException('用户角色未分配菜单');
             }
-            $menus = MenuModel::query()->whereIn('id', $menuIds)
-                ->orderBy('order_no', 'ASC')
-                ->select(['parent_id', 'type', 'id', 'active_menu', 'ext_open_mode', 'icon', 'is_ext', 'keep_alive', 'order_no', 'show', 'status', 'type', 'component', 'name', 'path'])
-                ->get()
-                ->toArray();
+            $menus = self::getMenuIdsCache($menuIds);
             return self::filterAsyncRoutes($menus);
         } catch (\Exception $e) {
+            exceptionLog($e);
             throw new RespBusinessException($e->getMessage());
         }
     }
@@ -163,5 +162,66 @@ class MenuService
         } else {
             return false;
         }
+    }
+
+
+    /**
+     * 获取角色菜单id缓存
+     * @param object $roleIds
+     * @return array
+     */
+    public static function getRoleMenuIdsCache(object $roleIds): array
+    {
+        $menuIds = [];
+        $roleMenuList = Cache::get(RedisKeyEnum::ROLE_MENU_IDS->value);
+        // 如果缓存中没有数据，从数据库中查询并更新缓存
+        if (empty($roleMenuList)) {
+            $roleMenuList = RoleMenuModel::query()->select('menu_id', 'role_id')->get();
+            // 转换为以 role_id 为键，menu_id 数组为值的数组
+            $roleMenuMap = [];
+            foreach ($roleMenuList as $item) {
+                $roleMenuMap[$item['role_id']][] = $item['menu_id'];
+            }
+            Cache::set(RedisKeyEnum::ROLE_MENU_IDS->value, $roleMenuMap);
+        } else {
+            // 如果缓存存在，直接使用缓存中的数据
+            $roleMenuMap = $roleMenuList;
+        }
+        // 遍历角色ID数组，收集对应的菜单ID
+        foreach ($roleIds as $role) {
+            if (isset($roleMenuMap[$role])) {
+                $menuIds = array_merge($menuIds, $roleMenuMap[$role]);
+            }
+        }
+        // 去除重复的menu_id并返回结果
+        return array_unique($menuIds);
+    }
+
+    /**
+     * 获取菜单缓存
+     * @param array $menuIds
+     * @return array
+     */
+    private static function getMenuIdsCache(array $menuIds): array
+    {
+        $allMenus = Cache::get(RedisKeyEnum::ALL_MENU_IDS->value);
+        if (empty($allMenus)) {
+            $allMenus = MenuModel::query()
+                ->orderBy('order_no', 'ASC')
+                ->select(['parent_id', 'type', 'id', 'active_menu', 'ext_open_mode', 'icon', 'is_ext', 'keep_alive', 'order_no', 'show', 'status', 'type', 'component', 'name', 'path'])
+                ->get()
+                ->keyBy('id')
+                ->toArray();
+            Cache::set(RedisKeyEnum::ALL_MENU_IDS->value, $allMenus);
+        }
+        // 过滤出指定 ID 的菜单信息
+        $data = [];
+        foreach ($menuIds as $menuId) {
+            // array_key_exists 比 isset 稍微快一点，因为它不需要传第二个参数
+            if (array_key_exists($menuId, $allMenus)) {
+                $data[$menuId] = $allMenus[$menuId];
+            }
+        }
+        return $data;
     }
 }

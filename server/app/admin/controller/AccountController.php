@@ -35,7 +35,7 @@ class AccountController
      */
     public function profile(): Response
     {
-        $data = AdminLogic::handleProfile();
+        $data = AdminService::getCurrentLoginInfo();
         return renderSuccess($data);
     }
 

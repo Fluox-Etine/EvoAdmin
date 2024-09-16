@@ -7,7 +7,6 @@ use app\common\model\system\AdminModel;
 use app\common\model\system\LogLoginModel as SysLoginLogModel;
 use support\Cache;
 use support\exception\RespBusinessException;
-use support\Redis;
 
 class AdminService
 {
@@ -35,7 +34,10 @@ class AdminService
             }
             $log['status'] = 10;
             self::handleLoginLog($log);
-            return self::makeToken($detail->id);
+            $token = self::makeToken($detail->id);
+            unset($detail->password);
+            Cache::set(RedisKeyEnum::ADMIN_TOKEN->value . $token, $detail->toArray(), 60 * 60 * 24);
+            return $token;
         } catch (\Exception $e) {
             self::handleLoginLog($log);
             throw new RespBusinessException($e->getMessage());
@@ -52,11 +54,27 @@ class AdminService
     {
         $guid = guidV4();
         $timeStamp = microtime(true);
-        $token = md5($guid . $timeStamp . $id);
-        Cache::set(RedisKeyEnum::ADMIN_TOKEN->value . $token, $id, 60 * 60 * 24 * 30);
-        return $token;
+        return md5($guid . $timeStamp . $id);
     }
 
+
+    /**
+     * 获取当前登录用户信息
+     * @return mixed
+     * @throws RespBusinessException
+     */
+    public static function getCurrentLoginInfo(): mixed
+    {
+        $token = get_token();
+        if (empty($token)) {
+            throw new RespBusinessException('非法登录');
+        }
+        $detail = Cache::get(RedisKeyEnum::ADMIN_TOKEN->value . $token);
+        if (empty($detail)) {
+            throw new RespBusinessException('身份验证信息已过期');
+        }
+        return $detail;
+    }
 
     /**
      * 获取当前登录用户id
@@ -69,7 +87,7 @@ class AdminService
         if (empty($token)) {
             throw new RespBusinessException('非法登录');
         }
-        $id = Cache::get(RedisKeyEnum::ADMIN_TOKEN->value . $token);
+        $id = Cache::get(RedisKeyEnum::ADMIN_TOKEN->value . $token)['id'];
         if (empty($id)) {
             throw new RespBusinessException('身份验证信息已过期');
         }
@@ -99,6 +117,6 @@ class AdminService
         if (empty($token)) {
             return 0;
         }
-        return Cache::get(RedisKeyEnum::ADMIN_TOKEN->value . $token) ?? 0;
+        return Cache::get(RedisKeyEnum::ADMIN_TOKEN->value . $token)['id'] ?? 0;
     }
 }

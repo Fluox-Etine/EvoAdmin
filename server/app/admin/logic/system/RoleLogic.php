@@ -2,9 +2,11 @@
 
 namespace app\admin\logic\system;
 
+use app\common\enum\RedisKeyEnum;
 use app\common\model\system\AdminRoleModel;
 use app\common\model\system\RoleMenuModel;
 use app\common\model\system\RoleModel;
+use support\Cache;
 use support\Db;
 use support\exception\RespBusinessException;
 
@@ -64,6 +66,7 @@ class RoleLogic
                 }, $menuIds);
                 RoleMenuModel::insert($save);
             });
+            Cache::delete(RedisKeyEnum::ROLE_MENU_IDS->value);
             return true;
         } catch (\Exception $e) {
             throw new RespBusinessException($e->getMessage());
@@ -114,6 +117,9 @@ class RoleLogic
                     RoleMenuModel::insert($save);
                 }
             });
+
+            Cache::delete(RedisKeyEnum::ROLE_MENU_IDS->value);
+            Cache::delete(RedisKeyEnum::ROLE_MENU_IDS->value);
             return true;
         } catch (\Exception $e) {
             exceptionLog($e);
@@ -142,6 +148,8 @@ class RoleLogic
                 // 删除角色菜单关联
                 RoleMenuModel::query()->where('role_id', $params['id'])->delete();
             });
+            Cache::delete(RedisKeyEnum::ROLE_MENU_IDS->value);
+            Cache::delete(RedisKeyEnum::ROLE_MENU_IDS->value);
             return true;
         } catch (\Exception $e) {
             throw new RespBusinessException($e->getMessage());

@@ -2,8 +2,10 @@
 
 namespace app\admin\logic\system;
 
+use app\common\enum\RedisKeyEnum;
 use app\common\model\system\MenuModel;
 use app\common\model\system\RoleMenuModel;
+use support\Cache;
 use support\exception\RespBusinessException;
 
 class MenuLogic
@@ -126,6 +128,7 @@ class MenuLogic
                 'component' => $params['component'],
                 'keep_alive' => $params['keep_alive'] ?? 1
             ]);
+            Cache::delete(RedisKeyEnum::ALL_MENU_IDS->value);
             return true;
         } catch (\Exception $e) {
             throw new RespBusinessException($e->getMessage());
@@ -144,6 +147,8 @@ class MenuLogic
         try {
             self::checkMenuParams($params);
             $params['updated_at'] = time();
+            Cache::delete(RedisKeyEnum::ROLE_MENU_IDS->value);
+            Cache::delete(RedisKeyEnum::ALL_MENU_IDS->value);
             return MenuModel::query()->where('id', $params['id'])->update($params) != false;
         } catch (\Exception $e) {
             throw new RespBusinessException($e->getMessage());
@@ -191,6 +196,8 @@ class MenuLogic
             // 如果有子菜单，则删除子菜单，一起删除子菜单
             $childMenus = MenuModel::query()->where('parent_id', $id)->pluck('id')->toArray();
             $ids = array_merge([$id], $childMenus);
+            Cache::delete(RedisKeyEnum::ROLE_MENU_IDS->value);
+            Cache::delete(RedisKeyEnum::ALL_MENU_IDS->value);
             return MenuModel::destroy($ids) != false;
         } catch (\Exception $e) {
             throw new RespBusinessException($e->getMessage());
