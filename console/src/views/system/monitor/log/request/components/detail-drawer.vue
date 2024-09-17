@@ -18,6 +18,7 @@ const recordMap = new Map([
   ['method', '请求方式'],
   ['user_agent', '请求头信息'],
   ['ip', '请求IP'],
+  ['address', 'IP地址'],
   ['uid', '操作人'],
   ['_status', '请求状态'],
   ['pid', '进程id'],

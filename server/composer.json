@@ -35,7 +35,8 @@
     "illuminate/pagination": "^10.48",
     "symfony/cache": "^7.1",
     "illuminate/redis": "^10.48",
-    "illuminate/events": "^10.48"
+    "illuminate/events": "^10.48",
+    "zoujingli/ip2region": "^2.0"
   },
   "suggest": {
     "ext-event": "For better performance. "

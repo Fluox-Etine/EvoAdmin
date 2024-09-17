@@ -42,7 +42,7 @@ class LogRequestLogic
             !empty($param['uri']) && $filter[] = ['uri', 'like', '%' . $param['uri'] . '%'];
             !empty($param['status']) && $filter[] = ['status', '=', $param['status']];
 
-            $list = SystemLogRequestModel::query()->where($filter)->select('created_at', 'exec_time', 'ip', 'method', 'pid', 'status', 'uid', 'uri', 'user_agent', 'uuid', 'id')->orderByDesc('created_at')->paginate($params["pageSize"] ?? 10);
+            $list = SystemLogRequestModel::query()->where($filter)->select('created_at', 'exec_time', 'ip', 'method', 'pid', 'status', 'uid', 'uri', 'user_agent', 'uuid', 'id','address')->orderByDesc('created_at')->paginate($params["pageSize"] ?? 10);
             return formattedPaginate($list);
         } catch (\Exception $e) {
             exceptionLog($e);

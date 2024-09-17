@@ -3,6 +3,7 @@
 namespace app\middleware;
 
 use app\admin\service\system\AdminService;
+use Ip2Region;
 use support\Context;
 use support\Db;
 use Webman\Http\Request;
@@ -15,6 +16,8 @@ use Webman\MiddlewareInterface;
  */
 class LogMiddleware implements MiddlewareInterface
 {
+    private static $ipInstance;
+
     /**
      * 日志中间件
      * @param Request $request
@@ -36,7 +39,18 @@ class LogMiddleware implements MiddlewareInterface
             'query' => jsonEncode($request->all()),
             'created_at' => time(),
         ];
-
+        if (!self::$ipInstance) {
+            self::$ipInstance = new Ip2Region();
+        }
+        $ip = self::$ipInstance->memorySearch(get_ip());
+        $parts = explode('|', $ip['region']);
+        if (count($parts) == 5) {
+            if ($parts[0] == 0 || $parts[2] == 0) {
+                $data['address'] = '内网IP';
+            } else {
+                $data['address'] = $parts[0] . '-' . $parts[2] . '-' . $parts[3];
+            }
+        }
         $err = $response->exception();
         // 判断当前接口是否异常报错了
         if (isset($err)) {

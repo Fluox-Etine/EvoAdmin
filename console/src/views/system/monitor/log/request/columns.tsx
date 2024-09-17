@@ -11,6 +11,12 @@ export const baseColumns: TableColumnItem[] = [
         width: 300,
     },
     {
+        title: 'IP地址',
+        dataIndex: 'address',
+        hideInSearch: true,
+        width: 150,
+    },
+    {
         title: '操作人',
         dataIndex: 'uid',
         hideInSearch: false,
