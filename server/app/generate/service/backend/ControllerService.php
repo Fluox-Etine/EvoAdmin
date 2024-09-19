@@ -69,7 +69,7 @@ class ControllerService
         }
         $tpl = "use app\\$moduleName\\logic\\" . $upperCameNameLogicStr;
         if ($isValidate) {
-            $tpl .= PHP_EOL . "use app\\validate\\" . $upperCameNameValidateStr;
+            $tpl .= PHP_EOL . "use app\\$moduleName\\validate\\" . $upperCameNameValidateStr;
         }
         if (!empty($classDir)) {
             $tpl = "use app\\$moduleName\\logic\\" . $classDir . "\\" . $upperCameNameLogicStr;
